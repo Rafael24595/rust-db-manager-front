@@ -1,0 +1,32 @@
+@if(services$ | async; as services) {
+    <div>
+        <div class="table-title">
+            <h3 class="title-text">Services [{{services.services.length}}]</h3>
+            <div class="title-combo">
+                <button class="title-button">
+                    <span class="plus-icon">+</span>
+                </button>
+            </div>
+        </div>
+        <div class="table-content" [ngClass]="{'empty': services.services.length === 0}">
+            @if (services.services.length == 0) {
+                <p style="text-align: center;">No services found.</p>
+            } @else {
+                <table class="table-base">
+                    @for (service of services.services; track $index) {
+                        <tr>
+                            <td>
+                                <div class="trade-mark">
+                                    <img class="db-logo" src="{{service.category.resources.image}}" alt="">
+                                    <a class="db-title" href="{{service.category.resources.web_site}}" target="_blank" [ngStyle]="{'color': service.category.resources.color}">{{service.category.category}}</a>
+                                </div>
+                            </td>
+                            <td>{{service.name}}</td>
+                            <td>-</td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+}
