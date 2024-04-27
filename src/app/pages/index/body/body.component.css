@@ -17,3 +17,9 @@
     border-bottom: 2px solid black;
     margin-bottom: 25px;
 }
+
+.content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}

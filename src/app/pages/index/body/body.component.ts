@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { TableServicesComponent } from '../components/table.services/table.services.component';
+import { ServicesComponent } from '../components/services/services.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-body',
   standalone: true,
-  imports: [TableServicesComponent],
+  imports: [RouterOutlet, ServicesComponent],
   templateUrl: './body.component.html',
   styleUrl: './body.component.css'
 })

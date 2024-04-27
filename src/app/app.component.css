@@ -4,3 +4,65 @@
     flex: 1 1 auto;
     height: 100%;
 }
+
+.table-title {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: ghostwhite;
+    padding: 3px;
+    display: flex;
+    border: 1px solid lightgrey;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title-text {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.title-combo {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.title-button {
+    padding: 3px;
+    padding-left: 9px;
+    padding-right: 9px;
+    background-color: white;
+    border: 1px solid darkgray;
+    box-shadow: 1px 1px 2px -1px;
+    cursor: pointer;
+}
+
+.title-button:hover {
+    background-color: whitesmoke;
+}
+
+.title-button:active {
+    background-color: whitesmoke;
+    box-shadow: -1px -1px 0px 0px;
+}
+
+.plus-icon {
+    font-family: fantasy;
+    font-size: large;
+}
+
+.table-content.empty {
+    border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    padding: 10px;
+}
+
+.table-base {
+    width: 100%;
+}
+
+.table-base, th, td {
+    border-collapse: collapse;
+    border: 1px solid lightgrey;
+    padding: 10px;
+}
