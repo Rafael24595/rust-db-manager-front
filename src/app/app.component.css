@@ -66,3 +66,11 @@
     border: 1px solid lightgrey;
     padding: 10px;
 }
+
+.data-key {
+    font-weight: bold;
+}
+
+.even-odd tr:nth-child(even) {
+    background-color: whitesmoke;
+}

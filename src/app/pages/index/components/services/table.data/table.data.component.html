@@ -1,1 +1,47 @@
-<p>table.data works!</p>
+<div>
+    <div class="table-title">
+        <h3 class="title-text">Server Status</h3>
+    </div>
+    <div class="table-content">
+        <table class="table-base even-odd">
+            @if(status$ | async; as status) {
+                <tr>
+                    <td class="data-key">Session Id</td>
+                    <td>{{status.session_id}}</td>
+                    <td class="data-key">Started</td>
+                    <td>{{formatDate(status.timestamp)}}</td>
+                </tr>
+                <tr>
+                    <td class="data-key">Uptime</td>
+                    <td>{{executionTime(status.timestamp)}}</td>
+                    <td class="data-key">Services</td>
+                    <td>{{status.services}}</td>
+                </tr>
+                <tr>
+                    <td colspan=4><br></td>
+                </tr>
+                <tr>
+                    <td class="data-key">Web Name</td>
+                    <td>{{status.web_name}}</td>
+                    <td class="data-key">Web Version</td>
+                    <td>{{status.web_version}}</td>
+                </tr>
+                <tr>
+                    <td class="data-key">Core Name</td>
+                    <td>{{status.core_name}}</td>
+                    <td class="data-key">Core Version</td>
+                    <td>{{status.core_version}}</td>
+                </tr>
+                <tr>
+                    <td colspan=4><br></td>
+                </tr>
+                <tr>
+                    <td class="data-key">Rustc Version</td>
+                    <td>{{status.rustc_version}}</td>
+                    <td class="data-key">Cargo Version</td>
+                    <td>{{status.cargo_version}}</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

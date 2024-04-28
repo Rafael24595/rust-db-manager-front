@@ -15,7 +15,6 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 export class TableServicesComponent {
 
   public services$!: Observable<Paginable<ServiceLite>>;
-course: any;
 
   constructor(private service: RustDbManagerService) {}
 

@@ -16,10 +16,10 @@
                     @for (service of services.services; track $index) {
                         <tr>
                             <td>
-                                <div class="trade-mark">
-                                    <img class="db-logo" src="{{service.category.resources.image}}" alt="">
-                                    <a class="db-title" href="{{service.category.resources.web_site}}" target="_blank" [ngStyle]="{'color': service.category.resources.color}">{{service.category.category}}</a>
-                                </div>
+                                <a class="trade-mark" href="{{service.category.resources.web_site}}" target="_blank" [ngStyle]="{'color': service.category.resources.color}">
+                                    <img class="db-logo" src="{{service.category.resources.image}}" alt="Logo of {{service.category.category}}">
+                                    <span class="db-title">{{service.category.category}}</span>
+                                </a>
                             </td>
                             <td>{{service.name}}</td>
                             <td>-</td>
