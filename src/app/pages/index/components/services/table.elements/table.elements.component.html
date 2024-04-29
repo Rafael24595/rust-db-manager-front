@@ -3,7 +3,7 @@
         <div class="table-title">
             <h3 class="title-text">Services [{{services.services.length}}]</h3>
             <div class="title-combo">
-                <button class="title-button">
+                <button class="title-button" (click)="openModal()">
                     <span class="plus-icon">+</span>
                 </button>
             </div>
@@ -30,3 +30,13 @@
         </div>
     </div>
 }
+
+<app-dialog-form 
+    [title]="'New Service'"
+    [buttons]="[
+        {'title': 'Submit', 'funct': onSubmit.bind(this)},
+        {'title': 'Close', 'funct': closeModal.bind(this)}
+    ]"
+>
+    <app-service-form/>
+</app-dialog-form>
