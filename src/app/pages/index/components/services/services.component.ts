@@ -6,7 +6,7 @@ import { TableDataComponent } from './table.data/table.data.component';
     selector: 'app-services',
     standalone: true,
     templateUrl: './services.component.html',
-    styleUrl: './services.component.css',
+    styleUrls: ['../../../../app.component.css', './services.component.css'],
     imports: [TableServicesComponent, TableDataComponent]
 })
 export class ServicesComponent {
