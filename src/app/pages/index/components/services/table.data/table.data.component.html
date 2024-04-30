@@ -4,7 +4,7 @@
     </div>
     <div class="table-content">
         <table class="table-base even-odd">
-            @if(status$ | async; as status) {
+            @if(status | async; as status) {
                 <tr>
                     <td class="data-key">Session Id</td>
                     <td>{{status.session_id}}</td>

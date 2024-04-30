@@ -9,27 +9,21 @@ import { AsyncPipe } from '@angular/common';
   standalone: true,
   imports: [AsyncPipe],
   templateUrl: './table.data.component.html',
-  styleUrls: ['../../../../../app.component.css', './table.data.component.css']
+  styleUrl: './table.data.component.css'
 })
 export class TableDataComponent {
 
-  public status$!: Observable<ServerStatus>;
-  private idPollData: number;
+  public status!: Observable<ServerStatus>;
 
   constructor(private service: RustDbManagerService) {
-    this.idPollData = 0;
   }
 
   ngOnInit(): void {
     this.refreshData();
   }
 
-  ngOnDestroy(): void {
-    clearInterval(this.idPollData)
-  }
-
   refreshData() {
-    this.status$ = this.service.serverStatus();
+    this.status = this.service.serverStatus();
   }
 
   formatDate(timestamp: number): string {

@@ -7,7 +7,7 @@ import { ModalButton } from '../../interfaces/modal.button';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dialog.form.component.html',
-  styleUrls: ['../../app.component.css', './dialog.form.component.css']
+  styleUrl: './dialog.form.component.css'
 })
 export class DialogFormComponent {
 

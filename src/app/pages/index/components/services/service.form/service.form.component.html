@@ -1,3 +1,54 @@
 <form (ngSubmit)="onSubmit()">
-    <p>service.form works!</p>
+    <table class="table-form">
+        <tbody>
+            <tr>
+                <td>
+                    <label for="category">Category:</label>
+                    <br>
+                    <select name="category" id="category" [(ngModel)]="category" required>
+                        <option value="" disabled selected>-- select one --</option>
+                        @if(categories | async; as categories) { 
+                            @for (category of categories; track $index) {
+                                <option value="{{ category.category }}">{{ category.category }}</option>
+                            }
+                        }
+                    </select>
+                </td>
+                <td>
+                    <label for="connection">Connection:</label>
+                    <br>
+                    <input type="text" name="connection" [(ngModel)]="connection" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="name">Name:</label>
+                    <br>
+                    <input type="text" name="name" [(ngModel)]="name" required>
+                </td>
+                <td>
+                    <label for="secure">Protect connection:</label>
+                    <input type="checkbox" name="secure" [(ngModel)]="secure">
+                </td>
+            </tr>
+            @if (secure) {
+                <tr><td class="void-row"></td></tr>
+                <tr>
+                    <td colspan="2" class="table-section">
+                        <label for="password">Password:</label>
+                        <br>
+                        <div class="password-input">
+                            <input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password">
+                            <button class="password-input-eye" (click)="togglePasswordVisibility()" [ngClass]="showPassword ? 'active' : ''">👁</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (secure) {
+       <div>
+            
+       </div> 
+    }
 </form>

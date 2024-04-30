@@ -12,7 +12,7 @@ import { ServiceFormComponent } from '../service.form/service.form.component';
   standalone: true,
   imports: [AsyncPipe, CommonModule, DialogFormComponent, ServiceFormComponent],
   templateUrl: './table.elements.component.html',
-  styleUrls: ['../../../../../app.component.css', './table.elements.component.css']
+  styleUrl: './table.elements.component.css'
 })
 export class TableServicesComponent {
   
