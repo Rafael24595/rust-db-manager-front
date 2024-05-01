@@ -5,7 +5,12 @@
         <ol>
             @for (button of options; track $index) {
                 <li>
-                    <button class="modal-button" (click)="execute(button.funct, button.args)">{{button.title}}</button>
+                    <button class="combo-button" (click)="execute(button.funct, button.args)">
+                        @if (button.icon != undefined) {
+                            <span class="combo-icon">{{ button.icon }}</span>
+                        }
+                        {{ button.title }}
+                    </button>
                 </li>
             }
         </ol>
