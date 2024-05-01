@@ -1,4 +1,5 @@
 export interface ModalButton {
     title: String,
-    funct: Function
+    funct: Function,
+    args?: any
 }

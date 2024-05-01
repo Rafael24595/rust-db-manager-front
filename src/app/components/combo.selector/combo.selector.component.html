@@ -1,0 +1,18 @@
+
+<div class="combo-container">
+    <div class="combo-options" [ngClass]="status ? 'opened' : ''" #combo>
+        <span class="combo-close" (click)="switchStatus()">X</span>
+        <ol>
+            @for (button of options; track $index) {
+                <li>
+                    <button class="modal-button" (click)="execute(button.funct, button.args)">{{button.title}}</button>
+                </li>
+            }
+        </ol>
+    </div>
+    <button class="candies-button" (click)="switchStatus()">
+        <div class="candy-button"></div>
+        <div class="candy-button"></div>
+        <div class="candy-button"></div>
+    </button>
+</div>

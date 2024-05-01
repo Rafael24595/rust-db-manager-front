@@ -23,7 +23,7 @@ export class TableDataComponent {
   }
 
   refreshData() {
-    this.status = this.service.serverStatus();
+    this.status = this.service.status();
   }
 
   formatDate(timestamp: number): string {

@@ -1,4 +1,4 @@
-@if(services$ | async; as services) {
+@if(services | async; as services) {
     <div>
         <div class="table-title">
             <h3 class="title-text">Services [{{services.services.length}}]</h3>
@@ -22,7 +22,11 @@
                                 </a>
                             </td>
                             <td>{{service.name}}</td>
-                            <td>-</td>
+                            <td>
+                                <app-combo-selector [options]="[
+                                    {title: 'Remove', funct: remove.bind(this), args: service.name}
+                                ]"/>
+                            </td>
                         </tr>
                     }
                 </table>
@@ -38,7 +42,6 @@
     [buttons]="[
         {'title': 'Submit', 'funct': onSubmit.bind(this)},
         {'title': 'Close', 'funct': closeModal.bind(this)}
-    ]"
->
-    <app-service-form/>
+    ]">
+    <app-service-form [closeModal]="closeModal.bind(this)" [refreshData]="refreshServices.bind(this)"/>
 </app-dialog-form>

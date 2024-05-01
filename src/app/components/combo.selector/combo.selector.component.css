@@ -1,0 +1,63 @@
+:host {
+    display: flex;
+    justify-content: center;
+}
+
+.combo-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.candies-button {
+    display: flex;
+    flex-direction: column;
+    background: none;
+    border: none;
+    font-weight: bolder;
+    font-size: medium;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.candy-button {
+    position: relative;
+    width: 4px;
+    height: 4px;
+    background-color: black;
+    border-radius: 50%;
+    margin: 1px;
+}
+
+.combo-close {
+    display: flex;
+    justify-content: flex-end;
+    font-family: sans-serif;
+    font-size: small;
+    font-weight: bold;
+    padding: 5px;
+    margin: 5px;
+    border-bottom: 1px solid lightgray;
+    cursor: pointer;
+}
+
+.combo-options {
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    background-color: whitesmoke;
+    border: 1px solid lightgray;
+    z-index: 1;
+}
+
+.combo-options.opened {
+    display: block;
+}
+
+.combo-options ol {
+    padding: 15px;
+    margin: 0px;
+}
+
+.combo-options li {
+    list-style: none;
+}

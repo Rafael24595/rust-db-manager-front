@@ -6,11 +6,12 @@ import { RustDbManagerService } from '../../../../../core/services/rust.db.manag
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
 import { ServiceFormComponent } from '../service.form/service.form.component';
+import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
 
 @Component({
   selector: 'app-table-elements',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, DialogFormComponent, ServiceFormComponent],
+  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, DialogFormComponent, ServiceFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
@@ -19,12 +20,16 @@ export class TableServicesComponent {
   @ViewChild(DialogFormComponent) dialog!: DialogFormComponent;
   @ViewChild(ServiceFormComponent) form!: ServiceFormComponent;
 
-  public services$!: Observable<Paginable<ServiceLite>>;
+  public services!: Observable<Paginable<ServiceLite>>;
 
   constructor(private service: RustDbManagerService) {}
 
   ngOnInit(): void {
-    this.services$ = this.service.findServices();
+    this.services = this.service.services();
+  }
+
+  refreshServices() {
+    this.services = this.service.services();
   }
 
   openModal() {
@@ -37,6 +42,14 @@ export class TableServicesComponent {
 
   onSubmit() {
     this.form.onSubmit();
+  }
+
+  remove(code: string) {
+    this.service.remove(code).subscribe({
+      next: (v) => console.log(v),
+      error: (e) => console.error(e),
+      complete: () => this.refreshServices()
+    });
   }
 
 }
