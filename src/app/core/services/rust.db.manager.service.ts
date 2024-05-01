@@ -28,14 +28,14 @@ export class RustDbManagerService {
   }
   
   publish(request: PublishRequest): Observable<void> {
-    return this.http.post<void>(`${environment.URL_SERVICE}/publish`, request)
+    return this.http.post<void>(`${environment.URL_SERVICE}/publish`, request, { withCredentials: true })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   remove(service: string): Observable<void> {
-    return this.http.delete<void>(`${environment.URL_SERVICE}/${service}`)
+    return this.http.delete<void>(`${environment.URL_SERVICE}/${service}`, { withCredentials: true })
       .pipe(
         catchError(this.handleError)
       );
