@@ -46,7 +46,6 @@ export class TableServicesComponent {
 
   remove(code: string) {
     this.service.remove(code).subscribe({
-      next: (v) => console.log(v),
       error: (e) => {alert(e); console.error(e)},
       complete: () => this.refreshServices()
     });

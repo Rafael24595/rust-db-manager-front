@@ -1,13 +1,15 @@
 
 <div class="combo-container">
     <div class="combo-options" [ngClass]="status ? 'opened' : ''" #combo>
-        <span class="combo-close" (click)="switchStatus()">X</span>
+        <span class="combo-close">
+            <div class="combo-close-icon" (click)="switchStatus()">X</div>
+        </span>
         <ol>
             @for (button of options; track $index) {
                 <li>
                     <button class="combo-button" (click)="execute(button.funct, button.args)">
                         @if (button.icon != undefined) {
-                            <span class="combo-icon">{{ button.icon }}</span>
+                            <span class="combo-icon" [ngStyle]="{'color': button.icon.color}">{{ button.icon.icon }}</span>
                         }
                         {{ button.title }}
                     </button>

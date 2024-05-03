@@ -56,8 +56,7 @@ export class ServiceFormComponent {
     };
     
     this.service.publish(request).subscribe({
-      next: (v) => console.log(v),
-      error: (e) => console.error(e),
+      error: (e) => {alert(e); console.error(e)},
       complete: () => {this.closeModal(), this.refreshData()}
     });
   }

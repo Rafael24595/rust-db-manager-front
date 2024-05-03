@@ -19,6 +19,10 @@
     margin: 5px;
 }
 
+.candies-button:hover .candy-button  {
+    background-color: dimgray;
+}
+
 .candy-button {
     position: relative;
     width: 4px;
@@ -37,6 +41,13 @@
     padding: 5px;
     margin: 5px;
     border-bottom: 1px solid lightgray;
+}
+
+.combo-close:hover {
+    color: dimgray;
+}
+
+.combo-close-icon {
     cursor: pointer;
 }
 
