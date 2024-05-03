@@ -1,0 +1,11 @@
+<div id="alert-container">
+    @for (alert of alerts; track $index) {
+        <div class="alert">
+            @if (alert.alert.title) {
+                <p> {{ alert.alert.title }} </p>
+            }
+            <span (click)="close(alert)">X</span>
+            <p> {{ alert.alert.message }} </p>
+        </div>
+    }
+</div>

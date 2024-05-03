@@ -7,7 +7,7 @@
         <ol>
             @for (button of options; track $index) {
                 <li>
-                    <button class="combo-button" (click)="execute(button.funct, button.args)">
+                    <button class="combo-button" (click)="execute(button.callback)">
                         @if (button.icon != undefined) {
                             <span class="combo-icon" [ngStyle]="{'color': button.icon.color}">{{ button.icon.icon }}</span>
                         }

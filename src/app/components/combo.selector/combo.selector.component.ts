@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { ModalButton } from '../../interfaces/modal.button';
 import { CommonModule } from '@angular/common';
+import { Callback } from '../../interfaces/callback';
 
 @Component({
   selector: 'app-combo-selector',
@@ -26,8 +27,8 @@ export class ComboSelectorComponent {
     this.status = !this.status;
   }
 
-  execute(func: Function, args?: any) {
-    func(args);
+  execute(calback: Callback<any>) {
+    calback.func(calback.args);
     this.status = false;
   }
 

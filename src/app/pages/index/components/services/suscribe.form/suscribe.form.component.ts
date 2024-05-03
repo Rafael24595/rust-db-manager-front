@@ -47,7 +47,6 @@ export class SuscribeFormComponent {
       complete: () => {
         this.closeModal();
         this.cleanForm();
-        console.log(this.next)
         this.next.func(this.next.args);
       }
     });

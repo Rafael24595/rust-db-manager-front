@@ -17,7 +17,7 @@ export class DialogFormComponent {
   @Input() height: string = "300px";
   @Input() title!: string;
   @Input() buttons: ModalButton[] = [
-    {title: "Close", funct: this.closeModal.bind(this)}
+    {title: "Close", callback: {func: this.closeModal.bind(this)}}
   ]
 
   closeModal() {

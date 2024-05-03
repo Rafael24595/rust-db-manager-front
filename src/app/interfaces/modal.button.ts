@@ -1,7 +1,8 @@
+import { Callback } from "./callback"
+
 export interface ModalButton {
     title: String,
-    funct: Function,
-    args?: any
+    callback: Callback<any>,
     icon?: {
         icon: string,
         color?: string

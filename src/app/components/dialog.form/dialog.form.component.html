@@ -7,7 +7,7 @@
     </div>
     <div class="modal-buttons">
         @for (button of buttons; track $index) {
-            <button class="modal-button" (click)="button.funct()">{{button.title}}</button>
+            <button class="modal-button" (click)="button.callback.func()">{{button.title}}</button>
         }
     </div>
 </dialog>

@@ -1,0 +1,15 @@
+#alert-container {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+
+.alert {
+    background: white;
+    border: 1px solid lightgray;
+    padding: 10px;
+    pointer-events: all;
+}
