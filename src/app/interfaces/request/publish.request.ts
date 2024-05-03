@@ -1,4 +1,4 @@
-import { ConnectionData } from "./connection.data";
+import { ConnectionData } from "../connection.data";
 
 export interface PublishRequest {
     name: string,

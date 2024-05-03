@@ -3,7 +3,7 @@
         <div class="table-title">
             <h3 class="title-text">Services [{{services.services.length}}]</h3>
             <div class="title-combo">
-                <button class="title-button" (click)="openModal()">
+                <button class="title-button" (click)="openPublishModal()">
                     <span class="plus-icon">+</span>
                 </button>
             </div>
@@ -40,8 +40,21 @@
     [height]="'375px'"
     [title]="'New Service'"
     [buttons]="[
-        {'title': 'Submit', 'funct': onSubmit.bind(this)},
-        {'title': 'Close', 'funct': closeModal.bind(this)}
-    ]">
-    <app-service-form [closeModal]="closeModal.bind(this)" [refreshData]="refreshServices.bind(this)"/>
+        {'title': 'Submit', 'funct': onPublish.bind(this)},
+        {'title': 'Close', 'funct': closePublishModal.bind(this)}
+    ]"
+    #publish_dialog>
+    <app-publish-form [closeModal]="closePublishModal.bind(this)" [refreshData]="refreshServices.bind(this)"/>
+</app-dialog-form>
+
+<app-dialog-form 
+    [widht]="'550px'"
+    [height]="'325px'"
+    [title]="'Suscribe Service'"
+    [buttons]="[
+        {'title': 'Submit', 'funct': onSuscribe.bind(this)},
+        {'title': 'Close', 'funct': closeSuscribeModal.bind(this)}
+    ]"
+    #suscribe_dialog>
+    <app-suscribe-form [closeModal]="closeSuscribeModal.bind(this)" [pointer]="suscribePointer" [next]="suscribeNext"/>
 </app-dialog-form>

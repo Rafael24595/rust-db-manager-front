@@ -3,7 +3,7 @@
         <tbody>
             <tr>
                 <td>
-                    <label for="category">Category:</label>
+                    <label for="category"><span class="required"></span> Category:</label>
                     <br>
                     <select name="category" id="category" [(ngModel)]="category" required>
                         <option value="" disabled selected>-- select one --</option>
@@ -15,14 +15,14 @@
                     </select>
                 </td>
                 <td>
-                    <label for="connection">Connection:</label>
+                    <label for="connection"><span class="required"></span> Connection:</label>
                     <br>
                     <input type="text" name="connection" [(ngModel)]="connection" required>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="name">Name:</label>
+                    <label for="name"><span class="required"></span> Name:</label>
                     <br>
                     <input type="text" name="name" [(ngModel)]="name" required>
                 </td>

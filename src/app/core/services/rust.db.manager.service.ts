@@ -6,12 +6,17 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ServerStatus } from '../../interfaces/server.status';
 import { ServiceCategory } from '../../interfaces/service.category';
-import { PublishRequest } from '../../interfaces/publish.request';
+import { PublishRequest } from '../../interfaces/request/publish.request';
+import { SuscribeRequest } from '../../interfaces/request/suscribe.request';
+import { ResponseException } from '../commons/response.exception';
+
+const CREDENTIALS_OPTIONS = { withCredentials: true };
 
 @Injectable({
   providedIn: 'root'
 })
 export class RustDbManagerService {
+
 
   constructor(private http: HttpClient) { }
 
@@ -28,14 +33,21 @@ export class RustDbManagerService {
   }
   
   publish(request: PublishRequest): Observable<void> {
-    return this.http.post<void>(`${environment.URL_SERVICE}/publish`, request, { withCredentials: true })
+    return this.http.post<void>(`${environment.URL_SERVICE}/publish`, request, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  suscribe(request: SuscribeRequest): Observable<void> {
+    return this.http.post<void>(`${environment.URL_SERVICE}/suscribe`, request, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   remove(service: string): Observable<void> {
-    return this.http.delete<void>(`${environment.URL_SERVICE}/${service}`, { withCredentials: true })
+    return this.http.delete<void>(`${environment.URL_SERVICE}/${service}`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );
@@ -47,7 +59,7 @@ export class RustDbManagerService {
     } else {
       console.error(`Backend returned code ${error.status}, body was: `, error.error);
     }
-    return throwError(() => new Error(error.message));
+    return throwError(() => new ResponseException(error.status, error.message, error.error));
   }
 
 }

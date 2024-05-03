@@ -1,0 +1,19 @@
+<form>
+    <div class="table-form-description">
+        <p><span class="required"></span><span class="service-name"> {{ pointer }} </span>service is protected. Please provide the password. </p>
+    </div>
+    <table class="table-form">
+        <tbody>
+            <tr>
+                <td>
+                    <label for="password">Password:</label>
+                    <br>
+                    <div class="password-input">
+                        <input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password">
+                        <button class="password-input-eye" (click)="togglePasswordVisibility()" [ngClass]="showPassword ? 'active' : ''">👁</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
