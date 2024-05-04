@@ -7,17 +7,16 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
 import { PublishFormComponent } from '../publish.form/publish.form.component';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
-import { SuscribeFormComponent } from '../suscribe.form/suscribe.form.component';
 import { ResponseException } from '../../../../../core/commons/response.exception';
-import { Callback } from '../../../../../interfaces/callback';
 import { AlertModalComponent } from '../../../../../components/alert.modal/alert.modal.component';
 import { AlertService } from '../../../../../core/services/alert.service';
 import { RouterModule } from '@angular/router';
+import { ServiceSuscribeService } from '../../../../../core/services/service.suscribe.service';
 
 @Component({
   selector: 'app-table-elements',
   standalone: true, 
-  imports: [AsyncPipe, CommonModule, RouterModule, AlertModalComponent, ComboSelectorComponent, DialogFormComponent, PublishFormComponent, SuscribeFormComponent],
+  imports: [AsyncPipe, CommonModule, RouterModule, AlertModalComponent, ComboSelectorComponent, DialogFormComponent, PublishFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
@@ -25,15 +24,10 @@ export class TableServicesComponent {
   
   @ViewChild('publish_dialog') publishDialog!: DialogFormComponent;
   @ViewChild(PublishFormComponent) publishForm!: PublishFormComponent;
-  @ViewChild('suscribe_dialog') suscribeDialog!: DialogFormComponent;
-  @ViewChild(SuscribeFormComponent) suscribeForm!: SuscribeFormComponent;
 
   public services!: Observable<Paginable<ServiceLite>>;
 
-  public suscribePointer!: string;
-  public suscribeNext!: Callback<String>;
-
-  constructor(private alert: AlertService, private service: RustDbManagerService) {
+  constructor(private alert: AlertService, private service: RustDbManagerService, private serviceSuscribe: ServiceSuscribeService) {
   }
 
   ngOnInit(): void {
@@ -56,20 +50,6 @@ export class TableServicesComponent {
     this.publishForm.onSubmit();
   }
 
-  openSuscribeModal(pointer: string, next: Callback<String>) {
-    this.suscribePointer = pointer;
-    this.suscribeNext = next;
-    this.suscribeDialog.openModal();
-  }
-
-  closeSuscribeModal() {
-    this.suscribeDialog.closeModal();
-  }
-
-  onSuscribe() {
-    this.suscribeForm.onSubmit();
-  }
-
   remove(code: string) {
     this.service.remove(code).subscribe({
       error: (e: ResponseException) => {
@@ -80,9 +60,12 @@ export class TableServicesComponent {
         }
 
         if(status && status > 399 && status < 500) {
-          this.openSuscribeModal(code, {
-            func: this.remove.bind(this),
-            args: code
+          this.serviceSuscribe.suscribe({
+            service: code,
+            suscribeCallback: {
+              func: this.remove.bind(this),
+              args: code
+            }
           });
           return;
         }

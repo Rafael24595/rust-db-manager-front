@@ -22,7 +22,7 @@
                                 </a>
                             </td>
                             <td [routerLink]="['/data-base', service.name]">
-                                {{service.name}}
+                                <p class="light-link">{{service.name}}</p>
                             </td>
                             <td>
                                 <app-combo-selector [options]="[
@@ -51,16 +51,4 @@
     ]"
     #publish_dialog>
     <app-publish-form [closeModal]="closePublishModal.bind(this)" [refreshData]="refreshServices.bind(this)"/>
-</app-dialog-form>
-
-<app-dialog-form 
-    [widht]="'550px'"
-    [height]="'325px'"
-    [title]="'Suscribe Service'"
-    [buttons]="[
-        {title: 'Suscribe', callback: {func: onSuscribe.bind(this)}},
-        {title: 'Close', 'callback': {func: closeSuscribeModal.bind(this)}}
-    ]"
-    #suscribe_dialog>
-    <app-suscribe-form [closeModal]="closeSuscribeModal.bind(this)" [pointer]="suscribePointer" [next]="suscribeNext"/>
 </app-dialog-form>

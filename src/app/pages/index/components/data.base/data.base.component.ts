@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RustDbManagerService } from '../../../../core/services/rust.db.manager.service';
 import { ResponseException } from '../../../../core/commons/response.exception';
 import { AlertService } from '../../../../core/services/alert.service';
+import { ServiceSuscribeService } from '../../../../core/services/service.suscribe.service';
 
 @Component({
   selector: 'app-data.base',
@@ -15,31 +16,39 @@ export class DataBaseComponent {
 
   public dataBase!: string;
 
-  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private service: RustDbManagerService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private service: RustDbManagerService, private serviceSuscribe: ServiceSuscribeService) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.dataBase = id ? id : "";
-    this.service.serviceStatus(id ? id : "").subscribe({
+    const route = this.route.snapshot.paramMap.get('id');
+    const id = route ? route : "";
+    this.service.serviceStatus(id).subscribe({
       error: (e: ResponseException) => {
         let status = e.status;
         if(status == 404) {
           this.alert.alert(`Service ${id} not found.`);
-          this.router.navigate(["services"]);
+          this.exit();
           return;
         }
 
-        /*if(status && status > 399 && status < 500) {
-          this.openSuscribeModal(code, {
-            func: this.remove.bind(this),
-            args: code
+        if(status && status > 399 && status < 500) {
+          this.serviceSuscribe.suscribe({
+            service: id,
+            closeCallback: {
+              func: this.exit.bind(this)
+            }
           });
           return;
-        }*/
+        }
+
         console.error(e);
         this.alert.alert(e.message);
-      }
+      },
+      complete: () => this.dataBase = id
     })
+  }
+
+  exit() {
+    this.router.navigate(["services"])
   }
 
 }

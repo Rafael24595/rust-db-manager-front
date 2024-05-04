@@ -4,6 +4,13 @@ html, body {
     overflow: auto;
 }
 
+.light-link {
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 0px;
+}
+
 .required:after {
     content: '\002A';
     font-weight: bold;
