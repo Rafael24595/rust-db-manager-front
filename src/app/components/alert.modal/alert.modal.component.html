@@ -1,11 +1,23 @@
 <div id="alert-container">
     @for (alert of alerts; track $index) {
-        <div class="alert">
-            @if (alert.alert.title) {
-                <p> {{ alert.alert.title }} </p>
-            }
-            <span (click)="close(alert)">X</span>
-            <p> {{ alert.alert.message }} </p>
+        <div class="alert" [ngStyle]="{'background': alert.alert.color}">
+            <div class="alert-header">
+                <span (click)="close(alert)">X</span>
+            </div>
+            <div class="alert-body">
+                @if (alert.alert.title) {
+                    <h4 class="alert-title"> {{ alert.alert.title }}: </h4>
+                }
+                <div class="alert-content">
+                    @if (alert.alert.icon) {
+                        <span class="alert-icon"> {{ alert.alert.icon }} </span>
+                    }
+                    <p class="alert-message"> {{ alert.alert.message }} </p>
+                </div>
+            </div>
+            <div class="alert-footer">
+                <button class="title-button">Ok</button>
+            </div>
         </div>
     }
 </div>

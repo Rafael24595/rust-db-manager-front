@@ -6,6 +6,7 @@ import { ServiceCategory } from '../../../../../interfaces/service.category';
 import { FormsModule } from '@angular/forms';
 import { PublishRequest } from '../../../../../interfaces/request/publish.request';
 import { ResponseException } from '../../../../../core/commons/response.exception';
+import { AlertService } from '../../../../../core/services/alert.service';
 
 @Component({
   selector: 'app-publish-form',
@@ -29,7 +30,7 @@ export class PublishFormComponent {
   public showPassword: boolean;
   public password: string;
 
-  constructor(private service: RustDbManagerService) {
+  constructor(private alert: AlertService, private service: RustDbManagerService) {
     this.closeModal = () => {};
     this.refreshData = () => {};
     this.category = "";
@@ -60,8 +61,7 @@ export class PublishFormComponent {
       error: (e: ResponseException) => {
         console.error(`${e}\nNumber of attemps: ${attemps+1}`);
         if(attemps > 1) {
-          //TODO: Use custom alert infrastructure.
-          alert(e);
+          this.alert.alert(e.message);
           return;
         }
         console.error(`${e}\nTrying to enable a new connection.`);

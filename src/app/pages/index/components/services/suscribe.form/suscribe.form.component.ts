@@ -5,6 +5,7 @@ import { SuscribeRequest } from '../../../../../interfaces/request/suscribe.requ
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { Callback } from '../../../../../interfaces/callback';
+import { AlertService } from '../../../../../core/services/alert.service';
 
 @Component({
   selector: 'app-suscribe-form',
@@ -22,7 +23,7 @@ export class SuscribeFormComponent {
   public showPassword: boolean;
   public password: string;
 
-  constructor(private service: RustDbManagerService) {
+  constructor(private alert: AlertService, private service: RustDbManagerService) {
     this.closeModal = () => {};
     this.next = {func: () => {}};
     this.showPassword = false;
@@ -39,8 +40,7 @@ export class SuscribeFormComponent {
     this.service.suscribe(request).subscribe({
       error: (e: ResponseException) => {
         const message = "Incorrect password."
-        //TODO: Use custom alert infrastructure.
-        alert(message);
+        this.alert.alert(message);
 
         console.error(e);
       },

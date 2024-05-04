@@ -10,11 +10,13 @@ import { ComboSelectorComponent } from '../../../../../components/combo.selector
 import { SuscribeFormComponent } from '../suscribe.form/suscribe.form.component';
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { Callback } from '../../../../../interfaces/callback';
+import { AlertModalComponent } from '../../../../../components/alert.modal/alert.modal.component';
+import { AlertService } from '../../../../../core/services/alert.service';
 
 @Component({
   selector: 'app-table-elements',
-  standalone: true,
-  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, DialogFormComponent, PublishFormComponent, SuscribeFormComponent],
+  standalone: true, 
+  imports: [AsyncPipe, CommonModule, AlertModalComponent, ComboSelectorComponent, DialogFormComponent, PublishFormComponent, SuscribeFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
@@ -30,7 +32,7 @@ export class TableServicesComponent {
   public suscribePointer!: string;
   public suscribeNext!: Callback<String>;
 
-  constructor(private service: RustDbManagerService) {}
+  constructor(private alert: AlertService, private service: RustDbManagerService) {}
 
   ngOnInit(): void {
     this.services = this.service.services();
@@ -78,9 +80,7 @@ export class TableServicesComponent {
           return;
         }
         console.error(e);
-
-        //TODO: Use custom alert infrastructure.
-        alert(e);
+        this.alert.alert(e.message);
       },
       complete: () => this.refreshServices()
     });

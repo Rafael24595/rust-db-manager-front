@@ -35,16 +35,12 @@
 .combo-close {
     display: flex;
     justify-content: flex-end;
-    font-family: sans-serif;
+    font-family: cursive;
     font-size: small;
     font-weight: bold;
     padding: 5px;
     margin: 5px;
     border-bottom: 1px solid lightgray;
-}
-
-.combo-close:hover {
-    color: dimgray;
 }
 
 .combo-close-icon {
