@@ -12,11 +12,12 @@ import { ResponseException } from '../../../../../core/commons/response.exceptio
 import { Callback } from '../../../../../interfaces/callback';
 import { AlertModalComponent } from '../../../../../components/alert.modal/alert.modal.component';
 import { AlertService } from '../../../../../core/services/alert.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-table-elements',
   standalone: true, 
-  imports: [AsyncPipe, CommonModule, AlertModalComponent, ComboSelectorComponent, DialogFormComponent, PublishFormComponent, SuscribeFormComponent],
+  imports: [AsyncPipe, CommonModule, RouterModule, AlertModalComponent, ComboSelectorComponent, DialogFormComponent, PublishFormComponent, SuscribeFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
@@ -32,7 +33,8 @@ export class TableServicesComponent {
   public suscribePointer!: string;
   public suscribeNext!: Callback<String>;
 
-  constructor(private alert: AlertService, private service: RustDbManagerService) {}
+  constructor(private alert: AlertService, private service: RustDbManagerService) {
+  }
 
   ngOnInit(): void {
     this.services = this.service.services();
@@ -72,6 +74,11 @@ export class TableServicesComponent {
     this.service.remove(code).subscribe({
       error: (e: ResponseException) => {
         let status = e.status;
+        if(status == 404) {
+          this.alert.alert(`Service ${code} not found.`);
+          return;
+        }
+
         if(status && status > 399 && status < 500) {
           this.openSuscribeModal(code, {
             func: this.remove.bind(this),
@@ -79,6 +86,7 @@ export class TableServicesComponent {
           });
           return;
         }
+
         console.error(e);
         this.alert.alert(e.message);
       },

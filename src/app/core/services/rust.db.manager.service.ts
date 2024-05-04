@@ -52,6 +52,10 @@ export class RustDbManagerService {
         catchError(this.handleError)
       );
   }
+  
+  serviceStatus(service: string): Observable<ServiceCategory[]> {
+    return this.http.get<ServiceCategory[]>(`${environment.URL_SERVICE}/${service}/status`);
+  }
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {

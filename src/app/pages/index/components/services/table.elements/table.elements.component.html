@@ -21,10 +21,16 @@
                                     <span class="db-title">{{service.category.category}}</span>
                                 </a>
                             </td>
-                            <td>{{service.name}}</td>
+                            <td [routerLink]="['/data-base', service.name]">
+                                {{service.name}}
+                            </td>
                             <td>
                                 <app-combo-selector [options]="[
-                                    {title: 'Remove', callback: {func: remove.bind(this), args: service.name}, icon: {icon: '🗑', color: 'crimson'}}
+                                    {
+                                        title: 'Remove', 
+                                        callback: {func: remove.bind(this), args: service.name}, 
+                                        icon: {icon: '🗑', color: 'crimson'}
+                                    }
                                 ]"/>
                             </td>
                         </tr>
