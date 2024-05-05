@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ServiceLite } from '../../../../../interfaces/service.lite';
-import { Observable, lastValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Paginable } from '../../../../../interfaces/paginable';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
