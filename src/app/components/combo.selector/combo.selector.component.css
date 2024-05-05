@@ -30,6 +30,8 @@
     background-color: black;
     border-radius: 50%;
     margin: 1px;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 .combo-close {
@@ -41,6 +43,16 @@
     padding: 5px;
     margin: 5px;
     border-bottom: 1px solid lightgray;
+}
+
+.combo-table {
+    width: 100%;
+    padding: 15px;
+}
+
+.combo-table th, .combo-table td {
+    border: none;
+    padding: 0px;
 }
 
 .combo-close-icon {
@@ -82,6 +94,6 @@
 }
 
 .combo-icon {
-    font-size: x-large;
-    margin-right: 10px;
+    font-size: 1.55em;
+    margin-right: 5px;
 }

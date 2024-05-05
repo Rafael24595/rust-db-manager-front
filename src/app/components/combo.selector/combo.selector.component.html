@@ -4,18 +4,26 @@
         <span class="combo-close">
             <div class="combo-close-icon" (click)="switchStatus()">X</div>
         </span>
-        <ol>
-            @for (button of options; track $index) {
-                <li>
-                    <button class="combo-button" (click)="execute(button.callback)">
+        <table class="combo-table">
+            <tbody>
+                @for (button of options; track $index) {
+                    <tr>
                         @if (button.icon != undefined) {
-                            <span class="combo-icon" [ngStyle]="{'color': button.icon.color}">{{ button.icon.icon }}</span>
+                            <td>
+                                <button class="combo-button combo-icon" (click)="execute(button.callback)"  [ngStyle]="{'color': button.icon.color}">
+                                    {{ button.icon.icon }}
+                                </button>
+                            </td>
                         }
-                        {{ button.title }}
-                    </button>
-                </li>
-            }
-        </ol>
+                        <td>
+                            <button class="combo-button" (click)="execute(button.callback)">
+                                {{ button.title }}
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
     <button class="candies-button" (click)="switchStatus()">
         <div class="candy-button"></div>
