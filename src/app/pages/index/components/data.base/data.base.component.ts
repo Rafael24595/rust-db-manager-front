@@ -41,9 +41,12 @@ export class DataBaseComponent {
           });
           return;
         }
+        
+        if(status != 0) {
+          this.alert.alert(e.message);
+        }
 
         console.error(e);
-        this.alert.alert(e.message);
       },
       complete: () => this.dataBase = id
     })

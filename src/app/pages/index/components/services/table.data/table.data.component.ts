@@ -13,7 +13,7 @@ import { AsyncPipe } from '@angular/common';
 })
 export class TableDataComponent {
 
-  public status!: Observable<ServerStatus>;
+  public metadata!: Observable<ServerStatus>;
 
   constructor(private service: RustDbManagerService) {
   }
@@ -23,7 +23,7 @@ export class TableDataComponent {
   }
 
   refreshData() {
-    this.status = this.service.status();
+    this.metadata = this.service.metadata();
   }
 
   formatDate(timestamp: number): string {
