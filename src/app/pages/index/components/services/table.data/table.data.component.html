@@ -1,10 +1,10 @@
-<div>
-    <div class="table-title">
-        <h3 class="title-text">Server Status</h3>
-    </div>
-    <div class="table-content">
-        <table class="table-base even-odd">
-            @if(status | async; as status) {
+@if(status | async; as status) {
+    <div>
+        <div class="table-title">
+            <h3 class="title-text">Server Status</h3>
+        </div>
+        <div class="table-content">
+            <table class="table-base even-odd">
                 <tr>
                     <td class="data-key">Session Id</td>
                     <td>{{status.session_id}}</td>
@@ -41,7 +41,7 @@
                     <td class="data-key">Cargo Version</td>
                     <td>{{status.cargo_version}}</td>
                 </tr>
-            }
-        </table>
+            </table>
+        </div>
     </div>
-</div>
+}

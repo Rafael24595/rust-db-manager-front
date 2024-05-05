@@ -4,7 +4,7 @@ import { AlertService } from '../../../../../core/services/alert.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 
 @Component({
-  selector: 'app-table.elements',
+  selector: 'app-table-elements',
   standalone: true,
   imports: [],
   templateUrl: './table.elements.component.html',

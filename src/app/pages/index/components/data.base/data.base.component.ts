@@ -4,11 +4,13 @@ import { RustDbManagerService } from '../../../../core/services/rust.db.manager.
 import { ResponseException } from '../../../../core/commons/response.exception';
 import { AlertService } from '../../../../core/services/alert.service';
 import { ServiceSuscribeService } from '../../../../core/services/service.suscribe.service';
+import { TableElementsComponent } from './table.elements/table.elements.component';
+import { TableDataComponent } from './table.data/table.data.component';
 
 @Component({
   selector: 'app-data.base',
   standalone: true,
-  imports: [],
+  imports: [TableElementsComponent, TableDataComponent],
   templateUrl: './data.base.component.html',
   styleUrl: './data.base.component.css'
 })
