@@ -1,6 +1,6 @@
 import { ServiceCategory } from "./service.category";
 
 export interface ServiceLite {
-    name: String,
+    name: string,
     category: ServiceCategory
 }

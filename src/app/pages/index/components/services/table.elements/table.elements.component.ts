@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ServiceLite } from '../../../../../interfaces/service.lite';
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { Paginable } from '../../../../../interfaces/paginable';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
@@ -10,7 +10,7 @@ import { ComboSelectorComponent } from '../../../../../components/combo.selector
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { AlertModalComponent } from '../../../../../components/alert.modal/alert.modal.component';
 import { AlertService } from '../../../../../core/services/alert.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ServiceSuscribeService } from '../../../../../core/services/service.suscribe.service';
 
 @Component({
@@ -26,16 +26,18 @@ export class TableServicesComponent {
   @ViewChild(PublishFormComponent) publishForm!: PublishFormComponent;
 
   public services!: Observable<Paginable<ServiceLite>>;
+  public status: {[key:string]: string} = {}
 
-  constructor(private alert: AlertService, private service: RustDbManagerService, private serviceSuscribe: ServiceSuscribeService) {
+  constructor(private router: Router, private alert: AlertService, private service: RustDbManagerService, private serviceSuscribe: ServiceSuscribeService) {
   }
 
   ngOnInit(): void {
-    this.services = this.service.services();
+    this.refreshServices();
   }
 
   refreshServices() {
     this.services = this.service.services();
+    this.verifyAllStatus();
   }
 
   openPublishModal() {
@@ -48,6 +50,18 @@ export class TableServicesComponent {
 
   onPublish() {
     this.publishForm.onSubmit();
+  }
+
+  verifyAllStatus() {
+    this.services.forEach(n => n.services.forEach(v => this.verifyStatus(v.name)))
+  }
+
+  verifyStatus(service: string) {
+    this.status[service] = "connecting";
+    this.service.serviceStatus(service).subscribe({
+      next: (status: string) => this.status[service] = status,
+      error: () => this.status[service] = "error",
+    });
   }
 
   remove(code: string) {
@@ -75,6 +89,10 @@ export class TableServicesComponent {
       },
       complete: () => this.refreshServices()
     });
+  }
+
+  loadService(service: string) {
+    this.router.navigate(["/data-base", service])
   }
 
 }

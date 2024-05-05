@@ -53,8 +53,8 @@ export class RustDbManagerService {
       );
   }
   
-  serviceStatus(service: string): Observable<ServiceCategory[]> {
-    return this.http.get<ServiceCategory[]>(`${environment.URL_SERVICE}/${service}/status`, CREDENTIALS_OPTIONS);
+  serviceStatus(service: string): Observable<string> {
+    return this.http.get(`${environment.URL_SERVICE}/${service}/status`, { withCredentials: true, responseType: 'text' });
   }
 
   private handleError(error: HttpErrorResponse) {
