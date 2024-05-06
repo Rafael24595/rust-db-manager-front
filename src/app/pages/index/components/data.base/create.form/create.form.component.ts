@@ -31,7 +31,7 @@ export class CreateFormComponent {
   }
 
   ngOnInit(): void {
-    const route = this.route.snapshot.paramMap.get('id');
+    const route = this.route.snapshot.paramMap.get("service");
     this.service = route ? route : "";
   }
 
@@ -40,7 +40,7 @@ export class CreateFormComponent {
       data_base: this.dataBase
     };
     
-    this.resolver.createDatabase(this.service, request).subscribe({
+    this.resolver.dataBaseCreate(this.service, request).subscribe({
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
           service: this.service,

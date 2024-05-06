@@ -3,19 +3,23 @@ import { ResponseException } from '../commons/response.exception';
 import { AlertService } from './alert.service';
 import { ServiceSuscribeService } from './service.suscribe.service';
 import { ServiceSuscribe } from '../../interfaces/service.suscribe';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResponseHandlerService {
 
-  constructor(private alert: AlertService, private suscribe: ServiceSuscribeService) {
+  constructor(private alert: AlertService, private utils: UtilsService, private suscribe: ServiceSuscribeService) {
   }
 
   autentication(e: ResponseException, service: ServiceSuscribe): boolean {
     let status = e.status;
     if(status == 404) {
-      this.alert.alert(`Service ${service} not found.`);
+      this.alert.alert(`Service ${service.service} not found.`);
+      if(service.closeCallback) {
+        this.utils.executeCallback(service.closeCallback);
+      }
       return true;
     }
 

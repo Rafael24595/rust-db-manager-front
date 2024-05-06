@@ -1,46 +1,49 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RustDbManagerService } from '../../../../core/services/rust.db.manager.service';
-import { ResponseException } from '../../../../core/commons/response.exception';
-import { AlertService } from '../../../../core/services/alert.service';
-import { ServiceSuscribeService } from '../../../../core/services/service.suscribe.service';
 import { TableElementsComponent } from './table.elements/table.elements.component';
 import { TableDataComponent } from './table.data/table.data.component';
+import { ResponseException } from '../../../../core/commons/response.exception';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertService } from '../../../../core/services/alert.service';
 import { DbLogoService } from '../../../../core/services/db.logo.service';
 import { ResponseHandlerService } from '../../../../core/services/response.handler.service';
+import { RustDbManagerService } from '../../../../core/services/rust.db.manager.service';
+import { ServiceSuscribeService } from '../../../../core/services/service.suscribe.service';
 
 @Component({
-  selector: 'app-data-base',
+  selector: 'app-collection',
   standalone: true,
   imports: [TableElementsComponent, TableDataComponent],
-  templateUrl: './data.base.component.html',
-  styleUrl: './data.base.component.css'
+  templateUrl: './collection.component.html',
+  styleUrl: './collection.component.css'
 })
-export class DataBaseComponent {
+export class CollectionComponent {
 
   public service!: string;
+  public dataBase!: string;
 
   constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService, private suscribe: ServiceSuscribeService) { }
 
   ngOnInit(): void {
     const oService = this.route.snapshot.paramMap.get("service");
     const service = oService ? oService : "";
-    this.resolver.serviceStatus(service).subscribe({
+    const oDataBase = this.route.snapshot.paramMap.get("data_base");
+    const dataBase = oDataBase ? oDataBase : "";
+    this.resolver.dataBaseStatus(service, dataBase).subscribe({
       error: (e: ResponseException) => {
-        this.checkServiceResponse(e, service);
+        this.checkServiceResponse(e, service, dataBase);
       },
       complete: () => {
-        this.refreshData(service);
+        this.refreshData(service, dataBase);
       }
-    })
+    });
   }
 
-  checkServiceResponse(e: ResponseException, service: string) {
+  checkServiceResponse(e: ResponseException, service: string, dataBase: string) {
     if(this.handler.autentication(e, {
       service: service,
       suscribeCallback: {
         func: this.refreshData.bind(this),
-        args: [service]
+        args: [service, dataBase]
       },
       closeCallback: {
         func: this.exit.bind(this)
@@ -56,13 +59,13 @@ export class DataBaseComponent {
     console.error(e);
   }
 
-  refreshData(service: string) {
+  refreshData(service: string, dataBase: string) {
     this.service = service;
+    this.dataBase = dataBase;
     this.logo.set(this.service);
   }
 
   exit() {
-    console.log("xxx")
     this.router.navigate(["service"])
   }
 

@@ -76,22 +76,50 @@ export class RustDbManagerService {
       );
   }
 
-  serviceDatabases(service: string): Observable<string[]> {
+  dataBaseFindAll(service: string): Observable<string[]> {
     return this.http.get<string[]>(`${environment.URL_SERVICE}/${service}/data-base`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  createDatabase(service: string, request: CreateDBRequest): Observable<void> {
+  dataBaseCreate(service: string, request: CreateDBRequest): Observable<void> {
     return this.http.post<void>(`${environment.URL_SERVICE}/${service}/data-base`, request, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  dropDatabase(service: string, database: string): Observable<void> {
+  dataBaseDrop(service: string, database: string): Observable<void> {
     return this.http.delete<void>(`${environment.URL_SERVICE}/${service}/data-base/${database}`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  dataBaseStatus(service: string, database: string): Observable<DataBaseGroup[]> {
+    return this.http.get<DataBaseGroup[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/metadata`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionFindAllLite(service: string, database: string): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionDrop(service: string, database: string, collection: string): Observable<void> {
+    return this.http.delete<void>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionFindAll(service: string, database: string, collection: string): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

@@ -33,9 +33,7 @@ export class SuscribeFormComponent {
 
   ngOnInit(): void {
     this.suscribe.onRequest().subscribe((request: ServiceSuscribe) => {
-      console.log(request)
       this.request = request;
-      console.log(this.suscribeDialog)
       this.suscribeDialog.openModal();
     });
   }
@@ -63,7 +61,7 @@ export class SuscribeFormComponent {
         console.error(e);
       },
       complete: () => {
-        this.closeModal();
+        this.suscribeDialog.closeModal();
         this.cleanForm();
         if(this.request.suscribeCallback) {
           this.utils.executeCallback(this.request.suscribeCallback);

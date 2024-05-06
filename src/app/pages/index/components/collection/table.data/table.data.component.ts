@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { AlertService } from '../../../../../core/services/alert.service';
-import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
 import { DataBaseGroup } from '../../../../../interfaces/metadata/data.base.group';
+import { ActivatedRoute } from '@angular/router';
 import { UtilsService } from '../../../../../core/services/utils.service';
+import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-table-data',
@@ -17,6 +16,8 @@ import { UtilsService } from '../../../../../core/services/utils.service';
 export class TableDataComponent {
 
   public service!: string;
+  public dataBase!: string;
+
 
   public metadata!: Observable<DataBaseGroup[]>;
 
@@ -24,13 +25,15 @@ export class TableDataComponent {
   }
 
   ngOnInit(): void {
-    const route = this.route.snapshot.paramMap.get("service");
-    this.service = route ? route : "";
+    const oService = this.route.snapshot.paramMap.get("service");
+    this.service = oService ? oService : "";
+    const oDataBase = this.route.snapshot.paramMap.get("data_base");
+    this.dataBase = oDataBase ? oDataBase : "";
     this.refreshData();
   }
 
   refreshData() {
-    this.metadata = this.resolver.serviceMetadata(this.service);
+    this.metadata = this.resolver.dataBaseStatus(this.service, this.dataBase);
   }
 
 }

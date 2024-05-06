@@ -30,13 +30,13 @@ export class TableElementsComponent {
   }
 
   ngOnInit(): void {
-    const route = this.route.snapshot.paramMap.get('id');
+    const route = this.route.snapshot.paramMap.get("service");
     this.service = route ? route : "";
     this.refreshData();
   }
 
   refreshData() {
-    this.dataBases = this.resolver.serviceDatabases(this.service);
+    this.dataBases = this.resolver.dataBaseFindAll(this.service);
   }
 
   openModal() {
@@ -52,7 +52,7 @@ export class TableElementsComponent {
   }
 
   remove(dataBase: string) {
-    this.resolver.dropDatabase(this.service, dataBase).subscribe({
+    this.resolver.dataBaseDrop(this.service, dataBase).subscribe({
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
           service: this.service,
@@ -70,7 +70,7 @@ export class TableElementsComponent {
     });
   }
 
-  loadService(dataBase: string) {
+  loadDataBase(dataBase: string) {
     this.router.navigate(["/service", this.service, dataBase])
   }
 
