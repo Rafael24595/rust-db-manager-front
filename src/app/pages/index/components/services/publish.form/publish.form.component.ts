@@ -6,7 +6,7 @@ import { ServiceCategory } from '../../../../../interfaces/response/service.cate
 import { FormsModule } from '@angular/forms';
 import { PublishRequest } from '../../../../../interfaces/request/publish.request';
 import { ResponseException } from '../../../../../core/commons/response.exception';
-import { AlertService } from '../../../../../core/services/alert.service';
+import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 
 @Component({
   selector: 'app-publish-form',
@@ -30,7 +30,7 @@ export class PublishFormComponent {
   public showPassword: boolean;
   public password: string;
 
-  constructor(private alert: AlertService, private resolver: RustDbManagerService) {
+  constructor(private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.closeModal = () => {};
     this.refreshData = () => {};
     this.category = "";
@@ -59,13 +59,7 @@ export class PublishFormComponent {
     
     this.resolver.publish(request).subscribe({
       error: (e: ResponseException) => {
-        console.error(`${e}\nNumber of attemps: ${attemps+1}`);
-        if(attemps > 1) {
-          this.alert.alert(e.message);
-          return;
-        }
-        console.error(`${e}\nTrying to enable a new connection.`);
-        this.onSubmit(attemps+1);
+        this.handler.requestAttemp(e, this.onSubmit.bind(this), attemps);
       },
       complete: () => {
         this.closeModal();

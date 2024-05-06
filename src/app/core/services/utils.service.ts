@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DataBaseGroup } from '../../interfaces/metadata/data.base.group';
+import { Callback } from '../../interfaces/callback';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,13 @@ export class UtilsService {
       .forEach(g => g.fields.
         sort((f1, f2) => f1.order - f2.order));
     return data;
+  }
+
+  executeCallback(callback: Callback) {
+    if(callback.args != undefined) {
+      return callback.func(...callback.args);
+    }
+    return callback.func();
   }
 
 }

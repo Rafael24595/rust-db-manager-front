@@ -1,4 +1,4 @@
-export interface Callback<T> {
+export interface Callback {
     func: Function,
-    args?: T
+    args?: any[]
 }

@@ -8,6 +8,7 @@ import { AlertService } from '../../../../core/services/alert.service';
 import { DialogFormComponent } from '../../../../components/dialog.form/dialog.form.component';
 import { ServiceSuscribeService } from '../../../../core/services/service.suscribe.service';
 import { ServiceSuscribe } from '../../../../interfaces/service.suscribe';
+import { UtilsService } from '../../../../core/services/utils.service';
 
 @Component({
   selector: 'app-suscribe-form',
@@ -25,7 +26,7 @@ export class SuscribeFormComponent {
   public showPassword: boolean;
   public password: string;
 
-  constructor(private alert: AlertService, private suscribe: ServiceSuscribeService, private resolver: RustDbManagerService) {
+  constructor(private alert: AlertService, private utils: UtilsService, private suscribe: ServiceSuscribeService, private resolver: RustDbManagerService) {
     this.showPassword = false;
     this.password = "";
   }
@@ -65,8 +66,7 @@ export class SuscribeFormComponent {
         this.closeModal();
         this.cleanForm();
         if(this.request.suscribeCallback) {
-          const callback = this.request.suscribeCallback;
-          callback.func(callback.args);
+          this.utils.executeCallback(this.request.suscribeCallback);
         }
       }
     });

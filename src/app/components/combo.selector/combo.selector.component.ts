@@ -2,6 +2,7 @@ import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/
 import { ModalButton } from '../../interfaces/modal.button';
 import { CommonModule } from '@angular/common';
 import { Callback } from '../../interfaces/callback';
+import { UtilsService } from '../../core/services/utils.service';
 
 @Component({
   selector: 'app-combo-selector',
@@ -18,7 +19,7 @@ export class ComboSelectorComponent {
 
   public status: boolean;
 
-  constructor(private elementRef: ElementRef) {
+  constructor(private elementRef: ElementRef, private utils: UtilsService) {
     this.options  = [];
     this.status = false;
   }
@@ -27,8 +28,8 @@ export class ComboSelectorComponent {
     this.status = !this.status;
   }
 
-  execute(calback: Callback<any>) {
-    calback.func(calback.args);
+  execute(calback: Callback) {
+    this.utils.executeCallback(calback);
     this.status = false;
   }
 

@@ -85,6 +85,10 @@ html, body {
     padding: 10px;
 }
 
+.combo-field {
+    width: 100px;
+}
+
 .data-key {
     font-weight: bold;
 }

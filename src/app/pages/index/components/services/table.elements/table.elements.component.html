@@ -27,24 +27,24 @@
                                     <span class="db-title">{{service.category.category}}</span>
                                 </a>
                             </td>
-                            <td [routerLink]="['/service', service.name]">
+                            <td (click)="loadService(service.name)">
                                 <p class="light-link">{{service.name}}</p>
                             </td>
                             <td class="combo-field">
                                 <app-combo-selector [options]="[
                                     {
                                         title: 'Remove', 
-                                        callback: {func: remove.bind(this), args: service.name}, 
+                                        callback: {func: remove.bind(this), args: [service.name]}, 
                                         icon: {icon: '🗑'}
                                     },
                                     {
                                         title: 'View', 
-                                        callback: {func: loadService.bind(this), args: service.name}, 
+                                        callback: {func: loadService.bind(this), args: [service.name]}, 
                                         icon: {icon: '⇨'}
                                     },
                                     {
                                         title: 'Status', 
-                                        callback: {func: verifyStatus.bind(this), args: service.name}, 
+                                        callback: {func: verifyStatus.bind(this), args: [service.name]}, 
                                         icon: {icon: '✓'}
                                     }
                                 ]"/>
@@ -62,9 +62,9 @@
     [height]="'375px'"
     [title]="'New Service'"
     [buttons]="[
-        {title: 'Publish', callback: {func: onPublish.bind(this)}},
+        {title: 'Publish', callback: {func: onSubmit.bind(this)}},
         {title: 'Close', callback: {func: closeModal.bind(this)}}
     ]"
     #form_dialog>
-    <app-publish-form [closeModal]="closeModal.bind(this)" [refreshData]="refreshServices.bind(this)"/>
+    <app-publish-form [closeModal]="closeModal.bind(this)" [refreshData]="refreshData.bind(this)"/>
 </app-dialog-form>

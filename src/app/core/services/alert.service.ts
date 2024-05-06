@@ -10,9 +10,6 @@ const DEFAULT_TIME: number = 6000;
 export class AlertService {
   
   private subject = new Subject<AlertData>();
-  
-  constructor() {
-  }
 
   onAlert(): Observable<AlertData> {
     return this.subject.asObservable();

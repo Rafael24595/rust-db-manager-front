@@ -11,7 +11,7 @@ import { ResponseException } from '../../../../../core/commons/response.exceptio
 import { AlertModalComponent } from '../../../../../components/alert.modal/alert.modal.component';
 import { AlertService } from '../../../../../core/services/alert.service';
 import { Router, RouterModule } from '@angular/router';
-import { ServiceSuscribeService } from '../../../../../core/services/service.suscribe.service';
+import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 
 @Component({
   selector: 'app-table-elements',
@@ -23,19 +23,19 @@ import { ServiceSuscribeService } from '../../../../../core/services/service.sus
 export class TableServicesComponent {
   
   @ViewChild('form_dialog') formDialog!: DialogFormComponent;
-  @ViewChild(PublishFormComponent) publishForm!: PublishFormComponent;
+  @ViewChild(PublishFormComponent) formComponent!: PublishFormComponent;
 
   public services!: Observable<Paginable<ServiceLite>>;
   public status: {[key:string]: string} = {}
 
-  constructor(private router: Router, private alert: AlertService, private resolver: RustDbManagerService, private suscribe: ServiceSuscribeService) {
+  constructor(private router: Router, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
   }
 
   ngOnInit(): void {
-    this.refreshServices();
+    this.refreshData();
   }
 
-  refreshServices() {
+  refreshData() {
     this.services = this.resolver.services();
     this.verifyAllStatus();
   }
@@ -48,8 +48,8 @@ export class TableServicesComponent {
     this.formDialog.closeModal();
   }
 
-  onPublish() {
-    this.publishForm.onSubmit();
+  onSubmit() {
+    this.formComponent.onSubmit();
   }
 
   verifyAllStatus() {
@@ -64,30 +64,23 @@ export class TableServicesComponent {
     });
   }
 
-  remove(code: string) {
-    this.resolver.remove(code).subscribe({
+  remove(service: string) {
+    this.resolver.remove(service).subscribe({
       error: (e: ResponseException) => {
-        let status = e.status;
-        if(status == 404) {
-          this.alert.alert(`Service ${code} not found.`);
-          return;
-        }
-
-        if(status && status > 399 && status < 500) {
-          this.suscribe.suscribe({
-            service: code,
-            suscribeCallback: {
-              func: this.remove.bind(this),
-              args: code
-            }
-          });
+        if(this.handler.autentication(e, {
+          service: service,
+          suscribeCallback: {
+            func: this.remove.bind(this),
+            args: [service]
+          }
+        })) {
           return;
         }
 
         console.error(e);
         this.alert.alert(e.message);
       },
-      complete: () => this.refreshServices()
+      complete: () => this.refreshData()
     });
   }
 

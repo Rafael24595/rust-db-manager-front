@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { ModalButton } from '../../interfaces/modal.button';
+import { UtilsService } from '../../core/services/utils.service';
 
 @Component({
   selector: 'app-dialog-form',
@@ -19,6 +20,9 @@ export class DialogFormComponent {
   @Input() buttons: ModalButton[] = [
     {title: "Close", callback: {func: this.closeModal.bind(this)}}
   ]
+
+  constructor(public utils: UtilsService) {
+  }
 
   closeModal() {
     this.dialog.nativeElement.close();

@@ -11,6 +11,8 @@ import { SuscribeRequest } from '../../interfaces/request/suscribe.request';
 import { ResponseException } from '../commons/response.exception';
 import { DataBaseGroup } from '../../interfaces/metadata/data.base.group';
 import { UtilsService } from './utils.service';
+import { CreateDBRequest } from '../../interfaces/request/create.db.request';
+import { Service } from '../../interfaces/response/service';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -48,6 +50,13 @@ export class RustDbManagerService {
       );
   }
 
+  find(service: string): Observable<Service> {
+    return this.http.get<Service>(`${environment.URL_SERVICE}/${service}`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   remove(service: string): Observable<void> {
     return this.http.delete<void>(`${environment.URL_SERVICE}/${service}`, CREDENTIALS_OPTIONS)
       .pipe(
@@ -67,8 +76,22 @@ export class RustDbManagerService {
       );
   }
 
-  serviceDatabases(service: string): Observable<String[]> {
-    return this.http.get<String[]>(`${environment.URL_SERVICE}/${service}/data-base`, CREDENTIALS_OPTIONS)
+  serviceDatabases(service: string): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.URL_SERVICE}/${service}/data-base`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  createDatabase(service: string, request: CreateDBRequest): Observable<void> {
+    return this.http.post<void>(`${environment.URL_SERVICE}/${service}/data-base`, request, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  dropDatabase(service: string, database: string): Observable<void> {
+    return this.http.delete<void>(`${environment.URL_SERVICE}/${service}/data-base/${database}`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

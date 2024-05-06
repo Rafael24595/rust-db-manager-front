@@ -20,7 +20,7 @@ export class TableDataComponent {
 
   public metadata!: Observable<DataBaseGroup[]>;
 
-  constructor(private route: ActivatedRoute, private alert: AlertService, private resolver: RustDbManagerService) {
+  constructor(private route: ActivatedRoute, private resolver: RustDbManagerService) {
   }
 
   ngOnInit(): void {
