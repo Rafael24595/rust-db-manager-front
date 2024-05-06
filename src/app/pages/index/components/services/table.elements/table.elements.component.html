@@ -3,7 +3,7 @@
         <div class="table-title">
             <h3 class="title-text">Services [{{services.services.length}}]</h3>
             <div class="title-combo">
-                <button class="title-button" (click)="openPublishModal()">
+                <button class="title-button" (click)="openModal()">
                     <span class="plus-icon">+</span>
                 </button>
             </div>
@@ -27,7 +27,7 @@
                                     <span class="db-title">{{service.category.category}}</span>
                                 </a>
                             </td>
-                            <td [routerLink]="['/data-base', service.name]">
+                            <td [routerLink]="['/service', service.name]">
                                 <p class="light-link">{{service.name}}</p>
                             </td>
                             <td class="combo-field">
@@ -63,8 +63,8 @@
     [title]="'New Service'"
     [buttons]="[
         {title: 'Publish', callback: {func: onPublish.bind(this)}},
-        {title: 'Close', callback: {func: closePublishModal.bind(this)}}
+        {title: 'Close', callback: {func: closeModal.bind(this)}}
     ]"
-    #publish_dialog>
-    <app-publish-form [closeModal]="closePublishModal.bind(this)" [refreshData]="refreshServices.bind(this)"/>
+    #form_dialog>
+    <app-publish-form [closeModal]="closeModal.bind(this)" [refreshData]="refreshServices.bind(this)"/>
 </app-dialog-form>

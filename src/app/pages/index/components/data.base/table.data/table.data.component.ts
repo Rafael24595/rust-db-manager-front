@@ -16,25 +16,25 @@ import { DataBaseField } from '../../../../../interfaces/metadata/data.base.fiel
 })
 export class TableDataComponent {
 
-  public dataBase!: string;
+  public service!: string;
 
   public metadata!: Observable<DataBaseGroup[]>;
 
-  constructor(private route: ActivatedRoute, private alert: AlertService, private service: RustDbManagerService) {
+  constructor(private route: ActivatedRoute, private alert: AlertService, private resolver: RustDbManagerService) {
   }
 
   ngOnInit(): void {
     const route = this.route.snapshot.paramMap.get('id');
-    this.dataBase = route ? route : "";
+    this.service = route ? route : "";
     this.refreshData();
   }
 
   refreshData() {
-    this.metadata = this.service.serviceMetadata(this.dataBase);
+    this.metadata = this.resolver.serviceMetadata(this.service);
   }
 
   groupInPairs(collection: DataBaseField[]) {
-    const pairs = [];console.log(collection)
+    const pairs = [];
   
     for (let i = 0; i < collection.length; i += 2) {
       if (i + 1 < collection.length) {

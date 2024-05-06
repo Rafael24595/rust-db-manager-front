@@ -19,13 +19,13 @@ export class AlertModalComponent {
   public queue: AlertItem[];
   public alerts: AlertItem[];
 
-  constructor(private utils: UtilsService, private alertService: AlertService) {
+  constructor(private utils: UtilsService, private alert: AlertService) {
     this.queue = [];
     this.alerts = [];
   }
 
   ngOnInit(): void {
-    this.alertService.onAlert().subscribe((alert: AlertData) => {
+    this.alert.onAlert().subscribe((alert: AlertData) => {
       const item: AlertItem = {
         id: this.utils.uuid(4),
         alert: alert

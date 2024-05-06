@@ -2,7 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
-import { ServiceCategory } from '../../../../../interfaces/service.category';
+import { ServiceCategory } from '../../../../../interfaces/response/service.category';
 import { FormsModule } from '@angular/forms';
 import { PublishRequest } from '../../../../../interfaces/request/publish.request';
 import { ResponseException } from '../../../../../core/commons/response.exception';
@@ -30,7 +30,7 @@ export class PublishFormComponent {
   public showPassword: boolean;
   public password: string;
 
-  constructor(private alert: AlertService, private service: RustDbManagerService) {
+  constructor(private alert: AlertService, private resolver: RustDbManagerService) {
     this.closeModal = () => {};
     this.refreshData = () => {};
     this.category = "";
@@ -42,7 +42,7 @@ export class PublishFormComponent {
   }
 
   ngOnInit(): void {
-    this.categories = this.service.support();
+    this.categories = this.resolver.support();
   }
 
   onSubmit(attemps: number = 0) {
@@ -57,7 +57,7 @@ export class PublishFormComponent {
       }
     };
     
-    this.service.publish(request).subscribe({
+    this.resolver.publish(request).subscribe({
       error: (e: ResponseException) => {
         console.error(`${e}\nNumber of attemps: ${attemps+1}`);
         if(attemps > 1) {

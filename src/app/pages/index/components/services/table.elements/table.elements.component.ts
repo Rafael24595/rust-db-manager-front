@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { ServiceLite } from '../../../../../interfaces/service.lite';
+import { ServiceLite } from '../../../../../interfaces/response/service.lite';
 import { Observable } from 'rxjs';
-import { Paginable } from '../../../../../interfaces/paginable';
+import { Paginable } from '../../../../../interfaces/response/paginable';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
@@ -22,13 +22,13 @@ import { ServiceSuscribeService } from '../../../../../core/services/service.sus
 })
 export class TableServicesComponent {
   
-  @ViewChild('publish_dialog') publishDialog!: DialogFormComponent;
+  @ViewChild('form_dialog') formDialog!: DialogFormComponent;
   @ViewChild(PublishFormComponent) publishForm!: PublishFormComponent;
 
   public services!: Observable<Paginable<ServiceLite>>;
   public status: {[key:string]: string} = {}
 
-  constructor(private router: Router, private alert: AlertService, private service: RustDbManagerService, private serviceSuscribe: ServiceSuscribeService) {
+  constructor(private router: Router, private alert: AlertService, private resolver: RustDbManagerService, private suscribe: ServiceSuscribeService) {
   }
 
   ngOnInit(): void {
@@ -36,16 +36,16 @@ export class TableServicesComponent {
   }
 
   refreshServices() {
-    this.services = this.service.services();
+    this.services = this.resolver.services();
     this.verifyAllStatus();
   }
 
-  openPublishModal() {
-    this.publishDialog.openModal();
+  openModal() {
+    this.formDialog.openModal();
   }
 
-  closePublishModal() {
-    this.publishDialog.closeModal();
+  closeModal() {
+    this.formDialog.closeModal();
   }
 
   onPublish() {
@@ -58,14 +58,14 @@ export class TableServicesComponent {
 
   verifyStatus(service: string) {
     this.status[service] = "connecting";
-    this.service.serviceStatus(service).subscribe({
+    this.resolver.serviceStatus(service).subscribe({
       next: (status: string) => this.status[service] = status,
       error: () => this.status[service] = "error",
     });
   }
 
   remove(code: string) {
-    this.service.remove(code).subscribe({
+    this.resolver.remove(code).subscribe({
       error: (e: ResponseException) => {
         let status = e.status;
         if(status == 404) {
@@ -74,7 +74,7 @@ export class TableServicesComponent {
         }
 
         if(status && status > 399 && status < 500) {
-          this.serviceSuscribe.suscribe({
+          this.suscribe.suscribe({
             service: code,
             suscribeCallback: {
               func: this.remove.bind(this),
@@ -92,7 +92,7 @@ export class TableServicesComponent {
   }
 
   loadService(service: string) {
-    this.router.navigate(["/data-base", service])
+    this.router.navigate(["/service", service])
   }
 
 }

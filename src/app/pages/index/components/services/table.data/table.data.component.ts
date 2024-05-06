@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ServerStatus } from '../../../../../interfaces/server.status';
+import { ServerStatus } from '../../../../../interfaces/response/server.status';
 import { Observable } from 'rxjs';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe } from '@angular/common';
@@ -15,7 +15,7 @@ export class TableDataComponent {
 
   public metadata!: Observable<ServerStatus>;
 
-  constructor(private service: RustDbManagerService) {
+  constructor(private resolver: RustDbManagerService) {
   }
 
   ngOnInit(): void {
@@ -23,7 +23,7 @@ export class TableDataComponent {
   }
 
   refreshData() {
-    this.metadata = this.service.metadata();
+    this.metadata = this.resolver.metadata();
   }
 
   formatDate(timestamp: number): string {

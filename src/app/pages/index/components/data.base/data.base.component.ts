@@ -18,12 +18,12 @@ export class DataBaseComponent {
 
   public dataBase!: string;
 
-  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private service: RustDbManagerService, private serviceSuscribe: ServiceSuscribeService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private resolver: RustDbManagerService, private suscribe: ServiceSuscribeService) { }
 
   ngOnInit(): void {
     const route = this.route.snapshot.paramMap.get('id');
     const id = route ? route : "";
-    this.service.serviceStatus(id).subscribe({
+    this.resolver.serviceStatus(id).subscribe({
       error: (e: ResponseException) => {
         let status = e.status;
         if(status == 404) {
@@ -33,7 +33,7 @@ export class DataBaseComponent {
         }
 
         if(status && status > 399 && status < 500) {
-          this.serviceSuscribe.suscribe({
+          this.suscribe.suscribe({
             service: id,
             closeCallback: {
               func: this.exit.bind(this)
@@ -53,7 +53,7 @@ export class DataBaseComponent {
   }
 
   exit() {
-    this.router.navigate(["services"])
+    this.router.navigate(["service"])
   }
 
 }

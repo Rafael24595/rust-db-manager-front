@@ -25,13 +25,13 @@ export class SuscribeFormComponent {
   public showPassword: boolean;
   public password: string;
 
-  constructor(private alert: AlertService, private suscribeService: ServiceSuscribeService, private service: RustDbManagerService) {
+  constructor(private alert: AlertService, private suscribe: ServiceSuscribeService, private resolver: RustDbManagerService) {
     this.showPassword = false;
     this.password = "";
   }
 
   ngOnInit(): void {
-    this.suscribeService.onRequest().subscribe((request: ServiceSuscribe) => {
+    this.suscribe.onRequest().subscribe((request: ServiceSuscribe) => {
       console.log(request)
       this.request = request;
       console.log(this.suscribeDialog)
@@ -54,7 +54,7 @@ export class SuscribeFormComponent {
       password: this.password
     };
     
-    this.service.suscribe(request).subscribe({
+    this.resolver.suscribe(request).subscribe({
       error: (e: ResponseException) => {
         const message = "Incorrect password."
         this.alert.alert(message);

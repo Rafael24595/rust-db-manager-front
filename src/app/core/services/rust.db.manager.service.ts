@@ -1,11 +1,11 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Paginable } from '../../interfaces/paginable';
-import { ServiceLite } from '../../interfaces/service.lite';
+import { Paginable } from '../../interfaces/response/paginable';
+import { ServiceLite } from '../../interfaces/response/service.lite';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ServerStatus } from '../../interfaces/server.status';
-import { ServiceCategory } from '../../interfaces/service.category';
+import { ServerStatus } from '../../interfaces/response/server.status';
+import { ServiceCategory } from '../../interfaces/response/service.category';
 import { PublishRequest } from '../../interfaces/request/publish.request';
 import { SuscribeRequest } from '../../interfaces/request/suscribe.request';
 import { ResponseException } from '../commons/response.exception';
@@ -63,6 +63,13 @@ export class RustDbManagerService {
     return this.http.get<DataBaseGroup[]>(`${environment.URL_SERVICE}/${service}/metadata`, CREDENTIALS_OPTIONS)
       .pipe(
         map(this.utils.sortDataBaseGroups),
+        catchError(this.handleError)
+      );
+  }
+
+  serviceDatabases(service: string): Observable<String[]> {
+    return this.http.get<String[]>(`${environment.URL_SERVICE}/${service}/data-base`, CREDENTIALS_OPTIONS)
+      .pipe(
         catchError(this.handleError)
       );
   }

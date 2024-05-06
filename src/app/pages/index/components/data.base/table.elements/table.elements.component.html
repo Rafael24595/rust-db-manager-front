@@ -1,1 +1,38 @@
-<p>table.elements works!</p>
+@if(dataBases | async; as dataBases) {
+    <div>
+        <div class="table-title">
+            <h3 class="title-text">Data Bases [{{dataBases.length}}]</h3>
+            <div class="title-combo">
+                <button class="title-button" (click)="openModal()">
+                    <span class="plus-icon">+</span>
+                </button>
+            </div>
+        </div>
+        <div class="table-content" [ngClass]="{'empty': dataBases.length === 0}">
+            @if (dataBases.length == 0) {
+                <p style="text-align: center;">No data bases found.</p>
+            } @else {
+                <table class="table-base">
+                    @for (dataBase of dataBases; track $index) {
+                        <tr>
+                            <td [routerLink]="['/service', service, dataBase]">
+                                <p class="light-link">{{dataBase}}</p>
+                            </td>
+                            <td class="combo-field">
+                                <app-combo-selector [options]="[]"/>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+}
+
+<app-dialog-form 
+    [widht]="'550px'"
+    [height]="'375px'"
+    [title]="'New DataBase'"
+    [buttons]="[]"
+    #form_dialog>
+</app-dialog-form>

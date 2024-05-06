@@ -3,7 +3,7 @@ import { ServicesComponent } from './pages/index/components/services/services.co
 import { DataBaseComponent } from './pages/index/components/data.base/data.base.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/services', pathMatch: 'full' },
-    { path: 'services', component: ServicesComponent },
-    { path: 'data-base/:id', component: DataBaseComponent }
+    { path: '', redirectTo: '/service', pathMatch: 'full' },
+    { path: 'service', component: ServicesComponent },
+    { path: 'service/:id', component: DataBaseComponent }
 ];
