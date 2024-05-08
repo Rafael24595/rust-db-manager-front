@@ -9,17 +9,19 @@ import { ComboSelectorComponent } from '../../../../../components/combo.selector
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { UtilsService } from '../../../../../core/services/utils.service';
+import { CreateFormComponent } from '../create.form/create.form.component';
 
 @Component({
   selector: 'app-table-elements',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, DialogFormComponent],
+  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, DialogFormComponent, CreateFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
 export class TableElementsComponent {
 
   @ViewChild('form_dialog') formDialog!: DialogFormComponent;
+  @ViewChild(CreateFormComponent) formComponent!: CreateFormComponent;
 
   public service!: string;
   public dataBase!: string;
@@ -42,7 +44,7 @@ export class TableElementsComponent {
   }
 
   openModal() {
-    this.formDialog.openModal();
+    this.router.navigate(["/service", this.service, "data-base", this.dataBase, "new-collection"])
   }
 
   closeModal() {
@@ -97,8 +99,8 @@ export class TableElementsComponent {
       });
   }
 
-  loadCollection(dataBase: string) {
-    this.router.navigate(["/service", this.service, dataBase])
+  loadCollection(collection: string) {
+    this.router.navigate(["/service", this.service, "data-base", this.dataBase, collection])
   }
 
 }

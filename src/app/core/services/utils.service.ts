@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DataBaseGroup } from '../../interfaces/metadata/data.base.group';
 import { Callback } from '../../interfaces/callback';
 import { DataBaseField } from '../../interfaces/metadata/data.base.field';
+import { FieldDefinition } from '../../interfaces/definition/field.definition';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,10 @@ export class UtilsService {
       .forEach(g => g.fields.
         sort((f1, f2) => f1.order - f2.order));
     return data;
+  }
+
+  sortFieldDefinition(data: FieldDefinition[]) {
+    return data.sort((g1, g2) => g1.order - g2.order);
   }
 
   executeCallback(callback: Callback) {

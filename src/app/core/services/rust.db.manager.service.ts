@@ -13,6 +13,7 @@ import { DataBaseGroup } from '../../interfaces/metadata/data.base.group';
 import { UtilsService } from './utils.service';
 import { CreateDBRequest } from '../../interfaces/request/create.db.request';
 import { Service } from '../../interfaces/response/service';
+import { FieldDefinition } from '../../interfaces/definition/field.definition';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -72,6 +73,14 @@ export class RustDbManagerService {
     return this.http.get<DataBaseGroup[]>(`${environment.URL_SERVICE}/${service}/metadata`, CREDENTIALS_OPTIONS)
       .pipe(
         map(this.utils.sortDataBaseGroups),
+        catchError(this.handleError)
+      );
+  }
+
+  serviceDefinition(service: string): Observable<FieldDefinition[]> {
+    return this.http.get<FieldDefinition[]>(`${environment.URL_SERVICE}/${service}/definition`, CREDENTIALS_OPTIONS)
+      .pipe(
+        map(this.utils.sortFieldDefinition),
         catchError(this.handleError)
       );
   }

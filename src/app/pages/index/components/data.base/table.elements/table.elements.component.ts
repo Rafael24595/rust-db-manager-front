@@ -71,7 +71,7 @@ export class TableElementsComponent {
   }
 
   loadDataBase(dataBase: string) {
-    this.router.navigate(["/service", this.service, dataBase])
+    this.router.navigate(["/service", this.service, "data-base", dataBase])
   }
 
 }

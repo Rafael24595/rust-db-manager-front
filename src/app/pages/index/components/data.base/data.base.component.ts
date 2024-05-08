@@ -62,7 +62,6 @@ export class DataBaseComponent {
   }
 
   exit() {
-    console.log("xxx")
     this.router.navigate(["service"])
   }
 

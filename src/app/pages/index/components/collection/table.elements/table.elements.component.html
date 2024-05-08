@@ -44,13 +44,3 @@
         </div>
     </div>
 }
-
-<app-dialog-form 
-    [widht]="'550px'"
-    [height]="'250px'"
-    [title]="'New DataBase'"
-    [buttons]="[
-        {title: 'Create', callback: {func: onSubmit.bind(this)}},
-        {title: 'Close', callback: {func: closeModal.bind(this)}}]"
-    #form_dialog>
-</app-dialog-form>

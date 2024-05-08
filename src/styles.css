@@ -63,6 +63,19 @@ html, body {
     box-shadow: -1px -1px 0px 0px;
 }
 
+.title-button.smoke {
+    background-color: whitesmoke;
+}
+
+.title-button:hover.smoke {
+    background-color: white;
+}
+
+.title-button:active.smoke {
+    background-color: white;
+    box-shadow: -1px -1px 0px 0px;
+}
+
 .plus-icon {
     font-family: fantasy;
     font-size: large;
@@ -145,6 +158,7 @@ html, body {
     min-height: 22px;
     border: none !important;
     border-bottom: 1px solid gray !important;
+    background-color: transparent;
 }
 
 .table-form input:not([type="checkbox"]):focus, .table-form select:focus {
