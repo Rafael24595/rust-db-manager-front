@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -19,6 +19,8 @@ import { ResponseHandlerService } from '../../../../../core/services/response.ha
 })
 export class TableElementsComponent {
 
+  @Input() refreshBranch: Function;
+  
   @ViewChild('form_dialog') formDialog!: DialogFormComponent;
   @ViewChild(CreateFormComponent) formComponent!: CreateFormComponent;
 
@@ -27,6 +29,7 @@ export class TableElementsComponent {
   public dataBases!: Observable<string[]>;
 
   constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+    this.refreshBranch = () => {};
   }
 
   ngOnInit(): void {
@@ -49,6 +52,7 @@ export class TableElementsComponent {
 
   onSubmit() {
     this.formComponent.onSubmit();
+    this.refreshBranch();
   }
 
   remove(dataBase: string) {
@@ -56,8 +60,9 @@ export class TableElementsComponent {
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
           service: this.service,
-          suscribeCallback: {
-            func: this.onSubmit.bind(this)
+          nextCallback: {
+            func: this.remove.bind(this),
+            args: [dataBase]
           }
         })) {
           return;
@@ -66,7 +71,7 @@ export class TableElementsComponent {
         console.error(e);
         this.alert.alert(e.message);
       },
-      complete: () => this.refreshData()
+      complete: () => this.refreshBranch()
     });
   }
 

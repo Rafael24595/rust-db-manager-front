@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TableElementsComponent } from './table.elements/table.elements.component';
 import { TableDataComponent } from './table.data/table.data.component';
 import { ResponseException } from '../../../../core/commons/response.exception';
@@ -17,6 +17,9 @@ import { ServiceSuscribeService } from '../../../../core/services/service.suscri
   styleUrl: './collection.component.css'
 })
 export class CollectionComponent {
+
+  @ViewChild('table_element') tableElement!: TableElementsComponent;
+  @ViewChild('table_data') tableData!: TableDataComponent;
 
   public service!: string;
   public dataBase!: string;
@@ -41,11 +44,11 @@ export class CollectionComponent {
   checkServiceResponse(e: ResponseException, service: string, dataBase: string) {
     if(this.handler.autentication(e, {
       service: service,
-      suscribeCallback: {
+      nextCallback: {
         func: this.refreshData.bind(this),
         args: [service, dataBase]
       },
-      closeCallback: {
+      exitCallback: {
         func: this.exit.bind(this)
       }
     })) {
@@ -63,6 +66,11 @@ export class CollectionComponent {
     this.service = service;
     this.dataBase = dataBase;
     this.logo.set(this.service);
+  }
+
+  refreshChilds() {
+    this.tableElement.refreshData();
+    this.tableData.refreshData()
   }
 
   exit() {

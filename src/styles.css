@@ -182,3 +182,8 @@ html, body {
 .password-input-eye:hover {
     color: gray;
 }
+
+.disabled-icon {
+    cursor: not-allowed !important;
+    filter: contrast(0);
+}

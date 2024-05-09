@@ -32,7 +32,7 @@
                                             <br>
                                             <select name="category" id="base-selector" [(ngModel)]="baseCode" (change)="selectBase()" required>
                                                 <option value="default" disabled selected>-- select one --</option>
-                                                @for (definition of definitions; track $index) {
+                                                @for (definition of definition.definition; track $index) {
                                                     <option value="{{ definition.code }}">{{ definition.name }}</option>
                                                 }
                                             </select>
@@ -44,7 +44,7 @@
                                                 <label for="code"><span class="required"></span> Code:</label>
                                                 <input type="text" name="code" [(ngModel)]="field.value" required>
                                             </td>
-                                            @if (base.size) {
+                                            @if (base.swsize) {
                                                 <td>
                                                     <label for="lenght"><span class="required"></span> Length:</label>
                                                     <br>
@@ -57,21 +57,31 @@
                                                 <td>
                                                     <h4>Attributes:</h4>
                                                     <div>
-                                                        @for (attribute of base.attributes; track $index) {
-                                                            <label for="{{attribute.code}}"><span class="required"></span> {{ attribute.name }}:</label>
-                                                            @if (findAttribute(attribute.code); as field) {
-                                                                @if (attribute.values.length == 0) {
-                                                                    <input type="text" name="{{attribute.code}}" [(ngModel)]="field.value" required>
-                                                                } @else {
-                                                                    <select name="{{attribute.code}}" id="base-selector" [(ngModel)]="field.value" required>
-                                                                        <option value="default" disabled selected>-- select one --</option>
-                                                                        @for (value of attribute.values; track $index) {
-                                                                            <option value="{{ value.value }}">{{ value.key }}</option>
-                                                                        }
-                                                                    </select>
+                                                        <table>
+                                                            @for (attribute of base.attributes; track $index) {
+                                                                @if (findAttribute(attribute.code); as field) {
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="attribute-code-field">
+                                                                                <label for="{{attribute.code}}"><span class="required"></span> {{ attribute.name }}:</label>
+                                                                            </td>
+                                                                            <td>
+                                                                                @if (attribute.values.length == 0) {
+                                                                                    <input type="text" name="{{attribute.code}}" [(ngModel)]="field.value" required>
+                                                                                } @else {
+                                                                                    <select name="{{attribute.code}}" id="base-selector" [(ngModel)]="field.value" required>
+                                                                                        <option value="default" disabled selected>-- select one --</option>
+                                                                                        @for (value of attribute.values; track $index) {
+                                                                                            <option value="{{ value.value }}">{{ value.key }}</option>
+                                                                                        }
+                                                                                    </select>
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
                                                                 }
                                                             }
-                                                        }
+                                                        </table>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -110,10 +120,10 @@
                                                 <p (click)="copyField($index)">+</p>
                                             </td>
                                             <td class="action-icon">
-                                                <p (click)="updateField($index)">⇦</p>
+                                                <p (click)="updateField($index)" [class.disabled-icon]="!field.mutable">⇦</p>
                                             </td>
                                             <td class="action-icon">
-                                                <p (click)="removeField($index)">🗑</p>
+                                                <p (click)="removeField($index)" [class.disabled-icon]="!field.mutable">🗑</p>
                                             </td>
                                         </tr>
                                     }
@@ -126,8 +136,8 @@
             </table>
         </div>
         <div id="form-buttons">
-            <button class="title-button smoke form-button">Create</button>
-            <button class="title-button smoke form-button">Exit</button>
+            <button class="title-button smoke form-button" (click)="onSubmit()">Create</button>
+            <button class="title-button smoke form-button" (click)="exitForm()">Exit</button>
         </div>
     </div>
 </form>

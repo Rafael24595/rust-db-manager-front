@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ServiceLite } from '../../../../../interfaces/response/service.lite';
 import { Observable } from 'rxjs';
 import { Paginable } from '../../../../../interfaces/response/paginable';
@@ -20,8 +20,10 @@ import { ResponseHandlerService } from '../../../../../core/services/response.ha
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
-export class TableServicesComponent {
+export class TableElementsComponent {
   
+  @Input() refreshBranch: Function;
+
   @ViewChild('form_dialog') formDialog!: DialogFormComponent;
   @ViewChild(PublishFormComponent) formComponent!: PublishFormComponent;
 
@@ -29,6 +31,7 @@ export class TableServicesComponent {
   public status: {[key:string]: string} = {}
 
   constructor(private router: Router, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+    this.refreshBranch = () => {};
   }
 
   ngOnInit(): void {
@@ -50,6 +53,7 @@ export class TableServicesComponent {
 
   onSubmit() {
     this.formComponent.onSubmit();
+    this.refreshBranch();
   }
 
   verifyAllStatus() {
@@ -69,7 +73,7 @@ export class TableServicesComponent {
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
           service: service,
-          suscribeCallback: {
+          nextCallback: {
             func: this.remove.bind(this),
             args: [service]
           }
@@ -80,7 +84,7 @@ export class TableServicesComponent {
         console.error(e);
         this.alert.alert(e.message);
       },
-      complete: () => this.refreshData()
+      complete: () => this.refreshBranch()
     });
   }
 

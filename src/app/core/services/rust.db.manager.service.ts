@@ -13,7 +13,8 @@ import { DataBaseGroup } from '../../interfaces/metadata/data.base.group';
 import { UtilsService } from './utils.service';
 import { CreateDBRequest } from '../../interfaces/request/create.db.request';
 import { Service } from '../../interfaces/response/service';
-import { FieldDefinition } from '../../interfaces/definition/field.definition';
+import { CollectionDefinition } from '../../interfaces/definition/collection.definition';
+import { GenerateCollectionRequest } from '../../interfaces/request/generate.collection.request';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -77,10 +78,10 @@ export class RustDbManagerService {
       );
   }
 
-  serviceDefinition(service: string): Observable<FieldDefinition[]> {
-    return this.http.get<FieldDefinition[]>(`${environment.URL_SERVICE}/${service}/definition`, CREDENTIALS_OPTIONS)
+  serviceDefinition(service: string): Observable<CollectionDefinition> {
+    return this.http.get<CollectionDefinition>(`${environment.URL_SERVICE}/${service}/definition`, CREDENTIALS_OPTIONS)
       .pipe(
-        map(this.utils.sortFieldDefinition),
+        map(this.utils.sortCollectionDefinition),
         catchError(this.handleError)
       );
   }
@@ -129,6 +130,14 @@ export class RustDbManagerService {
 
   collectionFindAll(service: string, database: string, collection: string): Observable<string[]> {
     return this.http.get<string[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  
+  collectionCreate(service: string, request: GenerateCollectionRequest): Observable<void> {
+    return this.http.post<void>(`${environment.URL_SERVICE}/${service}/data-base/${request.data_base}/collection`, request, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

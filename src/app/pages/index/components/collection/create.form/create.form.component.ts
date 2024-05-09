@@ -1,16 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../../../core/services/alert.service';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
-import { ServiceSuscribeService } from '../../../../../core/services/service.suscribe.service';
-import { Observable, map } from 'rxjs';
+import { map } from 'rxjs';
 import { FieldDefinition } from '../../../../../interfaces/definition/field.definition';
 import { AsyncPipe } from '@angular/common';
 import { FieldData } from '../../../../../interfaces/definition/field.data';
 import { FormsModule } from '@angular/forms';
 import { DbLogoService } from '../../../../../core/services/db.logo.service';
 import { ResponseException } from '../../../../../core/commons/response.exception';
+import { CollectionDefinition } from '../../../../../interfaces/definition/collection.definition';
+import { GenerateCollectionRequest } from '../../../../../interfaces/request/generate.collection.request';
 
 @Component({
   selector: 'app-create-form',
@@ -24,7 +25,7 @@ export class CreateFormComponent {
   public service!: string;
   public dataBase!: string;
 
-  public definitions!: FieldDefinition[];
+  public definition!: CollectionDefinition;
   public fields: FieldData[];
 
   public collection!: string;
@@ -42,9 +43,9 @@ export class CreateFormComponent {
     const oDataBase = this.route.snapshot.paramMap.get("data_base");
     const dataBase = oDataBase ? oDataBase : "";
     this.resolver.serviceDefinition(service).pipe(
-      map(definitions => {
-        this.definitions = definitions;
-        this.test()
+      map(definition => {
+        this.definition = definition;
+        this.fields = this.fields.concat(this.definition.defaults);
       })
     ).subscribe({
       error: (e: ResponseException) => {
@@ -59,11 +60,11 @@ export class CreateFormComponent {
   checkServiceResponse(e: ResponseException, service: string, dataBase: string) {
     if(this.handler.autentication(e, {
       service: service,
-      suscribeCallback: {
+      nextCallback: {
         func: this.refreshData.bind(this),
         args: [service, dataBase]
       },
-      closeCallback: {
+      exitCallback: {
         func: this.exit.bind(this)
       }
     })) {
@@ -83,19 +84,6 @@ export class CreateFormComponent {
     this.logo.set(this.service);
   }
 
-  test() {
-    const testdef: FieldDefinition = {
-        "order": 0,
-        "name": "VARCHAR",
-        "code": "VARCHAR",
-        "category": "STRING",
-        "size": true,
-        "multiple": true,
-        "attributes": []
-      }
-      this.definitions.push(testdef)
-    }
-
   selectBase() {
     if(this.updateBase(this.baseCode)) {
       this.newField()
@@ -103,7 +91,7 @@ export class CreateFormComponent {
   }
 
   updateBase(code: string) {
-    const definition = this.definitions.find(d => d.code == code);
+    const definition = this.definition.definition.find(d => d.code == code);
     if(definition) {
       this.baseCode = code;
       this.base = definition;
@@ -116,14 +104,16 @@ export class CreateFormComponent {
       order: this.fields.length,
       code: this.base.code,
       value: "",
-      swsize: this.base.size,
+      swsize: this.base.swsize,
       size: 0,
+      mutable: true,
       attributes: this.base.attributes.map(a => {
         return  {
           key: a.code,
           value: ""
         }
-      })
+      }),
+      reference: []
     }
   }
 
@@ -136,22 +126,68 @@ export class CreateFormComponent {
   }
 
   copyField(index: number) {
-    this.field = this.fields[index];
-    console.log(this.field)
+    this.field = structuredClone(this.fields[index]);
+    this.field.mutable = true;
     this.updateBase(this.field.code);
   }
 
   updateField(index: number) {
-    this.copyField(index)
-    this.removeField(index);
+    if(this.fields[index].mutable) { 
+      this.copyField(index)
+      this.removeField(index);
+    }
   }
 
   removeField(index: number) {
-    this.fields.splice(index, 1);
+    if(this.fields[index].mutable) {
+      this.fields.splice(index, 1);
+    }
   }
 
   findAttribute(code: string) {
-    return this.field?.attributes.find(a => a.key = code);
+    return this.field?.attributes.find(a => a.key == code);
+  }
+
+  valideForm(): string | undefined {
+    if (this.collection == undefined || this.collection.trim() == "") {
+      return "Collection field name is required."
+    }
+    return undefined;
+  }
+
+  onSubmit(attemps: number = 0) {
+    const message = this.valideForm();
+    if(message) {
+      this.alert.alert(message);
+      return;
+    }
+    const request: GenerateCollectionRequest = {
+      data_base: this.dataBase,
+      collection: this.collection,
+      fields: this.fields
+    }
+    
+    this.resolver.collectionCreate(this.service, request).subscribe({
+      error: (e: ResponseException) => {
+        if(this.handler.autentication(e, {
+          service: this.service,
+          nextCallback: {
+            func: this.onSubmit.bind(this)
+          }
+        })) {
+          return;
+        }
+
+        this.handler.requestAttemp(e, this.onSubmit.bind(this), attemps);
+      },
+      complete: () => {
+        this.exitForm();
+      }
+    });
+  }
+
+  exitForm() {
+    this.router.navigate(["/service", this.service, "data-base", this.dataBase]);
   }
 
   exit() {

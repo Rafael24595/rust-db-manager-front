@@ -18,7 +18,6 @@ export class TableDataComponent {
   public service!: string;
   public dataBase!: string;
 
-
   public metadata!: Observable<DataBaseGroup[]>;
 
   constructor(private route: ActivatedRoute, public utils: UtilsService, private resolver: RustDbManagerService) {

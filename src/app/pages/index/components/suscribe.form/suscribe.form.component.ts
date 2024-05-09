@@ -39,8 +39,8 @@ export class SuscribeFormComponent {
   }
 
   closeModal() {
-    if(this.request.closeCallback) {
-      const callback = this.request.closeCallback;
+    if(this.request.exitCallback) {
+      const callback = this.request.exitCallback;
       callback.func(callback.args);
     }
     this.suscribeDialog.closeModal();
@@ -63,8 +63,8 @@ export class SuscribeFormComponent {
       complete: () => {
         this.suscribeDialog.closeModal();
         this.cleanForm();
-        if(this.request.suscribeCallback) {
-          this.utils.executeCallback(this.request.suscribeCallback);
+        if(this.request.nextCallback) {
+          this.utils.executeCallback(this.request.nextCallback);
         }
       }
     });

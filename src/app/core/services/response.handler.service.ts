@@ -17,8 +17,8 @@ export class ResponseHandlerService {
     let status = e.status;
     if(status == 404) {
       this.alert.alert(`Service ${service.service} not found.`);
-      if(service.closeCallback) {
-        this.utils.executeCallback(service.closeCallback);
+      if(service.exitCallback) {
+        this.utils.executeCallback(service.exitCallback);
       }
       return true;
     }

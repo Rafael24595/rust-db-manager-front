@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RustDbManagerService } from '../../../../core/services/rust.db.manager.service';
 import { ResponseException } from '../../../../core/commons/response.exception';
@@ -18,9 +18,13 @@ import { ResponseHandlerService } from '../../../../core/services/response.handl
 })
 export class DataBaseComponent {
 
+  @ViewChild('table_element') tableElement!: TableElementsComponent;
+  @ViewChild('table_data') tableData!: TableDataComponent;
+
   public service!: string;
 
-  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService, private suscribe: ServiceSuscribeService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService, private suscribe: ServiceSuscribeService) {
+  }
 
   ngOnInit(): void {
     const oService = this.route.snapshot.paramMap.get("service");
@@ -38,11 +42,11 @@ export class DataBaseComponent {
   checkServiceResponse(e: ResponseException, service: string) {
     if(this.handler.autentication(e, {
       service: service,
-      suscribeCallback: {
+      nextCallback: {
         func: this.refreshData.bind(this),
         args: [service]
       },
-      closeCallback: {
+      exitCallback: {
         func: this.exit.bind(this)
       }
     })) {
@@ -59,6 +63,11 @@ export class DataBaseComponent {
   refreshData(service: string) {
     this.service = service;
     this.logo.set(this.service);
+  }
+
+  refreshChilds() {
+    this.tableElement.refreshData();
+    this.tableData.refreshData()
   }
 
   exit() {

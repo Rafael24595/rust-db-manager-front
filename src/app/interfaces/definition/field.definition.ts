@@ -4,8 +4,7 @@ export interface FieldDefinition {
     order: number;
     name: string;
     code: string;
-    category: string;
-    size: boolean;
+    swsize: boolean;
     multiple: boolean;
     attributes: FieldAttributeDefinition[];
 }

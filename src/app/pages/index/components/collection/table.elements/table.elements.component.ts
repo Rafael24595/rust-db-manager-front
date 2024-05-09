@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
 import { Observable, map } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,8 +20,7 @@ import { CreateFormComponent } from '../create.form/create.form.component';
 })
 export class TableElementsComponent {
 
-  @ViewChild('form_dialog') formDialog!: DialogFormComponent;
-  @ViewChild(CreateFormComponent) formComponent!: CreateFormComponent;
+  @Input() refreshBranch: Function;
 
   public service!: string;
   public dataBase!: string;
@@ -29,6 +28,7 @@ export class TableElementsComponent {
   public collections!: Observable<string[]>;
 
   constructor(private router: Router, private route: ActivatedRoute, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+    this.refreshBranch = () => {};
   }
 
   ngOnInit(): void {
@@ -43,15 +43,8 @@ export class TableElementsComponent {
     this.collections = this.resolver.collectionFindAllLite(this.service, this.dataBase);
   }
 
-  openModal() {
-    this.router.navigate(["/service", this.service, "data-base", this.dataBase, "new-collection"])
-  }
-
-  closeModal() {
-    this.formDialog.closeModal();
-  }
-
-  onSubmit() {
+  openForm() {
+    this.router.navigate(["/service", this.service, "data-base", this.dataBase, "new-collection"]);
   }
 
   remove(collection: string) {
@@ -59,8 +52,9 @@ export class TableElementsComponent {
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
           service: this.service,
-          suscribeCallback: {
-            func: this.onSubmit.bind(this)
+          nextCallback: {
+            func: this.remove.bind(this),
+            args: [collection]
           }
         })) {
           return;
@@ -85,8 +79,8 @@ export class TableElementsComponent {
         error: (e: ResponseException) => {
           if(this.handler.autentication(e, {
             service: this.service,
-            suscribeCallback: {
-              func: this.onSubmit.bind(this)
+            nextCallback: {
+              func: this.exportJson.bind(this)
             }
           })) {
             return;
@@ -95,12 +89,12 @@ export class TableElementsComponent {
           console.error(e);
           this.alert.alert(e.message);
         },
-        complete: () => this.refreshData()
+        complete: () => this.refreshBranch()
       });
   }
 
   loadCollection(collection: string) {
-    this.router.navigate(["/service", this.service, "data-base", this.dataBase, collection])
+    this.router.navigate(["/service", this.service, "data-base", this.dataBase, collection]);
   }
 
 }
