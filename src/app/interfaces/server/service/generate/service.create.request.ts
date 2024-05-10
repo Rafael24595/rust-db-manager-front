@@ -1,6 +1,6 @@
 import { ConnectionData } from "./connection.data";
 
-export interface PublishRequest {
+export interface ServiceCreateRequest {
     name: string,
     owner: string,
     protected: boolean,

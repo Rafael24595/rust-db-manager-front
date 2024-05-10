@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { ServiceLite } from '../../../../../interfaces/response/service.lite';
+import { ServiceLite } from '../../../../../interfaces/server/service/definition/service.lite';
 import { Observable } from 'rxjs';
-import { Paginable } from '../../../../../interfaces/response/paginable';
+import { PaginatedCollection } from '../../../../../interfaces/server/pagination/paginated.collection';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
@@ -27,7 +27,7 @@ export class TableElementsComponent {
   @ViewChild('form_dialog') formDialog!: DialogFormComponent;
   @ViewChild(PublishFormComponent) formComponent!: PublishFormComponent;
 
-  public services!: Observable<Paginable<ServiceLite>>;
+  public services!: Observable<PaginatedCollection<ServiceLite>>;
   public status: {[key:string]: string} = {}
 
   constructor(private router: Router, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {

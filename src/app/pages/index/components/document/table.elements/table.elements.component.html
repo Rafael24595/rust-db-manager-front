@@ -1,0 +1,30 @@
+@if(documents | async; as documents) {
+    <div>
+        <div class="table-title">
+            <h3 class="title-text">Documents [{{documents.length}}]</h3>
+            <div class="title-combo">
+                <button class="title-button" (click)="openForm()">
+                    <span class="plus-icon">+</span>
+                </button>
+            </div>
+        </div>
+        <div class="table-content" [ngClass]="{'empty': documents.length === 0}">
+            @if (documents.length == 0) {
+                <p style="text-align: center;">No collections found.</p>
+            } @else {
+                <table class="table-base">
+                    @for (document of documents; track $index) {
+                        <tr>
+                            <td (click)="loadDocument(collection)">
+                                <p class="light-link">{{document.base_key?.value}}</p>
+                            </td>
+                            <td class="combo-field">
+                                <app-combo-selector [options]="[]"/>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+}

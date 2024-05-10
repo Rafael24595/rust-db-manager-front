@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { TableDataGroup } from '../../../../../interfaces/server/table/data.base.group';
+import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { UtilsService } from '../../../../../core/services/utils.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
@@ -17,6 +17,7 @@ export class TableDataComponent {
 
   public service!: string;
   public dataBase!: string;
+  public collection!: string;
 
   public metadata!: Observable<TableDataGroup[]>;
 
@@ -28,11 +29,13 @@ export class TableDataComponent {
     this.service = oService ? oService : "";
     const oDataBase = this.route.snapshot.paramMap.get("data_base");
     this.dataBase = oDataBase ? oDataBase : "";
+    const oCollection = this.route.snapshot.paramMap.get("collection");
+    this.collection = oCollection ? oCollection : "";
     this.refreshData();
   }
 
   refreshData() {
-    this.metadata = this.resolver.dataBaseStatus(this.service, this.dataBase);
+    this.metadata = this.resolver.collectionStatus(this.service, this.dataBase, this.collection);
   }
 
 }

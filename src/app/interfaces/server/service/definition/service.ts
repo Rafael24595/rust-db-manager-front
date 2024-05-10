@@ -1,9 +1,9 @@
-import { Connection } from "./connection";
+import { ServiceCategory } from "./service.category";
 
 export interface Service {
     name: string,
     owner: string,
     protected: boolean,
     timestamp: number,
-    connection_data: Connection,
+    connection_data: ServiceCategory,
 }

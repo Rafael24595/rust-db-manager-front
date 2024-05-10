@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DbLogoService } from '../../../../core/services/db.logo.service';
-import { Service } from '../../../../interfaces/response/service';
+import { Service } from '../../../../interfaces/server/service/definition/service';
 
 @Component({
   selector: 'app-db-logo',

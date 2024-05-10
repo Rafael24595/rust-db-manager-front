@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Service } from '../../interfaces/response/service';
+import { Service } from '../../interfaces/server/service/definition/service';
 import { Observable, Subject, map } from 'rxjs';
 import { RustDbManagerService } from './rust.db.manager.service';
 import { ResponseException } from '../commons/response.exception';

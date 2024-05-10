@@ -94,7 +94,7 @@ export class TableElementsComponent {
   }
 
   loadCollection(collection: string) {
-    this.router.navigate(["/service", this.service, "data-base", this.dataBase, collection]);
+    this.router.navigate(["/service", this.service, "data-base", this.dataBase, "collection", collection]);
   }
 
 }

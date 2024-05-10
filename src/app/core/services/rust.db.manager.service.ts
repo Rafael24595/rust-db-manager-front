@@ -1,20 +1,21 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Paginable } from '../../interfaces/response/paginable';
-import { ServiceLite } from '../../interfaces/response/service.lite';
+import { PaginatedCollection } from '../../interfaces/server/pagination/paginated.collection';
+import { ServiceLite } from '../../interfaces/server/service/definition/service.lite';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ServerStatus } from '../../interfaces/response/server.status';
-import { ServiceCategory } from '../../interfaces/response/service.category';
-import { PublishRequest } from '../../interfaces/request/publish.request';
-import { SuscribeRequest } from '../../interfaces/request/suscribe.request';
+import { ServerStatus } from '../../interfaces/server/server.status';
+import { ServiceCategoryLite } from '../../interfaces/server/service/definition/service.category.lite';
+import { ServiceCreateRequest } from '../../interfaces/server/service/generate/service.create.request';
+import { ServiceSuscribeRequest } from '../../interfaces/server/service/generate/service.suscribe.request';
 import { ResponseException } from '../commons/response.exception';
-import { DataBaseGroup } from '../../interfaces/metadata/data.base.group';
+import { TableDataGroup } from '../../interfaces/server/table/data.base.group';
 import { UtilsService } from './utils.service';
-import { CreateDBRequest } from '../../interfaces/request/create.db.request';
-import { Service } from '../../interfaces/response/service';
-import { CollectionDefinition } from '../../interfaces/definition/collection.definition';
-import { GenerateCollectionRequest } from '../../interfaces/request/generate.collection.request';
+import { GenerateDatabaseQuery } from '../../interfaces/server/data.base/generate.data.base.quey';
+import { Service } from '../../interfaces/server/service/definition/service';
+import { CollectionDefinition } from '../../interfaces/server/collection/collection.definition';
+import { GenerateCollectionQuery } from '../../interfaces/server/collection/generate.collection.query';
+import { DocumentData } from '../../interfaces/server/document/document.data';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -30,22 +31,22 @@ export class RustDbManagerService {
     return this.http.get<ServerStatus>(`${environment.URL_SERVICE}/metadata`);
   }
 
-  support(): Observable<ServiceCategory[]> {
-    return this.http.get<ServiceCategory[]>(`${environment.URL_SERVICE}/support`);
+  support(): Observable<ServiceCategoryLite[]> {
+    return this.http.get<ServiceCategoryLite[]>(`${environment.URL_SERVICE}/support`);
   }
 
-  services(): Observable<Paginable<ServiceLite>> {
-    return this.http.get<Paginable<ServiceLite>>(`${environment.URL_SERVICE}/services`);
+  services(): Observable<PaginatedCollection<ServiceLite>> {
+    return this.http.get<PaginatedCollection<ServiceLite>>(`${environment.URL_SERVICE}/services`);
   }
   
-  publish(request: PublishRequest): Observable<void> {
+  publish(request: ServiceCreateRequest): Observable<void> {
     return this.http.post<void>(`${environment.URL_SERVICE}/publish`, request, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  suscribe(request: SuscribeRequest): Observable<void> {
+  suscribe(request: ServiceSuscribeRequest): Observable<void> {
     return this.http.post<void>(`${environment.URL_SERVICE}/suscribe`, request, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
@@ -70,8 +71,8 @@ export class RustDbManagerService {
     return this.http.get(`${environment.URL_SERVICE}/${service}/status`, { withCredentials: true, responseType: 'text' });
   }
 
-  serviceMetadata(service: string): Observable<DataBaseGroup[]> {
-    return this.http.get<DataBaseGroup[]>(`${environment.URL_SERVICE}/${service}/metadata`, CREDENTIALS_OPTIONS)
+  serviceMetadata(service: string): Observable<TableDataGroup[]> {
+    return this.http.get<TableDataGroup[]>(`${environment.URL_SERVICE}/${service}/metadata`, CREDENTIALS_OPTIONS)
       .pipe(
         map(this.utils.sortDataBaseGroups),
         catchError(this.handleError)
@@ -93,7 +94,7 @@ export class RustDbManagerService {
       );
   }
 
-  dataBaseCreate(service: string, request: CreateDBRequest): Observable<void> {
+  dataBaseCreate(service: string, request: GenerateDatabaseQuery): Observable<void> {
     return this.http.post<void>(`${environment.URL_SERVICE}/${service}/data-base`, request, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
@@ -107,8 +108,8 @@ export class RustDbManagerService {
       );
   }
 
-  dataBaseStatus(service: string, database: string): Observable<DataBaseGroup[]> {
-    return this.http.get<DataBaseGroup[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/metadata`, CREDENTIALS_OPTIONS)
+  dataBaseStatus(service: string, database: string): Observable<TableDataGroup[]> {
+    return this.http.get<TableDataGroup[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/metadata`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );
@@ -128,16 +129,23 @@ export class RustDbManagerService {
       );
   }
 
-  collectionFindAll(service: string, database: string, collection: string): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}`, CREDENTIALS_OPTIONS)
+  collectionFindAll(service: string, database: string, collection: string): Observable<DocumentData[]> {
+    return this.http.get<DocumentData[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   
-  collectionCreate(service: string, request: GenerateCollectionRequest): Observable<void> {
+  collectionCreate(service: string, request: GenerateCollectionQuery): Observable<void> {
     return this.http.post<void>(`${environment.URL_SERVICE}/${service}/data-base/${request.data_base}/collection`, request, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionStatus(service: string, database: string, collection: string): Observable<TableDataGroup[]> {
+    return this.http.get<TableDataGroup[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/metadata`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

@@ -1,4 +1,4 @@
-export interface Paginable<T> {
+export interface PaginatedCollection<T> {
     total: number,
     previous: number,
     next: number,

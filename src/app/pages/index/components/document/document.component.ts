@@ -9,29 +9,31 @@ import { ResponseHandlerService } from '../../../../core/services/response.handl
 import { RustDbManagerService } from '../../../../core/services/rust.db.manager.service';
 
 @Component({
-  selector: 'app-collection',
+  selector: 'app-document',
   standalone: true,
   imports: [TableElementsComponent, TableDataComponent],
-  templateUrl: './collection.component.html',
-  styleUrl: './collection.component.css'
+  templateUrl: './document.component.html',
+  styleUrl: './document.component.css'
 })
-export class CollectionComponent {
+export class DocumentComponent {
 
   @ViewChild('table_element') tableElement!: TableElementsComponent;
   @ViewChild('table_data') tableData!: TableDataComponent;
 
   public service!: string;
   public dataBase!: string;
+  public collection!: string;
 
-  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
-  }
+  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) { }
 
   ngOnInit(): void {
     const oService = this.route.snapshot.paramMap.get("service");
     const service = oService ? oService : "";
     const oDataBase = this.route.snapshot.paramMap.get("data_base");
     const dataBase = oDataBase ? oDataBase : "";
-    this.resolver.dataBaseStatus(service, dataBase).subscribe({
+    const oCollection = this.route.snapshot.paramMap.get("collection");
+    const collection = oCollection ? oCollection : "";
+    this.resolver.collectionStatus(service, dataBase, collection).subscribe({
       error: (e: ResponseException) => {
         this.checkServiceResponse(e, service, dataBase);
       },

@@ -4,14 +4,14 @@ import { AlertService } from '../../../../../core/services/alert.service';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { map } from 'rxjs';
-import { FieldDefinition } from '../../../../../interfaces/definition/field.definition';
+import { FieldDefinition } from '../../../../../interfaces/server/field/definition/field.definition';
 import { AsyncPipe } from '@angular/common';
-import { FieldData } from '../../../../../interfaces/definition/field.data';
+import { FieldData } from '../../../../../interfaces/server/field/generate/field.data';
 import { FormsModule } from '@angular/forms';
 import { DbLogoService } from '../../../../../core/services/db.logo.service';
 import { ResponseException } from '../../../../../core/commons/response.exception';
-import { CollectionDefinition } from '../../../../../interfaces/definition/collection.definition';
-import { GenerateCollectionRequest } from '../../../../../interfaces/request/generate.collection.request';
+import { CollectionDefinition } from '../../../../../interfaces/server/collection/collection.definition';
+import { GenerateCollectionQuery } from '../../../../../interfaces/server/collection/generate.collection.query';
 
 @Component({
   selector: 'app-create-form',
@@ -161,7 +161,7 @@ export class CreateFormComponent {
       this.alert.alert(message);
       return;
     }
-    const request: GenerateCollectionRequest = {
+    const request: GenerateCollectionQuery = {
       data_base: this.dataBase,
       collection: this.collection,
       fields: this.fields

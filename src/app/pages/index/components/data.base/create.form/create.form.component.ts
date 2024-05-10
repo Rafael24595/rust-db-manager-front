@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { AlertService } from '../../../../../core/services/alert.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { ResponseException } from '../../../../../core/commons/response.exception';
-import { CreateDBRequest } from '../../../../../interfaces/request/create.db.request';
+import { GenerateDatabaseQuery } from '../../../../../interfaces/server/data.base/generate.data.base.quey';
 import { ActivatedRoute } from '@angular/router';
 import { ServiceSuscribeService } from '../../../../../core/services/service.suscribe.service';
 import { FormsModule } from '@angular/forms';
@@ -36,7 +36,7 @@ export class CreateFormComponent {
   }
 
   onSubmit(attemps: number = 0) {
-    const request: CreateDBRequest = {
+    const request: GenerateDatabaseQuery = {
       data_base: this.dataBase
     };
     

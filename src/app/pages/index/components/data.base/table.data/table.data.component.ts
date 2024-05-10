@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { AlertService } from '../../../../../core/services/alert.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
-import { DataBaseGroup } from '../../../../../interfaces/metadata/data.base.group';
+import { TableDataGroup } from '../../../../../interfaces/server/table/data.base.group';
 import { UtilsService } from '../../../../../core/services/utils.service';
 
 @Component({
@@ -18,7 +17,7 @@ export class TableDataComponent {
 
   public service!: string;
 
-  public metadata!: Observable<DataBaseGroup[]>;
+  public metadata!: Observable<TableDataGroup[]>;
 
   constructor(private route: ActivatedRoute, public utils: UtilsService, private resolver: RustDbManagerService) {
   }

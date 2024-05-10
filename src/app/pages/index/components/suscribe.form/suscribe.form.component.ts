@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SuscribeRequest } from '../../../../interfaces/request/suscribe.request';
+import { ServiceSuscribeRequest } from '../../../../interfaces/server/service/generate/service.suscribe.request';
 import { RustDbManagerService } from '../../../../core/services/rust.db.manager.service';
 import { ResponseException } from '../../../../core/commons/response.exception';
 import { AlertService } from '../../../../core/services/alert.service';
@@ -47,7 +47,7 @@ export class SuscribeFormComponent {
   }
 
   onSubmit() {
-    const request: SuscribeRequest = {
+    const request: ServiceSuscribeRequest = {
       name: this.request.service,
       owner: "Client",
       password: this.password

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ServerStatus } from '../../../../../interfaces/response/server.status';
+import { ServerStatus } from '../../../../../interfaces/server/server.status';
 import { Observable } from 'rxjs';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe } from '@angular/common';

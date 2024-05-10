@@ -1,10 +1,10 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
-import { ServiceCategory } from '../../../../../interfaces/response/service.category';
+import { ServiceCategoryLite } from '../../../../../interfaces/server/service/definition/service.category.lite';
 import { FormsModule } from '@angular/forms';
-import { PublishRequest } from '../../../../../interfaces/request/publish.request';
+import { ServiceCreateRequest } from '../../../../../interfaces/server/service/generate/service.create.request';
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 
@@ -20,7 +20,7 @@ export class PublishFormComponent {
   @Input() closeModal: Function;
   @Input() refreshData: Function;
 
-  public categories!: Observable<ServiceCategory[]>;
+  public categories!: Observable<ServiceCategoryLite[]>;
   
   public category: string;
   public name: string;
@@ -46,7 +46,7 @@ export class PublishFormComponent {
   }
 
   onSubmit(attemps: number = 0) {
-    const request: PublishRequest = {
+    const request: ServiceCreateRequest = {
       name: this.name,
       owner: "Client",
       protected: this.secure,

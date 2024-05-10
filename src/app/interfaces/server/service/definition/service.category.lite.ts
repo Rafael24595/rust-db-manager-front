@@ -1,6 +1,6 @@
 import { ServiceResources } from "./service.resources";
 
-export interface ServiceCategory {
+export interface ServiceCategoryLite {
     category: String,
     resources: ServiceResources
 }
