@@ -1,13 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RustDbManagerService } from '../../../../core/services/rust.db.manager.service';
 import { ResponseException } from '../../../../core/commons/response.exception';
-import { AlertService } from '../../../../core/services/alert.service';
-import { ServiceSuscribeService } from '../../../../core/services/service.suscribe.service';
+import { AlertService } from '../../../../core/services/view/alert.service';
+import { ServiceSuscribeService } from '../../../../core/services/view/service.suscribe.service';
 import { TableElementsComponent } from './table.elements/table.elements.component';
 import { TableDataComponent } from './table.data/table.data.component';
-import { DbLogoService } from '../../../../core/services/db.logo.service';
+import { DbLogoService } from '../../../../core/services/view/db.logo.service';
 import { ResponseHandlerService } from '../../../../core/services/response.handler.service';
+import { RedirectService } from '../../../../core/services/redirect.service';
 
 @Component({
   selector: 'app-data-base',
@@ -23,12 +24,13 @@ export class DataBaseComponent {
 
   public service!: string;
 
-  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService, private suscribe: ServiceSuscribeService) {
+  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService, private suscribe: ServiceSuscribeService) {
   }
 
   ngOnInit(): void {
     const oService = this.route.snapshot.paramMap.get("service");
     const service = oService ? oService : "";
+
     this.resolver.serviceStatus(service).subscribe({
       error: (e: ResponseException) => {
         this.checkServiceResponse(e, service);
@@ -71,7 +73,7 @@ export class DataBaseComponent {
   }
 
   exit() {
-    this.router.navigate(["service"])
+    this.redirect.goToHome();
   }
 
 }

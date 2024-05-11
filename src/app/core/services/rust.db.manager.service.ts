@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PaginatedCollection } from '../../interfaces/server/pagination/paginated.collection';
 import { ServiceLite } from '../../interfaces/server/service/definition/service.lite';
@@ -10,7 +10,7 @@ import { ServiceCreateRequest } from '../../interfaces/server/service/generate/s
 import { ServiceSuscribeRequest } from '../../interfaces/server/service/generate/service.suscribe.request';
 import { ResponseException } from '../commons/response.exception';
 import { TableDataGroup } from '../../interfaces/server/table/data.base.group';
-import { UtilsService } from './utils.service';
+import { UtilsService } from './utils/utils.service';
 import { GenerateDatabaseQuery } from '../../interfaces/server/data.base/generate.data.base.quey';
 import { Service } from '../../interfaces/server/service/definition/service';
 import { CollectionDefinition } from '../../interfaces/server/collection/collection.definition';
@@ -135,7 +135,6 @@ export class RustDbManagerService {
         catchError(this.handleError)
       );
   }
-
   
   collectionCreate(service: string, request: GenerateCollectionQuery): Observable<void> {
     return this.http.post<void>(`${environment.URL_SERVICE}/${service}/data-base/${request.data_base}/collection`, request, CREDENTIALS_OPTIONS)

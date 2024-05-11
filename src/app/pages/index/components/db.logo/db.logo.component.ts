@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DbLogoService } from '../../../../core/services/db.logo.service';
+import { DbLogoService } from '../../../../core/services/view/db.logo.service';
 import { Service } from '../../../../interfaces/server/service/definition/service';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { RedirectService } from '../../../core/services/redirect.service';
 
 @Component({
   selector: 'app-header',
@@ -10,11 +10,11 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
 
-  constructor(private router: Router) {
+  constructor(private redirect: RedirectService) {
   }
 
   loadHome() {
-    this.router.navigate(["/service"]);
+    this.redirect.goToHome();
   }
 
 }

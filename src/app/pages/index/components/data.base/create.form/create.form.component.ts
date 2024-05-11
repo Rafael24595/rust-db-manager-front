@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { AlertService } from '../../../../../core/services/alert.service';
+import { AlertService } from '../../../../../core/services/view/alert.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { GenerateDatabaseQuery } from '../../../../../interfaces/server/data.base/generate.data.base.quey';
 import { ActivatedRoute } from '@angular/router';
-import { ServiceSuscribeService } from '../../../../../core/services/service.suscribe.service';
+import { ServiceSuscribeService } from '../../../../../core/services/view/service.suscribe.service';
 import { FormsModule } from '@angular/forms';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 

@@ -1,13 +1,14 @@
 import { Component, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from '../../../../../core/services/utils.service';
-import { AlertService } from '../../../../../core/services/alert.service';
+import { ActivatedRoute } from '@angular/router';
+import { AlertService } from '../../../../../core/services/view/alert.service';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { Observable, map } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
 import { DocumentDataParser } from '../../../../../interfaces/server/document/document.data.parsed';
+import { RedirectService } from '../../../../../core/services/redirect.service';
+import { WorkshopFormRequest } from '../../../../../interfaces/worksop.form.request';
 
 @Component({
   selector: 'app-table-elements',
@@ -24,20 +25,22 @@ export class TableElementsComponent {
   public dataBase!: string;
   public collection!: string;
 
-  //public documents!: Observable<{[key:string]:any}[]>;
   public documents!: Observable<DocumentDataParser[]>;
 
-  constructor(private router: Router, private route: ActivatedRoute, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
   }
 
   ngOnInit(): void {
-    const oService = this.route.snapshot.paramMap.get("service");
+    const snapshot = this.route.snapshot;
+
+    const oService = snapshot.paramMap.get("service");
     this.service = oService ? oService : "";
-    const oDataBase = this.route.snapshot.paramMap.get("data_base");
+    const oDataBase = snapshot.paramMap.get("data_base");
     this.dataBase = oDataBase ? oDataBase : "";
-    const oCollection = this.route.snapshot.paramMap.get("collection");
+    const oCollection = snapshot.paramMap.get("collection");
     this.collection = oCollection ? oCollection : "";
+
     this.refreshData();
   }
 
@@ -46,7 +49,6 @@ export class TableElementsComponent {
       map(documents => {
         try {
           return documents.map(document => {
-            console.log(JSON.parse(document.document));
             const documentParsed: DocumentDataParser = {
               data_base: document.data_base,
               collection: document.collection,
@@ -67,8 +69,12 @@ export class TableElementsComponent {
   openForm() {
   }
 
-  loadDocument(document: string) {
-    this.router.navigate(["/service", this.service, "data-base", this.dataBase, "collection", this.collection, "document", document]);
+  loadDocument(document: DocumentDataParser) {
+    const request: WorkshopFormRequest = {
+      base_key: document.base_key,
+      keys: document.keys
+    };
+    this.redirect.goToWorkshop(this.service, this.dataBase, this.collection, request);
   }
 
 }

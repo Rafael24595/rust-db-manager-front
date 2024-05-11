@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TableDataGroup } from '../../../../../interfaces/server/table/data.base.group';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { UtilsService } from '../../../../../core/services/utils.service';
+import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe } from '@angular/common';
 
@@ -25,12 +25,15 @@ export class TableDataComponent {
   }
 
   ngOnInit(): void {
-    const oService = this.route.snapshot.paramMap.get("service");
+    const snapshot = this.route.snapshot;
+
+    const oService = snapshot.paramMap.get("service");
     this.service = oService ? oService : "";
-    const oDataBase = this.route.snapshot.paramMap.get("data_base");
+    const oDataBase = snapshot.paramMap.get("data_base");
     this.dataBase = oDataBase ? oDataBase : "";
-    const oCollection = this.route.snapshot.paramMap.get("collection");
+    const oCollection = snapshot.paramMap.get("collection");
     this.collection = oCollection ? oCollection : "";
+
     this.refreshData();
   }
 

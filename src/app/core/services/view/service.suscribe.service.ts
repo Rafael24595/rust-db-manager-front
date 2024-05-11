@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ServiceSuscribe } from '../../interfaces/service.suscribe';
+import { ServiceSuscribe } from '../../../interfaces/service.suscribe';
 
 @Injectable({
   providedIn: 'root'

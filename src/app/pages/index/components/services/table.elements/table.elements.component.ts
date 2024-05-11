@@ -9,9 +9,10 @@ import { PublishFormComponent } from '../publish.form/publish.form.component';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { AlertModalComponent } from '../../../../../components/alert.modal/alert.modal.component';
-import { AlertService } from '../../../../../core/services/alert.service';
-import { Router, RouterModule } from '@angular/router';
+import { AlertService } from '../../../../../core/services/view/alert.service';
+import { RouterModule } from '@angular/router';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
+import { RedirectService } from '../../../../../core/services/redirect.service';
 
 @Component({
   selector: 'app-table-elements',
@@ -30,7 +31,7 @@ export class TableElementsComponent {
   public services!: Observable<PaginatedCollection<ServiceLite>>;
   public status: {[key:string]: string} = {}
 
-  constructor(private router: Router, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  constructor(private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
   }
 
@@ -89,7 +90,7 @@ export class TableElementsComponent {
   }
 
   loadService(service: string) {
-    this.router.navigate(["/service", service])
+    this.redirect.goToService(service);
   }
 
 }

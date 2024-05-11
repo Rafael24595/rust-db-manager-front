@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { TableDataGroup } from '../../../../../interfaces/server/table/data.base.group';
-import { UtilsService } from '../../../../../core/services/utils.service';
+import { UtilsService } from '../../../../../core/services/utils/utils.service';
 
 @Component({
   selector: 'app-table-data',
@@ -25,6 +25,7 @@ export class TableDataComponent {
   ngOnInit(): void {
     const route = this.route.snapshot.paramMap.get("service");
     this.service = route ? route : "";
+
     this.refreshData();
   }
 

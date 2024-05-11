@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { AlertData } from '../../interfaces/alert/alert.data';
+import { AlertData } from '../../../interfaces/alert/alert.data';
 
 const DEFAULT_TIME: number = 6000;
 

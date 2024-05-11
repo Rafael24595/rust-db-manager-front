@@ -1,15 +1,16 @@
 import { Component, Input } from '@angular/core';
 import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
 import { Observable, map } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AlertService } from '../../../../../core/services/alert.service';
+import { ActivatedRoute } from '@angular/router';
+import { AlertService } from '../../../../../core/services/view/alert.service';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ResponseException } from '../../../../../core/commons/response.exception';
-import { UtilsService } from '../../../../../core/services/utils.service';
+import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { CreateFormComponent } from '../create.form/create.form.component';
+import { RedirectService } from '../../../../../core/services/redirect.service';
 
 @Component({
   selector: 'app-table-elements',
@@ -27,15 +28,18 @@ export class TableElementsComponent {
 
   public collections!: Observable<string[]>;
 
-  constructor(private router: Router, private route: ActivatedRoute, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  constructor(private route: ActivatedRoute, private redirect: RedirectService, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
   }
 
   ngOnInit(): void {
-    const oService = this.route.snapshot.paramMap.get("service");
+    const snapshot = this.route.snapshot;
+
+    const oService = snapshot.paramMap.get("service");
     this.service = oService ? oService : "";
-    const oDataBase = this.route.snapshot.paramMap.get("data_base");
+    const oDataBase = snapshot.paramMap.get("data_base");
     this.dataBase = oDataBase ? oDataBase : "";
+
     this.refreshData();
   }
 
@@ -44,7 +48,7 @@ export class TableElementsComponent {
   }
 
   openForm() {
-    this.router.navigate(["/service", this.service, "data-base", this.dataBase, "new-collection"]);
+    this.redirect.goToCollectionForm(this.service, this.dataBase);
   }
 
   remove(collection: string) {
@@ -94,7 +98,7 @@ export class TableElementsComponent {
   }
 
   loadCollection(collection: string) {
-    this.router.navigate(["/service", this.service, "data-base", this.dataBase, "collection", collection]);
+    this.redirect.goToCollection(this.service, this.dataBase, collection);
   }
 
 }

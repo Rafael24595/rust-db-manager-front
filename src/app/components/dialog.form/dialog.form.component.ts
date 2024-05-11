@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { ModalButton } from '../../interfaces/modal.button';
-import { UtilsService } from '../../core/services/utils.service';
+import { UtilsService } from '../../core/services/utils/utils.service';
 
 @Component({
   selector: 'app-dialog-form',

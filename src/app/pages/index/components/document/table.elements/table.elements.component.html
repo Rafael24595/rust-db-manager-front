@@ -15,7 +15,7 @@
                 <table class="table-base">
                     @for (document of documents; track $index) {
                         <tr>
-                            <td (click)="loadDocument(collection)">
+                            <td (click)="loadDocument(document)">
                                 <p class="light-link">{{document.base_key?.value}}</p>
                             </td>
                             <td class="combo-field">

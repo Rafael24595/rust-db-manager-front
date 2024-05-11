@@ -1,0 +1,18 @@
+.numbered-text-area {
+    font-family: monospace;
+    background-color: antiquewhite;
+    max-width: 300px;
+    padding-left: 25px;
+    white-space: break-spaces;
+}
+
+.numbered-text-area-line {
+    list-style: none !important;
+    padding: 0;
+}
+
+.numbered-text-area-line::marker {
+    content: counter(list-item)"\a0\a0";
+    font-size: 10px;
+    color: grey;
+}

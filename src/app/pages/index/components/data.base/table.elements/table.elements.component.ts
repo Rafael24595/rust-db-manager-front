@@ -1,14 +1,15 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
 import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
 import { CreateFormComponent } from '../create.form/create.form.component';
 import { ResponseException } from '../../../../../core/commons/response.exception';
-import { AlertService } from '../../../../../core/services/alert.service';
+import { AlertService } from '../../../../../core/services/view/alert.service';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
+import { RedirectService } from '../../../../../core/services/redirect.service';
 
 @Component({
   selector: 'app-table-elements',
@@ -28,13 +29,14 @@ export class TableElementsComponent {
 
   public dataBases!: Observable<string[]>;
 
-  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
   }
 
   ngOnInit(): void {
     const route = this.route.snapshot.paramMap.get("service");
     this.service = route ? route : "";
+
     this.refreshData();
   }
 
@@ -76,7 +78,7 @@ export class TableElementsComponent {
   }
 
   loadDataBase(dataBase: string) {
-    this.router.navigate(["/service", this.service, "data-base", dataBase])
+    this.redirect.goToDataBase(this.service, dataBase);
   }
 
 }

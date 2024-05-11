@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { TableElementsComponent } from "./table.elements/table.elements.component";
 import { TableDataComponent } from './table.data/table.data.component';
-import { DbLogoService } from '../../../../core/services/db.logo.service';
+import { DbLogoService } from '../../../../core/services/view/db.logo.service';
 
 @Component({
   selector: 'app-services',

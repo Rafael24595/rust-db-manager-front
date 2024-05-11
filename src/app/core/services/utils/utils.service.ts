@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { TableDataGroup } from '../../interfaces/server/table/data.base.group';
-import { Callback } from '../../interfaces/callback';
-import { TableDataField } from '../../interfaces/server/table/data.base.field';
-import { CollectionDefinition } from '../../interfaces/server/collection/collection.definition';
+import { TableDataGroup } from '../../../interfaces/server/table/data.base.group';
+import { Callback } from '../../../interfaces/callback';
+import { TableDataField } from '../../../interfaces/server/table/data.base.field';
+import { CollectionDefinition } from '../../../interfaces/server/collection/collection.definition';
 
 @Injectable({
   providedIn: 'root'

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AlertService } from '../../../../../core/services/alert.service';
+import { ActivatedRoute } from '@angular/router';
+import { AlertService } from '../../../../../core/services/view/alert.service';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { map } from 'rxjs';
@@ -8,10 +8,11 @@ import { FieldDefinition } from '../../../../../interfaces/server/field/definiti
 import { AsyncPipe } from '@angular/common';
 import { FieldData } from '../../../../../interfaces/server/field/generate/field.data';
 import { FormsModule } from '@angular/forms';
-import { DbLogoService } from '../../../../../core/services/db.logo.service';
+import { DbLogoService } from '../../../../../core/services/view/db.logo.service';
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { CollectionDefinition } from '../../../../../interfaces/server/collection/collection.definition';
 import { GenerateCollectionQuery } from '../../../../../interfaces/server/collection/generate.collection.query';
+import { RedirectService } from '../../../../../core/services/redirect.service';
 
 @Component({
   selector: 'app-create-form',
@@ -33,15 +34,18 @@ export class CreateFormComponent {
   public base!: FieldDefinition;
   public field: FieldData | undefined
 
-  constructor(private router: Router, private route: ActivatedRoute, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.fields = [];
   }
 
   ngOnInit(): void {
-    const oService = this.route.snapshot.paramMap.get("service");
+    const snapshot = this.route.snapshot;
+
+    const oService = snapshot.paramMap.get("service");
     const service = oService ? oService : "";
-    const oDataBase = this.route.snapshot.paramMap.get("data_base");
+    const oDataBase = snapshot.paramMap.get("data_base");
     const dataBase = oDataBase ? oDataBase : "";
+
     this.resolver.serviceDefinition(service).pipe(
       map(definition => {
         this.definition = definition;
@@ -187,11 +191,11 @@ export class CreateFormComponent {
   }
 
   exitForm() {
-    this.router.navigate(["/service", this.service, "data-base", this.dataBase]);
+    this.redirect.goToDataBase(this.service, this.dataBase);
   }
 
   exit() {
-    this.router.navigate(["service"])
+    this.redirect.goToHome();
   }
 
 }

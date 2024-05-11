@@ -2,7 +2,7 @@ import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/
 import { ModalButton } from '../../interfaces/modal.button';
 import { CommonModule } from '@angular/common';
 import { Callback } from '../../interfaces/callback';
-import { UtilsService } from '../../core/services/utils.service';
+import { UtilsService } from '../../core/services/utils/utils.service';
 
 @Component({
   selector: 'app-combo-selector',

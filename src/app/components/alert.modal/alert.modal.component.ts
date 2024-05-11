@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { AlertData } from '../../interfaces/alert/alert.data';
-import { AlertService } from '../../core/services/alert.service';
+import { AlertService } from '../../core/services/view/alert.service';
 import { AlertItem } from '../../interfaces/alert/alert.item';
-import { UtilsService } from '../../core/services/utils.service';
+import { UtilsService } from '../../core/services/utils/utils.service';
 import { CommonModule } from '@angular/common';
 
 const MAX_VIEW: number = 3;
