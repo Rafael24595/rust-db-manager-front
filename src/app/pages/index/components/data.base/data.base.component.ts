@@ -64,7 +64,8 @@ export class DataBaseComponent {
 
   refreshData(service: string) {
     this.service = service;
-    this.logo.set(this.service);
+    const title = "Viewing data base";
+    this.logo.set(title, this.service);
   }
 
   refreshChilds() {

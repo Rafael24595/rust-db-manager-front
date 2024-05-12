@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DbLogoService } from '../../../../core/services/view/db.logo.service';
-import { Service } from '../../../../interfaces/server/service/definition/service';
+import { LogoTitle } from '../../../../interfaces/logo.title';
 
 @Component({
   selector: 'app-db-logo',
@@ -11,13 +11,13 @@ import { Service } from '../../../../interfaces/server/service/definition/servic
 })
 export class DbLogoComponent {
 
-  public service: Service | undefined;
+  public title: LogoTitle | undefined;
 
   constructor(private logo: DbLogoService) {
   }
 
   ngOnInit(): void {
-    this.logo.onEvent().subscribe((service: Service | undefined) => this.service = service);
+    this.logo.onEvent().subscribe((title: LogoTitle | undefined) => this.title = title);
   }
 
 }

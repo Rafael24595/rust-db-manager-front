@@ -16,6 +16,7 @@ import { Service } from '../../interfaces/server/service/definition/service';
 import { CollectionDefinition } from '../../interfaces/server/collection/collection.definition';
 import { GenerateCollectionQuery } from '../../interfaces/server/collection/generate.collection.query';
 import { DocumentData } from '../../interfaces/server/document/document.data';
+import { DocumentKey } from '../../interfaces/server/document/document.key';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -131,6 +132,13 @@ export class RustDbManagerService {
 
   collectionFindAll(service: string, database: string, collection: string): Observable<DocumentData[]> {
     return this.http.get<DocumentData[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionFind(service: string, database: string, collection: string, document: DocumentKey[]): Observable<DocumentData> {
+    return this.http.post<DocumentData>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/document`, document, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

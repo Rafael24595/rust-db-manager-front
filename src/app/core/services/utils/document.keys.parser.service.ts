@@ -16,6 +16,11 @@ export class DocumentKeysParserService {
 
   constructor() {}
 
+  public static pathTitleParser(title: string): string {
+    const result = DocumentKeysParserService._deserialize(title, {});
+    return result.map(r => r.value).join("#");
+  }
+
   public serialize(document: WorkshopFormRequest): {pathParam: string; queryParams: Dict<string>;} {
     if(document.base_key != undefined) {
       return this.serializeKey(document.base_key);
@@ -33,7 +38,7 @@ export class DocumentKeysParserService {
   }
 
   private serializeKey(request: DocumentKey): {pathParam: string; queryParams: Dict<string>;} {
-    const pathParam = `${request.name}${KEY_FIELD_SEPARATOR}${request.value}`;
+    const pathParam = `${request.name}${KEY_FIELD_SEPARATOR}${request.jtype}${KEY_FIELD_SEPARATOR}${request.value}`;
     let queryParams: Dict<string> = {};
     for (const attribute of request.attributes) {
       const paramKey = `${request.name}${KEY_FIELD_SEPARATOR}${attribute.key}`;
@@ -50,11 +55,16 @@ export class DocumentKeysParserService {
 
     const attributesDict: Dict<DocumentKeyAttribute[]> = this.deserializeAttributes(snapshot);
 
+    return DocumentKeysParserService._deserialize(documents, attributesDict);
+  }
+
+  private static _deserialize(documents: string, attributesDict: Dict<DocumentKeyAttribute[]>): DocumentKey[] {
+    const keys: DocumentKey[] = [];
     for (const document of documents.split(KEYS_MULTIPLE_SEPARATOR)) {
-      const [name, value] = document.split(KEY_FIELD_SEPARATOR);
+      const [name, jtype, value] = document.split(KEY_FIELD_SEPARATOR);
       const attributes = attributesDict[name] ? attributesDict[name] : [];
       keys.push({
-        name, value, attributes
+        name, value, jtype, attributes
       });
     }
 

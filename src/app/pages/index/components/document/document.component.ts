@@ -25,7 +25,7 @@ export class DocumentComponent {
   public dataBase!: string;
   public collection!: string;
 
-  constructor( private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) { }
+  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) { }
 
   ngOnInit(): void {
     const snapshot = this.route.snapshot;
@@ -71,7 +71,8 @@ export class DocumentComponent {
   refreshData(service: string, dataBase: string) {
     this.service = service;
     this.dataBase = dataBase;
-    this.logo.set(this.service);
+    const title = "Viewing document";
+    this.logo.set(title, this.service);
   }
 
   refreshChilds() {

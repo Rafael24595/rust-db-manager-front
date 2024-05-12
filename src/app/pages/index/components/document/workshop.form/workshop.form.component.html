@@ -1,3 +1,8 @@
-<p>workshop.form works!</p>
-
-<ol class="numbered-text-area" contenteditable (input)="watchContent()" #text_area></ol>
+<div id="error-container">
+    @if (error) {
+        <p>{{ error }}</p>
+    }
+</div>
+<div id="text-area-container">
+    <ol class="numbered-text-area" contenteditable (input)="watchContent()" #text_area></ol>
+</div>

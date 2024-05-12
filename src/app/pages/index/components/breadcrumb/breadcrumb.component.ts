@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Breadcrumb } from '../../../../interfaces/breadcrum';
-import { ActivationStart, Router, RouterModule } from '@angular/router';
+import { ActivationStart, Route, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -27,8 +27,15 @@ export class BreadcrumbComponent {
         const routes = this.router.config;
         const snapshot = event.snapshot;
 
-        const parts = snapshot.routeConfig?.path?.split("/");
-        for (const part of parts ? parts : []) {
+        const oParts = snapshot.routeConfig?.path?.split("/");
+        const parts = oParts ? oParts : [];
+        
+        const iterator = parts.entries();
+        let cursor = iterator.next();
+        while(!cursor.done) {
+          const part = cursor.value[1];
+          cursor = iterator.next();
+
           let title = part.charAt(0).toUpperCase() + part.slice(1);
           let route = part;
           if(part.startsWith(":")) {
@@ -36,25 +43,41 @@ export class BreadcrumbComponent {
             title = value ? value : title;
             route = value ? value : route;
           }
-
+  
           path.push(route);
+  
+          const matches = routes.find(r => r.path ? this.matchStrings(path.join("/"), r.path) : false);
 
-          if(routes.find(r => r.path ? this.matchStrings(path.join("/"), r.path) : false)) {
+          const queryKeys = snapshot.queryParamMap.keys;
+          if(cursor.done && queryKeys.length) {
+            path.push(`?${queryKeys.map(k => `${k}=${snapshot.queryParamMap.get(k)}`).join("&")}`);
+          }
+
+          if(matches) {
             this.breadcrumbs.push({
-              title: title,
+              title: this.parseTitle(title, matches),
               path: [...path]
             });
           }
-
         }
       }
     });
   }
 
-  matchStrings(str1: string, str2:string) {
+  private parseTitle(title: string, matches: Route): string {
+    const parsers: ((title: string) => string)[] | undefined = matches.data ? matches.data["parsers"] : undefined;
+    if(parsers) {
+      for (const parser of parsers) {
+        title = parser(title);
+      }
+    }
+    return title;
+  }
+
+  private matchStrings(str1: string, str2:string): boolean {
     const regexStr2 = str2.replace(/\//g, "\\/").replace(/:\w+/g, '[^\\/]+');
     const regex = new RegExp(`^${regexStr2}$`);
     return regex.test(str1);
-}
+  }
 
 }

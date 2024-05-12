@@ -69,7 +69,8 @@ export class CollectionComponent {
   refreshData(service: string, dataBase: string) {
     this.service = service;
     this.dataBase = dataBase;
-    this.logo.set(this.service);
+    const title = "Viewing collection";
+    this.logo.set(title, this.service);
   }
 
   refreshChilds() {

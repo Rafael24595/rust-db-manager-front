@@ -85,7 +85,8 @@ export class CreateFormComponent {
   refreshData(service: string, dataBase: string) {
     this.service = service;
     this.dataBase = dataBase;
-    this.logo.set(this.service);
+    const title = "Creating collection";
+    this.logo.set(title, this.service);
   }
 
   selectBase() {
