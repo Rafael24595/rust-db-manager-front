@@ -1,8 +1,14 @@
-<div id="error-container">
-    @if (error) {
-        <p>{{ error }}</p>
-    }
+<div id="button-container">
+    <button class="title-button smoke">Save</button><button class="title-button smoke">Delete</button>
 </div>
-<div id="text-area-container">
-    <ol class="numbered-text-area" contenteditable (input)="watchContent()" #text_area></ol>
-</div>
+@if (document) {
+    <div id="text-area-container">
+        <ngx-codemirror
+              [options]="options"
+              [ngModel]="document"
+              [disabled]="false"
+              [autoFocus]="true"
+              (ngModelChange)="handleChange($event)"
+        />
+    </div>
+}

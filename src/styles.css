@@ -1,3 +1,22 @@
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/theme/idea.css';
+@import 'codemirror/addon/fold/foldgutter.css';
+@import 'codemirror/addon/lint/lint.css';
+
+.CodeMirror { 
+    height: 100%;
+    font-weight: bold;
+    font-size: 1.05em;
+}
+
+.CodeMirror-gutters {
+    background-color: ghostwhite;
+}
+
+.CodeMirror-foldmarker {
+    text-shadow: #b9f 1px 1px 1px;
+}
+
 html, body {
     margin: 0px;
     height: 100%;

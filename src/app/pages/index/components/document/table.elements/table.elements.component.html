@@ -10,7 +10,7 @@
         </div>
         <div class="table-content" [ngClass]="{'empty': documents.length === 0}">
             @if (documents.length == 0) {
-                <p style="text-align: center;">No collections found.</p>
+                <p style="text-align: center;">No documents found.</p>
             } @else {
                 <table class="table-base">
                     @for (document of documents; track $index) {
