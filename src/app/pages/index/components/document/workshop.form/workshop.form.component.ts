@@ -62,6 +62,7 @@ export class WorkshopFormComponent {
     this.dataBase = oDataBase ? oDataBase : "";
     const oCollection = snapshot.paramMap.get("collection");
     this.collection = oCollection ? oCollection : "";
+
     this.keys = this.keyParser.deserialize(snapshot);
 
     if(this.keys && this.keys.length > 0) {
@@ -145,7 +146,6 @@ export class WorkshopFormComponent {
  }
 
   handleChange($event: string): void {
-    console.log(this.documentUpdated);
     this.documentUpdated = $event;
   }
 
@@ -190,8 +190,14 @@ export class WorkshopFormComponent {
           base_key: documentData.base_key,
           keys: documentData.keys
         }
-        
-        this.redirect.goToWorkshop(this.service, this.dataBase, this.collection, request);
+
+        if(documentData.base_key) {
+          this.keys = [documentData.base_key];
+        } else {
+          this.keys = document.keys;
+        }
+
+        this.refreshData();
       }
     });
   }

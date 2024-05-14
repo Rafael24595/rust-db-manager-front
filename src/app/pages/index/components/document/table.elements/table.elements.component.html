@@ -3,6 +3,9 @@
         <div class="table-title">
             <h3 class="title-text">Documents [{{documents.length}}]</h3>
             <div class="title-combo">
+                <button class="title-button" (click)="switchExpand()">
+                    <span class="expand-icon">▼</span>
+                </button>
                 <button class="title-button" (click)="openForm()">
                     <span class="plus-icon">+</span>
                 </button>

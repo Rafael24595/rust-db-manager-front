@@ -93,6 +93,11 @@ export class TableElementsComponent {
     ).subscribe();
   }
 
+  switchExpand() {
+    const direction = this.details.filter(d => d).length < this.details.length / 2;console.log(direction)
+    this.details = this.details.map(d => direction);
+  }
+
   switchDetails(index: number) {
     this.details[index] = !this.details[index];
   }

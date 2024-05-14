@@ -59,6 +59,7 @@ html, body {
 }
 
 .title-combo {
+    display: flex;
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -71,6 +72,7 @@ html, body {
     border: 1px solid darkgray;
     box-shadow: 1px 1px 2px -1px;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .title-button:hover {
@@ -100,6 +102,10 @@ html, body {
     font-size: large;
 }
 
+.expand-icon {
+    font-size: x-small;
+}
+
 .table-content.empty {
     border-left: 1px solid lightgrey;
     border-right: 1px solid lightgrey;
@@ -110,6 +116,10 @@ html, body {
 .table-base {
     width: 100%;
     table-layout: fixed;
+}
+
+.disable-layout {
+    table-layout: auto;
 }
 
 .table-base, .table-base th, .table-base td {
