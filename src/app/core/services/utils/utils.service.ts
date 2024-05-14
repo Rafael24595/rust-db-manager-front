@@ -9,6 +9,11 @@ import { CollectionDefinition } from '../../../interfaces/server/collection/coll
 })
 export class UtilsService {
 
+  public readonly COVERED_WITH_QUOTES = /^"/;
+  public readonly IS_KEY = /:$/;
+  public readonly IS_BOOLEAN = /true|false/;
+  public readonly IS_NULL = /null/;
+
   constructor() { }
 
   uuid(parts: number): string {
@@ -66,6 +71,29 @@ export class UtilsService {
 
     window.URL.revokeObjectURL(a.href);
     document.body.removeChild(a);
+  }
+
+  public beautifyDocument(document: string): string {
+    return document.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, (match) => {
+        let color = this.pickColor(match);
+        return `<span style="color: ${color};">${match}</span>`;
+    });
+  }
+
+  public pickColor(match: string): string {
+    if (this.COVERED_WITH_QUOTES.test(match)) {
+      return this.IS_KEY.test(match) ? '#000' : '#a11';
+    } 
+    
+    if (this.IS_BOOLEAN.test(match)) {
+        return'#219';
+    }
+    
+    if (this.IS_NULL.test(match)) {
+        return '#219';
+    }
+
+    return '#164';
   }
 
 }

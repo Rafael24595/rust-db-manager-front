@@ -190,7 +190,8 @@ export class WorkshopFormComponent {
           base_key: documentData.base_key,
           keys: documentData.keys
         }
-        this.redirect.goToWorkshop(this.service, this.dataBase, this.collection, request)
+        
+        this.redirect.goToWorkshop(this.service, this.dataBase, this.collection, request);
       }
     });
   }

@@ -109,6 +109,7 @@ html, body {
 
 .table-base {
     width: 100%;
+    table-layout: fixed;
 }
 
 .table-base, .table-base th, .table-base td {

@@ -6,6 +6,7 @@
 .combo-container {
     display: flex;
     justify-content: flex-end;
+    position: relative;
 }
 
 .candies-button {

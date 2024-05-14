@@ -1,4 +1,4 @@
-@if(documents | async; as documents) {
+@if(documents != undefined) {
     <div>
         <div class="table-title">
             <h3 class="title-text">Documents [{{documents.length}}]</h3>
@@ -16,7 +16,10 @@
                     @for (document of documents; track $index) {
                         <tr>
                             <td (click)="loadDocument(document)">
-                                <p class="light-link">{{document.base_key?.value}}</p>
+                                <p class="light-link">{{ keyValue(document) }}</p>
+                            </td>
+                            <td class="details-field">
+                                <button class="title-button smoke" (click)="switchDetails($index)">Details</button>
                             </td>
                             <td class="combo-field">
                                 <app-combo-selector [options]="[
@@ -31,6 +34,24 @@
                                         icon: {icon: '⤇'}
                                     }
                                 ]"/>
+                            </td>
+                        </tr>
+                        <tr [ngClass]="{'hide-details': !details[$index]}">
+                            <td class="sub-table-row" colspan="3">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            @for (field of documentKeys(document); track $index) {
+                                                <th>{{ field }}</th>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            @for (field of documentKeys(document); track $index) {
+                                                <td><div class="value-content"><pre [innerHTML]="fieldValue(field, document)"></pre></div></td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </td>
                         </tr>
                     }
