@@ -48,10 +48,10 @@ export class DocumentKeysParserService {
   }
 
   public deserialize(snapshot: ActivatedRouteSnapshot): DocumentKey[] {
-    const keys: DocumentKey[] = [];
-
-    const oDocuments = snapshot.paramMap.get("document");
-    const documents = oDocuments ? oDocuments : "";
+    const documents = snapshot.paramMap.get("document");
+    if(!documents) {
+      return [];
+    }
 
     const attributesDict: Dict<DocumentKeyAttribute[]> = this.deserializeAttributes(snapshot);
 

@@ -47,6 +47,8 @@ export class CollectionComponent {
 
   checkServiceResponse(e: ResponseException, service: string, dataBase: string) {
     if(this.handler.autentication(e, {
+      key: "Data base",
+      name: dataBase,
       service: service,
       nextCallback: {
         func: this.refreshData.bind(this),

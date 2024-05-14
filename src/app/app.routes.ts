@@ -14,6 +14,10 @@ export const routes: Routes = [
     { path: 'service/:service/data-base/:data_base', component: CollectionComponent },
     { path: 'service/:service/data-base/:data_base/new-collection', component: CreateFormComponent },
     { path: 'service/:service/data-base/:data_base/collection/:collection', component: DocumentComponent },
-    { path: 'service/:service/data-base/:data_base/collection/:collection/document/:document', component: WorkshopFormComponent
-        , data: { parsers: [DocumentKeysParserService.pathTitleParser] } },
+    { path: 'service/:service/data-base/:data_base/collection/:collection/document', component: WorkshopFormComponent,
+        data: { hide: true }
+    },
+    { path: 'service/:service/data-base/:data_base/collection/:collection/document/:document', component: WorkshopFormComponent, 
+        data: { parsers: [DocumentKeysParserService.pathTitleParser] } 
+    },
 ];

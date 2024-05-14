@@ -61,6 +61,8 @@ export class TableElementsComponent {
     this.resolver.dataBaseDrop(this.service, dataBase).subscribe({
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
+          key: "Data base",
+          name: dataBase,
           service: this.service,
           nextCallback: {
             func: this.remove.bind(this),

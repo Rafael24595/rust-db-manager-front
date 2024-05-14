@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Breadcrumb } from '../../../../interfaces/breadcrum';
 import { ActivationStart, Route, Router, RouterModule } from '@angular/router';
+import { Optional } from '../../../../types/optional';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -53,7 +54,8 @@ export class BreadcrumbComponent {
             path.push(`?${queryKeys.map(k => `${k}=${snapshot.queryParamMap.get(k)}`).join("&")}`);
           }
 
-          if(matches) {
+          const hide = this.isHidden(matches);
+          if(matches && hide) {
             this.breadcrumbs.push({
               title: this.parseTitle(title, matches),
               path: [...path]
@@ -62,6 +64,10 @@ export class BreadcrumbComponent {
         }
       }
     });
+  }
+
+  private isHidden(matches: Optional<Route>): boolean {
+    return !matches?.data || (matches?.data && !matches.data["hide"]);
   }
 
   private parseTitle(title: string, matches: Route): string {

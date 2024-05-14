@@ -31,6 +31,10 @@ export class RedirectService {
     this.router.navigate(["/service", service, "data-base", dataBase, "collection", collection]);
   }
 
+  public goToNewWorkshop(service: string, dataBase: string, collection: string): void {
+    this.router.navigate(["/service", service, "data-base", dataBase, "collection", collection, "document", ""]);
+  }
+
   public goToWorkshop(service: string, dataBase: string, collection: string, document: WorkshopFormRequest): void {
     const {pathParam, queryParams} = this.keyParser.serialize(document)
     this.router.navigate(["/service", service, "data-base", dataBase, "collection", collection, "document", pathParam], {queryParams});

@@ -43,6 +43,8 @@ export class DataBaseComponent {
 
   checkServiceResponse(e: ResponseException, service: string) {
     if(this.handler.autentication(e, {
+      key: "Service",
+      name: service,
       service: service,
       nextCallback: {
         func: this.refreshData.bind(this),

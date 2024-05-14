@@ -55,6 +55,8 @@ export class TableElementsComponent {
     this.resolver.collectionDrop(this.service, this.dataBase, collection).subscribe({
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
+          key: "Collection",
+          name: collection,
           service: this.service,
           nextCallback: {
             func: this.remove.bind(this),
@@ -72,7 +74,7 @@ export class TableElementsComponent {
   }
 
   exportJson(collection: string) {
-    this.resolver.collectionFindAll(this.service, this.dataBase, collection)
+    this.resolver.documentFindAll(this.service, this.dataBase, collection)
       .pipe(
         map(json => {
           const filename = `${this.service}-${this.dataBase}-${collection}_${Date.now()}.json`;
@@ -82,6 +84,8 @@ export class TableElementsComponent {
       .subscribe({
         error: (e: ResponseException) => {
           if(this.handler.autentication(e, {
+            key: "Collection",
+            name: collection,
             service: this.service,
             nextCallback: {
               func: this.exportJson.bind(this)

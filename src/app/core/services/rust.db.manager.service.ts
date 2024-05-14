@@ -17,6 +17,8 @@ import { CollectionDefinition } from '../../interfaces/server/collection/collect
 import { GenerateCollectionQuery } from '../../interfaces/server/collection/generate.collection.query';
 import { DocumentData } from '../../interfaces/server/document/document.data';
 import { DocumentKey } from '../../interfaces/server/document/document.key';
+import { UpdateDocument } from '../../interfaces/update.document';
+import { DocumentSchema } from '../../interfaces/server/document/document.schema';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -81,7 +83,7 @@ export class RustDbManagerService {
   }
 
   serviceDefinition(service: string): Observable<CollectionDefinition> {
-    return this.http.get<CollectionDefinition>(`${environment.URL_SERVICE}/${service}/definition`, CREDENTIALS_OPTIONS)
+    return this.http.get<CollectionDefinition>(`${environment.URL_SERVICE}/${service}/schema`, CREDENTIALS_OPTIONS)
       .pipe(
         map(this.utils.sortCollectionDefinition),
         catchError(this.handleError)
@@ -129,20 +131,6 @@ export class RustDbManagerService {
         catchError(this.handleError)
       );
   }
-
-  collectionFindAll(service: string, database: string, collection: string): Observable<DocumentData[]> {
-    return this.http.get<DocumentData[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}`, CREDENTIALS_OPTIONS)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  collectionFind(service: string, database: string, collection: string, document: DocumentKey[]): Observable<DocumentData> {
-    return this.http.post<DocumentData>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/document`, document, CREDENTIALS_OPTIONS)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
   
   collectionCreate(service: string, request: GenerateCollectionQuery): Observable<void> {
     return this.http.post<void>(`${environment.URL_SERVICE}/${service}/data-base/${request.data_base}/collection`, request, CREDENTIALS_OPTIONS)
@@ -153,6 +141,48 @@ export class RustDbManagerService {
 
   collectionStatus(service: string, database: string, collection: string): Observable<TableDataGroup[]> {
     return this.http.get<TableDataGroup[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/metadata`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  documentShema(service: string, database: string, collection: string): Observable<DocumentSchema> {
+    return this.http.get<DocumentSchema>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/schema`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  documentFindAll(service: string, database: string, collection: string): Observable<DocumentData[]> {
+    return this.http.get<DocumentData[]>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/document/find`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  documentFind(service: string, database: string, collection: string, document: DocumentKey[]): Observable<DocumentData> {
+    return this.http.post<DocumentData>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/document/find`, document, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  documentInsert(service: string, database: string, collection: string, document: UpdateDocument): Observable<DocumentData> {
+    return this.http.post<DocumentData>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/document/query`, document, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  documentUpdate(service: string, database: string, collection: string, document: UpdateDocument): Observable<DocumentData> {
+    return this.http.put<DocumentData>(`${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/document/query`, document, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  documentDelete(service: string, database: string, collection: string, document: DocumentKey[]): Observable<DocumentData> {
+    return this.http.request<DocumentData>('delete', `${environment.URL_SERVICE}/${service}/data-base/${database}/collection/${collection}/document/query`, { withCredentials: true, body: document })
       .pipe(
         catchError(this.handleError)
       );

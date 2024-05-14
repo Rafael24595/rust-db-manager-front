@@ -19,7 +19,18 @@
                                 <p class="light-link">{{document.base_key?.value}}</p>
                             </td>
                             <td class="combo-field">
-                                <app-combo-selector [options]="[]"/>
+                                <app-combo-selector [options]="[
+                                    {
+                                        title: 'Remove', 
+                                        callback: {func: remove.bind(this), args: [document]}, 
+                                        icon: {icon: '🗑'}
+                                    },
+                                    {
+                                        title: 'View', 
+                                        callback: {func: loadDocument.bind(this), args: [document]}, 
+                                        icon: {icon: '⤇'}
+                                    }
+                                ]"/>
                             </td>
                         </tr>
                     }

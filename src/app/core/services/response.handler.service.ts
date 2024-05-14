@@ -4,6 +4,7 @@ import { AlertService } from './view/alert.service';
 import { ServiceSuscribeService } from './view/service.suscribe.service';
 import { ServiceSuscribe } from '../../interfaces/service.suscribe';
 import { UtilsService } from './utils/utils.service';
+import { AuthAction } from '../../interfaces/auth.action';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +14,26 @@ export class ResponseHandlerService {
   constructor(private alert: AlertService, private utils: UtilsService, private suscribe: ServiceSuscribeService) {
   }
 
-  autentication(e: ResponseException, service: ServiceSuscribe): boolean {
+  autentication(e: ResponseException, action: AuthAction): boolean {
     let status = e.status;
     if(status == 404) {
-      this.alert.alert(`Service ${service.service} not found.`);
-      if(service.exitCallback) {
-        this.utils.executeCallback(service.exitCallback);
+      this.alert.alert(`${action.key} ${action.name} not found.`);
+      if(action.exitCallback) {
+        this.utils.executeCallback(action.exitCallback);
       }
       return true;
     }
 
+    if(status == 405) {
+      return false;
+    }
+
     if(status && status > 399 && status < 500) {
+      const service: ServiceSuscribe = {
+        service: action.service,
+        nextCallback: action.nextCallback,
+        exitCallback: action.exitCallback
+      };
       this.suscribe.suscribe(service);
       return true;
     }

@@ -9,6 +9,7 @@ import { ComboSelectorComponent } from '../../../../../components/combo.selector
 import { DocumentDataParser } from '../../../../../interfaces/server/document/document.data.parsed';
 import { RedirectService } from '../../../../../core/services/redirect.service';
 import { WorkshopFormRequest } from '../../../../../interfaces/worksop.form.request';
+import { ResponseException } from '../../../../../core/commons/response.exception';
 
 @Component({
   selector: 'app-table-elements',
@@ -45,7 +46,7 @@ export class TableElementsComponent {
   }
 
   refreshData() {
-    this.documents = this.resolver.collectionFindAll(this.service, this.dataBase, this.collection).pipe(
+    this.documents = this.resolver.documentFindAll(this.service, this.dataBase, this.collection).pipe(
       map(documents => {
         try {
           return documents.map(document => {
@@ -67,6 +68,39 @@ export class TableElementsComponent {
   }
 
   openForm() {
+    this.redirect.goToNewWorkshop(this.service, this.dataBase, this.collection);
+  }
+
+  remove(document: DocumentDataParser) {
+    let keys = document.keys;
+    let title = document.keys.map(k => k.value).join("#");
+    if(document.base_key != undefined) {
+      keys = [document.base_key];
+      title = document.base_key.value
+    }
+
+    this.resolver.documentDelete(this.service, this.dataBase, this.collection, keys).subscribe({
+      error: (e: ResponseException) => {
+        if(this.handler.autentication(e, {
+          key: "Document",
+          name: title,
+          service: this.service,
+          nextCallback: {
+            func: this.remove.bind(this),
+            args: [document]
+          }
+        })) {
+          return;
+        }
+
+        console.error(e);
+        this.alert.alert(e.message);
+      },
+      complete: () => {
+        this.alert.message(`Document '${title}' removed successfully.`);
+        this.refreshData();
+      }
+    });
   }
 
   loadDocument(document: DocumentDataParser) {
