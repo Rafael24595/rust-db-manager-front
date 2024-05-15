@@ -15,25 +15,35 @@
                 <table class="table-base">
                     @for (collection of collections; track $index) {
                         <tr>
-                            <td (click)="loadCollection(collection)">
+                            <td (click)="load(collection)">
                                 <p class="light-link">{{collection}}</p>
                             </td>
                             <td class="combo-field">
                                 <app-combo-selector [options]="[
+                                {
+                                    title: 'View', 
+                                    callback: {func: load.bind(this), args: [collection]}, 
+                                    icon: {icon: '⤇'}
+                                },
+                                {
+                                    title: 'Rename', 
+                                    callback: {func: rename.bind(this), args: [collection]}, 
+                                    icon: {icon: '···'}
+                                },
                                 {
                                     title: 'Remove', 
                                     callback: {func: remove.bind(this), args: [collection]}, 
                                     icon: {icon: '🗑'}
                                 },
                                 {
-                                    title: 'View', 
-                                    callback: {func: loadCollection.bind(this), args: [collection]}, 
-                                    icon: {icon: '⤇'}
-                                },
-                                {
                                     title: 'Export JSON', 
                                     callback: {func: exportJson.bind(this), args: [collection]}, 
                                     icon: {icon: '🖫'}
+                                },
+                                {
+                                    title: 'Import JSON', 
+                                    callback: {func: exportJson.bind(this), args: [collection]}, 
+                                    icon: {icon: '🖬'}
                                 }
                                 ]"/>
                             </td>
@@ -44,3 +54,12 @@
         </div>
     </div>
 }
+
+<app-rename-form
+    [service]="service"
+    [dataBase]="dataBase"
+    [collection]="cursor"
+    [onSubmit]="{
+        func: refreshBranch.bind(this)
+    }"
+/>

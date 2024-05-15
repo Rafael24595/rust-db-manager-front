@@ -46,7 +46,7 @@ export class CreateFormComponent {
     const oDataBase = snapshot.paramMap.get("data_base");
     const dataBase = oDataBase ? oDataBase : "";
 
-    this.resolver.serviceDefinition(service).pipe(
+    this.resolver.serviceSchema(service).pipe(
       map(definition => {
         this.definition = definition;
         this.fields = this.fields.concat(this.definition.defaults);
@@ -174,7 +174,7 @@ export class CreateFormComponent {
       fields: this.fields
     }
     
-    this.resolver.collectionCreate(this.service, request).subscribe({
+    this.resolver.collectionInsert(this.service, request).subscribe({
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
           key: "Data base",

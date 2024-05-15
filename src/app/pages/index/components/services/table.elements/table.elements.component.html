@@ -3,7 +3,7 @@
         <div class="table-title">
             <h3 class="title-text">Services [{{services.services.length}}]</h3>
             <div class="title-combo">
-                <button class="title-button" (click)="openModal()">
+                <button class="title-button" (click)="openForm()">
                     <span class="plus-icon">+</span>
                 </button>
             </div>
@@ -27,7 +27,7 @@
                                     <span class="db-title">{{service.category.category}}</span>
                                 </a>
                             </td>
-                            <td (click)="loadService(service.name)">
+                            <td (click)="load(service.name)">
                                 <p class="light-link">{{service.name}}</p>
                             </td>
                             <td class="combo-field">
@@ -39,7 +39,7 @@
                                     },
                                     {
                                         title: 'View', 
-                                        callback: {func: loadService.bind(this), args: [service.name]}, 
+                                        callback: {func: load.bind(this), args: [service.name]}, 
                                         icon: {icon: '⤇'}
                                     },
                                     {
@@ -57,14 +57,8 @@
     </div>
 }
 
-<app-dialog-form 
-    [widht]="'550px'"
-    [height]="'375px'"
-    [title]="'New Service'"
-    [buttons]="[
-        {title: 'Publish', callback: {func: onSubmit.bind(this)}},
-        {title: 'Close', callback: {func: closeModal.bind(this)}}
-    ]"
-    #form_dialog>
-    <app-publish-form [closeModal]="closeModal.bind(this)" [refreshData]="refreshData.bind(this)"/>
-</app-dialog-form>
+<app-publish-form
+    [onSubmit]="{
+        func: refreshBranch.bind(this)
+    }"
+/>

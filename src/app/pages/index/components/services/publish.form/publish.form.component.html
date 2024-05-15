@@ -1,49 +1,59 @@
-<form>
-    <table class="table-form">
-        <tbody>
-            <tr>
-                <td>
-                    <label for="category"><span class="required"></span> Category:</label>
-                    <br>
-                    <select name="category" id="category" [(ngModel)]="category" required>
-                        <option value="" disabled selected>-- select one --</option>
-                        @if(categories | async; as categories) { 
-                            @for (category of categories; track $index) {
-                                <option value="{{ category.category }}">{{ category.category }}</option>
-                            }
-                        }
-                    </select>
-                </td>
-                <td>
-                    <label for="connection"><span class="required"></span> Connection:</label>
-                    <br>
-                    <input type="text" name="connection" [(ngModel)]="connection" required>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="name"><span class="required"></span> Name:</label>
-                    <br>
-                    <input type="text" name="name" [(ngModel)]="name" required>
-                </td>
-                <td>
-                    <label for="secure">Protect connection:</label>
-                    <input type="checkbox" name="secure" [(ngModel)]="secure">
-                </td>
-            </tr>
-            @if (secure) {
-                <tr><td class="void-row"></td></tr>
+<app-dialog-form 
+    [widht]="'550px'"
+    [height]="'375px'"
+    [title]="'New Service'"
+    [buttons]="[
+        {title: 'Publish', callback: {func: submitForm.bind(this)}},
+        {title: 'Close', callback: {func: closeModal.bind(this)}}
+    ]"
+    #form_dialog>
+    <form>
+        <table class="table-form">
+            <tbody>
                 <tr>
-                    <td colspan="2" class="table-section">
-                        <label for="password">Password:</label>
+                    <td>
+                        <label for="category"><span class="required"></span> Category:</label>
                         <br>
-                        <div class="password-input">
-                            <input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password">
-                            <button class="password-input-eye" (click)="togglePasswordVisibility()" [ngClass]="showPassword ? 'active' : ''">👁</button>
-                        </div>
+                        <select name="category" id="category" [(ngModel)]="category" required>
+                            <option value="" disabled selected>-- select one --</option>
+                            @if(categories | async; as categories) { 
+                                @for (category of categories; track $index) {
+                                    <option value="{{ category.category }}">{{ category.category }}</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <label for="connection"><span class="required"></span> Connection:</label>
+                        <br>
+                        <input type="text" name="connection" [(ngModel)]="connection" required>
                     </td>
                 </tr>
-            }
-        </tbody>
-    </table>
-</form>
+                <tr>
+                    <td>
+                        <label for="name"><span class="required"></span> Name:</label>
+                        <br>
+                        <input type="text" name="name" [(ngModel)]="name" required>
+                    </td>
+                    <td>
+                        <label for="secure">Protect connection:</label>
+                        <input type="checkbox" name="secure" [(ngModel)]="secure">
+                    </td>
+                </tr>
+                @if (secure) {
+                    <tr><td class="void-row"></td></tr>
+                    <tr>
+                        <td colspan="2" class="table-section">
+                            <label for="password">Password:</label>
+                            <br>
+                            <div class="password-input">
+                                <input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password">
+                                <button class="password-input-eye" (click)="togglePasswordVisibility()" [ngClass]="showPassword ? 'active' : ''">👁</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</app-dialog-form>

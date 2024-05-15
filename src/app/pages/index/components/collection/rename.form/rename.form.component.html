@@ -1,9 +1,9 @@
 <app-dialog-form 
     [widht]="'550px'"
     [height]="'250px'"
-    [title]="'New DataBase'"
+    [title]="'Renaming collection \'' + collection + '\''"
     [buttons]="[
-        {title: 'Create', callback: {func: formSubmit.bind(this)}},
+        {title: 'Rename', callback: {func: submitForm.bind(this)}},
         {title: 'Close', callback: {func: closeModal.bind(this)}}
     ]"
     #form_dialog>
@@ -14,7 +14,7 @@
                     <td>
                         <label for="name"><span class="required"></span> Name:</label>
                         <br>
-                        <input type="text" name="connection" [(ngModel)]="dataBase" required>
+                        <input type="text" name="connection" [(ngModel)]="rename" required>
                     </td>
                 </tr>
             </tbody>

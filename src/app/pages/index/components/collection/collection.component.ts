@@ -35,7 +35,7 @@ export class CollectionComponent {
     const oDataBase = snapshot.paramMap.get("data_base");
     const dataBase = oDataBase ? oDataBase : "";
 
-    this.resolver.dataBaseStatus(service, dataBase).subscribe({
+    this.resolver.dataBaseMetadata(service, dataBase).subscribe({
       error: (e: ResponseException) => {
         this.checkServiceResponse(e, service, dataBase);
       },

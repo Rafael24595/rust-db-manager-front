@@ -92,6 +92,7 @@
     border: none;
     cursor: pointer;
     color: #333333;
+    text-align: left;
 }
 
 .combo-icon {

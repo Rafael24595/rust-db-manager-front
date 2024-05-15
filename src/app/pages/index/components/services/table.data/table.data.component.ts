@@ -13,24 +13,24 @@ import { AsyncPipe } from '@angular/common';
 })
 export class TableDataComponent {
 
-  public metadata!: Observable<ServerStatus>;
+  protected metadata!: Observable<ServerStatus>;
 
-  constructor(private resolver: RustDbManagerService) {
+  public constructor(private resolver: RustDbManagerService) {
   }
 
-  ngOnInit(): void {
+  protected ngOnInit(): void {
     this.refreshData();
   }
 
-  refreshData() {
+  public refreshData(): void {
     this.metadata = this.resolver.metadata();
   }
 
-  formatDate(timestamp: number): string {
+  protected formatDate(timestamp: number): string {
     return new Date(timestamp).toString();
   }
 
-  executionTime(timestamp: number): string {
+  protected executionTime(timestamp: number): string {
     const now = Date.now();
     const difference = Math.abs(now - timestamp);
 

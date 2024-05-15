@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
@@ -7,32 +7,36 @@ import { FormsModule } from '@angular/forms';
 import { ServiceCreateRequest } from '../../../../../interfaces/server/service/generate/service.create.request';
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
+import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
+import { Callback } from '../../../../../interfaces/callback';
+import { UtilsService } from '../../../../../core/services/utils/utils.service';
 
 @Component({
   selector: 'app-publish-form',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, FormsModule],
+  imports: [AsyncPipe, CommonModule, FormsModule, DialogFormComponent],
   templateUrl: './publish.form.component.html',
   styleUrl: './publish.form.component.css'
 })
 export class PublishFormComponent {
   
-  @Input() closeModal: Function;
-  @Input() refreshData: Function;
+  @ViewChild('form_dialog') 
+  private formDialog!: DialogFormComponent;
 
-  public categories!: Observable<ServiceCategoryLite[]>;
+  @Input() 
+  public onSubmit!: Callback;
+
+  protected categories!: Observable<ServiceCategoryLite[]>;
   
-  public category: string;
-  public name: string;
-  public connection: string;
-  public secure: boolean;
+  protected category: string;
+  protected name: string;
+  protected connection: string;
+  protected secure: boolean;
 
-  public showPassword: boolean;
-  public password: string;
+  protected showPassword: boolean;
+  protected password: string;
 
-  constructor(private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
-    this.closeModal = () => {};
-    this.refreshData = () => {};
+  public constructor(private utils: UtilsService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.category = "";
     this.name = "";
     this.connection = "";
@@ -41,11 +45,19 @@ export class PublishFormComponent {
     this.password = "";
   }
 
-  ngOnInit(): void {
-    this.categories = this.resolver.support();
+  protected ngOnInit(): void {
+    this.categories = this.resolver.available();
   }
 
-  onSubmit(attemps: number = 0) {
+  public openModal(): void {
+    this.formDialog.openModal();
+  }
+
+  public closeModal(): void {
+    this.formDialog.closeModal();
+  }
+
+  protected submitForm(attemps: number = 0): void {
     const request: ServiceCreateRequest = {
       name: this.name,
       owner: "Client",
@@ -57,19 +69,19 @@ export class PublishFormComponent {
       }
     };
     
-    this.resolver.publish(request).subscribe({
+    this.resolver.serviceInsert(request).subscribe({
       error: (e: ResponseException) => {
-        this.handler.requestAttemp(e, this.onSubmit.bind(this), attemps);
+        this.handler.requestAttemp(e, this.submitForm.bind(this), attemps);
       },
       complete: () => {
+        this.utils.executeCallback(this.onSubmit);
         this.closeModal();
-        this.refreshData();
         this.cleanForm();
       }
     });
   }
 
-  cleanForm() {
+  private cleanForm(): void {
     this.category = "";
     this.name = "";
     this.connection = "";
@@ -78,7 +90,7 @@ export class PublishFormComponent {
     this.showPassword = false;
   }
 
-  togglePasswordVisibility() {
+  protected togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 

@@ -18,16 +18,19 @@ import { RedirectService } from '../../../../core/services/redirect.service';
 })
 export class DocumentComponent {
 
-  @ViewChild('table_element') tableElement!: TableElementsComponent;
-  @ViewChild('table_data') tableData!: TableDataComponent;
+  @ViewChild('table_element') 
+  private tableElement!: TableElementsComponent;
+  @ViewChild('table_data')
+  private tableData!: TableDataComponent;
 
-  public service!: string;
-  public dataBase!: string;
-  public collection!: string;
+  protected service!: string;
+  protected dataBase!: string;
+  protected collection!: string;
 
-  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) { }
+  public constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const snapshot = this.route.snapshot;
 
     const oService = snapshot.paramMap.get("service");
@@ -37,7 +40,7 @@ export class DocumentComponent {
     const oCollection = snapshot.paramMap.get("collection");
     const collection = oCollection ? oCollection : "";
 
-    this.resolver.collectionStatus(service, dataBase, collection).subscribe({
+    this.resolver.collectionMetadata(service, dataBase, collection).subscribe({
       error: (e: ResponseException) => {
         this.checkServiceResponse(e, service, dataBase);
       },
@@ -47,7 +50,7 @@ export class DocumentComponent {
     });
   }
 
-  checkServiceResponse(e: ResponseException, service: string, dataBase: string) {
+  private checkServiceResponse(e: ResponseException, service: string, dataBase: string): void {
     if(this.handler.autentication(e, {
       key: "Collection",
       name: this.collection,
@@ -70,19 +73,19 @@ export class DocumentComponent {
     console.error(e);
   }
 
-  refreshData(service: string, dataBase: string) {
+  private refreshData(service: string, dataBase: string): void {
     this.service = service;
     this.dataBase = dataBase;
     const title = "Viewing document";
     this.logo.set(title, this.service);
   }
 
-  refreshChilds() {
+  protected refreshChilds(): void {
     this.tableElement.refreshData();
     this.tableData.refreshData()
   }
 
-  exit() {
+  private exit(): void {
     this.redirect.goToHome();
   }
 

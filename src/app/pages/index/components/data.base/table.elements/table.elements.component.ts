@@ -14,51 +14,42 @@ import { RedirectService } from '../../../../../core/services/redirect.service';
 @Component({
   selector: 'app-table-elements',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, RouterModule, ComboSelectorComponent, DialogFormComponent, CreateFormComponent],
+  imports: [AsyncPipe, CommonModule, RouterModule, ComboSelectorComponent, CreateFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
 export class TableElementsComponent {
 
-  @Input() refreshBranch: Function;
+  @ViewChild(CreateFormComponent) 
+  protected formComponent!: CreateFormComponent;
   
-  @ViewChild('form_dialog') formDialog!: DialogFormComponent;
-  @ViewChild(CreateFormComponent) formComponent!: CreateFormComponent;
+  @Input() 
+  public refreshBranch: Function;
+  
+  protected service!: string;
+  protected dataBases!: Observable<string[]>;
 
-  public service!: string;
-
-  public dataBases!: Observable<string[]>;
-
-  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  public constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
   }
 
-  ngOnInit(): void {
+  protected ngOnInit(): void {
     const route = this.route.snapshot.paramMap.get("service");
     this.service = route ? route : "";
 
     this.refreshData();
   }
 
-  refreshData() {
+  public refreshData() {
     this.dataBases = this.resolver.dataBaseFindAll(this.service);
   }
 
-  openModal() {
-    this.formDialog.openModal();
+  protected openForm() {
+    this.formComponent.openModal();
   }
 
-  closeModal() {
-    this.formDialog.closeModal();
-  }
-
-  onSubmit() {
-    this.formComponent.onSubmit();
-    this.refreshBranch();
-  }
-
-  remove(dataBase: string) {
-    this.resolver.dataBaseDrop(this.service, dataBase).subscribe({
+  protected remove(dataBase: string) {
+    this.resolver.dataBaseRemove(this.service, dataBase).subscribe({
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
           key: "Data base",
@@ -79,7 +70,7 @@ export class TableElementsComponent {
     });
   }
 
-  loadDataBase(dataBase: string) {
+  protected load(dataBase: string) {
     this.redirect.goToDataBase(this.service, dataBase);
   }
 

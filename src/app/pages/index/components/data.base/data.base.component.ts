@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { RustDbManagerService } from '../../../../core/services/rust.db.manager.service';
 import { ResponseException } from '../../../../core/commons/response.exception';
 import { AlertService } from '../../../../core/services/view/alert.service';
-import { ServiceSuscribeService } from '../../../../core/services/view/service.suscribe.service';
 import { TableElementsComponent } from './table.elements/table.elements.component';
 import { TableDataComponent } from './table.data/table.data.component';
 import { DbLogoService } from '../../../../core/services/view/db.logo.service';
@@ -19,15 +18,17 @@ import { RedirectService } from '../../../../core/services/redirect.service';
 })
 export class DataBaseComponent {
 
-  @ViewChild('table_element') tableElement!: TableElementsComponent;
-  @ViewChild('table_data') tableData!: TableDataComponent;
+  @ViewChild('table_element') 
+  protected tableElement!: TableElementsComponent;
+  @ViewChild('table_data') 
+  protected tableData!: TableDataComponent;
 
-  public service!: string;
+  protected service!: string;
 
-  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService, private suscribe: ServiceSuscribeService) {
+  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
   }
 
-  ngOnInit(): void {
+  protected ngOnInit(): void {
     const oService = this.route.snapshot.paramMap.get("service");
     const service = oService ? oService : "";
 
@@ -41,7 +42,7 @@ export class DataBaseComponent {
     })
   }
 
-  checkServiceResponse(e: ResponseException, service: string) {
+  private checkServiceResponse(e: ResponseException, service: string) {
     if(this.handler.autentication(e, {
       key: "Service",
       name: service,
@@ -64,18 +65,18 @@ export class DataBaseComponent {
     console.error(e);
   }
 
-  refreshData(service: string) {
+  private refreshData(service: string) {
     this.service = service;
     const title = "Viewing data base";
     this.logo.set(title, this.service);
   }
 
-  refreshChilds() {
+  protected refreshChilds() {
     this.tableElement.refreshData();
     this.tableData.refreshData()
   }
 
-  exit() {
+  private exit() {
     this.redirect.goToHome();
   }
 

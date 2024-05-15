@@ -35,7 +35,7 @@ export class TableDataComponent {
   }
 
   refreshData() {
-    this.metadata = this.resolver.dataBaseStatus(this.service, this.dataBase);
+    this.metadata = this.resolver.dataBaseMetadata(this.service, this.dataBase);
   }
 
 }

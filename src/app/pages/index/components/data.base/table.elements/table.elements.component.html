@@ -3,7 +3,7 @@
         <div class="table-title">
             <h3 class="title-text">Data Bases [{{dataBases.length}}]</h3>
             <div class="title-combo">
-                <button class="title-button" (click)="openModal()">
+                <button class="title-button" (click)="openForm()">
                     <span class="plus-icon">+</span>
                 </button>
             </div>
@@ -15,20 +15,20 @@
                 <table class="table-base">
                     @for (dataBase of dataBases; track $index) {
                         <tr>
-                            <td (click)="loadDataBase(dataBase)">
+                            <td (click)="load(dataBase)">
                                 <p class="light-link">{{dataBase}}</p>
                             </td>
                             <td class="combo-field">
                                 <app-combo-selector [options]="[
                                     {
+                                        title: 'View', 
+                                        callback: {func: load.bind(this), args: [dataBase]}, 
+                                        icon: {icon: '⤇'}
+                                    },
+                                    {
                                         title: 'Remove', 
                                         callback: {func: remove.bind(this), args: [dataBase]}, 
                                         icon: {icon: '🗑'}
-                                    },
-                                    {
-                                        title: 'View', 
-                                        callback: {func: loadDataBase.bind(this), args: [dataBase]}, 
-                                        icon: {icon: '⤇'}
                                     }
                                 ]"/>
                             </td>
@@ -40,14 +40,9 @@
     </div>
 }
 
-<app-dialog-form 
-    [widht]="'550px'"
-    [height]="'250px'"
-    [title]="'New DataBase'"
-    [buttons]="[
-        {title: 'Create', callback: {func: onSubmit.bind(this)}},
-        {title: 'Close', callback: {func: closeModal.bind(this)}}
-    ]"
-    #form_dialog>
-    <app-create-form [closeModal]="closeModal.bind(this)" [refreshData]="refreshData.bind(this)"/>
-</app-dialog-form>
+<app-create-form
+    [service]="service"
+    [onSubmit]="{
+        func: refreshBranch.bind(this)
+    }"
+/>

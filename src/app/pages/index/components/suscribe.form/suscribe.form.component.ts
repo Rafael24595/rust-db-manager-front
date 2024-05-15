@@ -19,26 +19,27 @@ import { UtilsService } from '../../../../core/services/utils/utils.service';
 })
 export class SuscribeFormComponent {
 
-  @ViewChild(DialogFormComponent) suscribeDialog!: DialogFormComponent;
+  @ViewChild(DialogFormComponent)
+  private suscribeDialog!: DialogFormComponent;
   
-  public request!: ServiceSuscribe;
+  protected request!: ServiceSuscribe;
 
-  public showPassword: boolean;
-  public password: string;
+  protected showPassword: boolean;
+  protected password: string;
 
-  constructor(private alert: AlertService, private utils: UtilsService, private suscribe: ServiceSuscribeService, private resolver: RustDbManagerService) {
+  public constructor(private alert: AlertService, private utils: UtilsService, private suscribe: ServiceSuscribeService, private resolver: RustDbManagerService) {
     this.showPassword = false;
     this.password = "";
   }
 
-  ngOnInit(): void {
+  protected ngOnInit(): void {
     this.suscribe.onRequest().subscribe((request: ServiceSuscribe) => {
       this.request = request;
       this.suscribeDialog.openModal();
     });
   }
 
-  closeModal() {
+  protected closeModal(): void {
     if(this.request.exitCallback) {
       const callback = this.request.exitCallback;
       callback.func(callback.args);
@@ -46,14 +47,14 @@ export class SuscribeFormComponent {
     this.suscribeDialog.closeModal();
   }
 
-  onSubmit() {
+  protected onSubmit(): void {
     const request: ServiceSuscribeRequest = {
       name: this.request.service,
       owner: "Client",
       password: this.password
     };
     
-    this.resolver.suscribe(request).subscribe({
+    this.resolver.serviceSuscribe(request).subscribe({
       error: (e: ResponseException) => {
         const message = "Incorrect password."
         this.alert.alert(message);
@@ -70,12 +71,12 @@ export class SuscribeFormComponent {
     });
   }
 
-  cleanForm() {
+  private cleanForm(): void {
     this.password = "";
     this.showPassword = false;
   }
 
-  togglePasswordVisibility() {
+  protected togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 

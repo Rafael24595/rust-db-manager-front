@@ -38,7 +38,7 @@ export class TableDataComponent {
   }
 
   refreshData() {
-    this.metadata = this.resolver.collectionStatus(this.service, this.dataBase, this.collection);
+    this.metadata = this.resolver.collectionMetadata(this.service, this.dataBase, this.collection);
   }
 
 }

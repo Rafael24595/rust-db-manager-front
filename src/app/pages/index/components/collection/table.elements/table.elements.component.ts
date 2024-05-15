@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from '../../../../../core/services/view/alert.service';
@@ -11,28 +10,35 @@ import { ResponseException } from '../../../../../core/commons/response.exceptio
 import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { CreateFormComponent } from '../create.form/create.form.component';
 import { RedirectService } from '../../../../../core/services/redirect.service';
+import { RenameFormComponent } from '../rename.form/rename.form.component';
 
 @Component({
   selector: 'app-table-elements',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, DialogFormComponent, CreateFormComponent],
+  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, CreateFormComponent, RenameFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
 export class TableElementsComponent {
 
-  @Input() refreshBranch: Function;
+  @ViewChild(RenameFormComponent) 
+  private renameFormComponent!: RenameFormComponent;
 
-  public service!: string;
-  public dataBase!: string;
+  @Input() 
+  public refreshBranch: Function;
 
-  public collections!: Observable<string[]>;
+  protected service!: string;
+  protected dataBase!: string;
 
-  constructor(private route: ActivatedRoute, private redirect: RedirectService, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  protected collections!: Observable<string[]>;
+  protected cursor: string;
+
+  public constructor(private route: ActivatedRoute, private redirect: RedirectService, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
+    this.cursor = "";
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const snapshot = this.route.snapshot;
 
     const oService = snapshot.paramMap.get("service");
@@ -43,16 +49,21 @@ export class TableElementsComponent {
     this.refreshData();
   }
 
-  refreshData() {
-    this.collections = this.resolver.collectionFindAllLite(this.service, this.dataBase);
+  public refreshData(): void {
+    this.collections = this.resolver.collectionFindAll(this.service, this.dataBase);
   }
 
-  openForm() {
+  protected openForm(): void {
     this.redirect.goToCollectionForm(this.service, this.dataBase);
   }
 
-  remove(collection: string) {
-    this.resolver.collectionDrop(this.service, this.dataBase, collection).subscribe({
+  protected rename(collection: string): void {
+    this.cursor = collection;
+    this.renameFormComponent.openModal();
+  }
+
+  protected remove(collection: string): void {
+    this.resolver.collectionRemove(this.service, this.dataBase, collection).subscribe({
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
           key: "Collection",
@@ -73,8 +84,8 @@ export class TableElementsComponent {
     });
   }
 
-  exportJson(collection: string) {
-    this.resolver.documentFindAll(this.service, this.dataBase, collection)
+  protected exportJson(collection: string): void {
+    this.resolver.collectionExport(this.service, this.dataBase, collection)
       .pipe(
         map(json => {
           const filename = `${this.service}-${this.dataBase}-${collection}_${Date.now()}.json`;
@@ -101,7 +112,7 @@ export class TableElementsComponent {
       });
   }
 
-  loadCollection(collection: string) {
+  protected load(collection: string) {
     this.redirect.goToCollection(this.service, this.dataBase, collection);
   }
 

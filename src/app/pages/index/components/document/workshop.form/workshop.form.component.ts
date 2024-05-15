@@ -107,7 +107,7 @@ export class WorkshopFormComponent {
   }
 
   newData() {
-    this.resolver.documentShema(this.service, this.dataBase, this.collection).subscribe({
+    this.resolver.collectionShema(this.service, this.dataBase, this.collection).subscribe({
        error: (e: ResponseException) => {
          if(this.handler.autentication(e, {
            key: "Document",

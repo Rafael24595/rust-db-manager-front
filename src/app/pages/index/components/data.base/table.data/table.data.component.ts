@@ -15,21 +15,21 @@ import { UtilsService } from '../../../../../core/services/utils/utils.service';
 })
 export class TableDataComponent {
 
-  public service!: string;
+  protected service!: string;
 
-  public metadata!: Observable<TableDataGroup[]>;
+  protected metadata!: Observable<TableDataGroup[]>;
 
-  constructor(private route: ActivatedRoute, public utils: UtilsService, private resolver: RustDbManagerService) {
+  public constructor(private route: ActivatedRoute, public utils: UtilsService, private resolver: RustDbManagerService) {
   }
 
-  ngOnInit(): void {
+  protected ngOnInit(): void {
     const route = this.route.snapshot.paramMap.get("service");
     this.service = route ? route : "";
 
     this.refreshData();
   }
 
-  refreshData() {
+  public refreshData() {
     this.metadata = this.resolver.serviceMetadata(this.service);
   }
 

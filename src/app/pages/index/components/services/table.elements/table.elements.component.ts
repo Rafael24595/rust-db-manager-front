@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { PaginatedCollection } from '../../../../../interfaces/server/pagination/paginated.collection';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
 import { PublishFormComponent } from '../publish.form/publish.form.component';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
 import { ResponseException } from '../../../../../core/commons/response.exception';
@@ -13,55 +12,45 @@ import { AlertService } from '../../../../../core/services/view/alert.service';
 import { RouterModule } from '@angular/router';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 import { RedirectService } from '../../../../../core/services/redirect.service';
+import { Dict } from '../../../../../types/dict';
 
 @Component({
   selector: 'app-table-elements',
   standalone: true, 
-  imports: [AsyncPipe, CommonModule, RouterModule, AlertModalComponent, ComboSelectorComponent, DialogFormComponent, PublishFormComponent],
+  imports: [AsyncPipe, CommonModule, RouterModule, AlertModalComponent, ComboSelectorComponent, PublishFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
 export class TableElementsComponent {
   
-  @Input() refreshBranch: Function;
+  @Input() 
+  public refreshBranch: Function;
 
-  @ViewChild('form_dialog') formDialog!: DialogFormComponent;
-  @ViewChild(PublishFormComponent) formComponent!: PublishFormComponent;
+  @ViewChild(PublishFormComponent)
+  private formComponent!: PublishFormComponent;
 
-  public services!: Observable<PaginatedCollection<ServiceLite>>;
-  public status: {[key:string]: string} = {}
+  protected services!: Observable<PaginatedCollection<ServiceLite>>;
+  protected status: Dict<string>;
 
-  constructor(private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  public constructor(private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
+    this.status = {};
   }
 
-  ngOnInit(): void {
+  protected ngOnInit(): void {
     this.refreshData();
   }
 
-  refreshData() {
-    this.services = this.resolver.services();
+  public refreshData(): void {
+    this.services = this.resolver.serviceFindAll();
     this.verifyAllStatus();
   }
 
-  openModal() {
-    this.formDialog.openModal();
-  }
-
-  closeModal() {
-    this.formDialog.closeModal();
-  }
-
-  onSubmit() {
-    this.formComponent.onSubmit();
-    this.refreshBranch();
-  }
-
-  verifyAllStatus() {
+  private verifyAllStatus(): void {
     this.services.forEach(n => n.services.forEach(v => this.verifyStatus(v.name)))
   }
 
-  verifyStatus(service: string) {
+  protected verifyStatus(service: string): void {
     this.status[service] = "connecting";
     this.resolver.serviceStatus(service).subscribe({
       next: (status: string) => this.status[service] = status,
@@ -69,8 +58,12 @@ export class TableElementsComponent {
     });
   }
 
-  remove(service: string) {
-    this.resolver.remove(service).subscribe({
+  protected openForm(): void {
+    this.formComponent.openModal();
+  }
+
+  protected remove(service: string): void {
+    this.resolver.serviceRemove(service).subscribe({
       error: (e: ResponseException) => {
         if(this.handler.autentication(e, {
           key: "Service",
@@ -91,7 +84,7 @@ export class TableElementsComponent {
     });
   }
 
-  loadService(service: string) {
+  protected load(service: string): void {
     this.redirect.goToService(service);
   }
 

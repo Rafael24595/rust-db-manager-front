@@ -18,7 +18,7 @@ export class DbLogoService {
   }
 
   set(title: string, serviceName: string) {
-    this.resolver.find(serviceName).pipe(
+    this.resolver.serviceFind(serviceName).pipe(
       map(service => {
         if (service) {
           this.subject.next({

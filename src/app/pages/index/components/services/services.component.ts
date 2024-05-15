@@ -12,17 +12,19 @@ import { DbLogoService } from '../../../../core/services/view/db.logo.service';
 })
 export class ServicesComponent {
 
-  @ViewChild('table_element') tableElement!: TableElementsComponent;
-  @ViewChild('table_data') tableData!: TableDataComponent;
+  @ViewChild('table_element')
+  private tableElement!: TableElementsComponent;
+  @ViewChild('table_data')
+  private tableData!: TableDataComponent;
 
-  constructor(private logo: DbLogoService) {
+  public constructor(private logo: DbLogoService) {
   }
 
-  ngOnInit(): void {
+  protected ngOnInit(): void {
     this.logo.unset();
   }
 
-  refreshChilds() {
+  protected refreshChilds(): void {
     this.tableElement.refreshData();
     this.tableData.refreshData()
   }

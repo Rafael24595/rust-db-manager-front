@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableElementsComponent } from './table.elements.component';
+import { RenameFormComponent } from './rename.form.component';
 
-describe('TableServicesComponent', () => {
-  let component: TableElementsComponent;
-  let fixture: ComponentFixture<TableElementsComponent>;
+describe('RenameFormComponent', () => {
+  let component: RenameFormComponent;
+  let fixture: ComponentFixture<RenameFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TableElementsComponent]
+      imports: [RenameFormComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(TableElementsComponent);
+    fixture = TestBed.createComponent(RenameFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
