@@ -33,14 +33,14 @@
                             <td class="combo-field">
                                 <app-combo-selector [options]="[
                                     {
-                                        title: 'Remove', 
-                                        callback: {func: remove.bind(this), args: [service.name]}, 
-                                        icon: {icon: '🗑'}
-                                    },
-                                    {
                                         title: 'View', 
                                         callback: {func: load.bind(this), args: [service.name]}, 
                                         icon: {icon: '⤇'}
+                                    },
+                                    {
+                                        title: 'Remove', 
+                                        callback: {func: remove.bind(this), args: [service.name]}, 
+                                        icon: {icon: '🗑'}
                                     },
                                     {
                                         title: 'Status', 

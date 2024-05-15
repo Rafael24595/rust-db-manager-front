@@ -6,6 +6,9 @@
                 <button class="title-button" (click)="switchExpand()">
                     <span class="expand-icon">▼</span>
                 </button>
+                <button class="title-button" (click)="removeAll()">
+                    <span class="delete-icon">🗑</span>
+                </button>
                 <button class="title-button" (click)="openForm()">
                     <span class="plus-icon">+</span>
                 </button>
@@ -18,7 +21,7 @@
                 <table class="table-base">
                     @for (document of documents; track $index) {
                         <tr>
-                            <td (click)="loadDocument(document)">
+                            <td (click)="load(document)">
                                 <p class="light-link">{{ keyValue(document) }}</p>
                             </td>
                             <td class="details-field">
@@ -27,14 +30,14 @@
                             <td class="combo-field">
                                 <app-combo-selector [options]="[
                                     {
+                                        title: 'View', 
+                                        callback: {func: load.bind(this), args: [document]}, 
+                                        icon: {icon: '⤇'}
+                                    },
+                                    {
                                         title: 'Remove', 
                                         callback: {func: remove.bind(this), args: [document]}, 
                                         icon: {icon: '🗑'}
-                                    },
-                                    {
-                                        title: 'View', 
-                                        callback: {func: loadDocument.bind(this), args: [document]}, 
-                                        icon: {icon: '⤇'}
                                     }
                                 ]"/>
                             </td>

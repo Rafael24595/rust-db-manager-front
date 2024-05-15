@@ -1,7 +1,7 @@
 import { Callback } from "./callback"
 
 export interface ModalButton {
-    title: String,
+    title: string,
     callback: Callback,
     icon?: {
         icon: string,

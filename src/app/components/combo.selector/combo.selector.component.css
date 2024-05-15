@@ -42,7 +42,10 @@
     font-size: small;
     font-weight: bold;
     padding: 5px;
+    padding-top: 6px;
+    padding-bottom: 6px;
     margin: 5px;
+    margin-bottom: 0px;
     border-bottom: 1px solid lightgray;
 }
 
@@ -58,6 +61,7 @@
 
 .combo-close-icon {
     cursor: pointer;
+    text-shadow: 1px 1px 0px lightgray;
 }
 
 .combo-options {

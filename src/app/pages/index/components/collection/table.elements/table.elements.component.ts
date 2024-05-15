@@ -11,18 +11,21 @@ import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { CreateFormComponent } from '../create.form/create.form.component';
 import { RedirectService } from '../../../../../core/services/redirect.service';
 import { RenameFormComponent } from '../rename.form/rename.form.component';
+import { ImportFormComponent } from '../import.form/import.form.component';
 
 @Component({
   selector: 'app-table-elements',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, CreateFormComponent, RenameFormComponent],
+  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, CreateFormComponent, RenameFormComponent, ImportFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
 export class TableElementsComponent {
 
   @ViewChild(RenameFormComponent) 
-  private renameFormComponent!: RenameFormComponent;
+  private renameForm!: RenameFormComponent;
+  @ViewChild(ImportFormComponent) 
+  private importForm!: ImportFormComponent;
 
   @Input() 
   public refreshBranch: Function;
@@ -59,7 +62,7 @@ export class TableElementsComponent {
 
   protected rename(collection: string): void {
     this.cursor = collection;
-    this.renameFormComponent.openModal();
+    this.renameForm.openModal();
   }
 
   protected remove(collection: string): void {
@@ -89,7 +92,8 @@ export class TableElementsComponent {
       .pipe(
         map(json => {
           const filename = `${this.service}-${this.dataBase}-${collection}_${Date.now()}.json`;
-          this.utils.downloadFile(filename, json.join("\n"));
+          const vector = `[\n${json.map(d => d.document).join(",\n")}\n]`;
+          this.utils.downloadFile(filename, vector);
         })
       )
       .subscribe({
@@ -107,9 +111,13 @@ export class TableElementsComponent {
 
           console.error(e);
           this.alert.alert(e.message);
-        },
-        complete: () => this.refreshBranch()
+        }
       });
+  }
+
+  protected importJson(collection: string): void {
+    this.cursor = collection;
+    this.importForm.openModal();
   }
 
   protected load(collection: string) {

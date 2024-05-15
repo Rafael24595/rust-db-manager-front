@@ -13,28 +13,30 @@ import { UtilsService } from '../../core/services/utils/utils.service';
 })
 export class ComboSelectorComponent {
 
-  @ViewChild('combo') combo!: ElementRef<HTMLDialogElement>;
+  @ViewChild('combo')
+  private combo!: ElementRef<HTMLDialogElement>;
 
-  @Input() options: ModalButton[];
+  @Input() 
+  public options: ModalButton[];
 
-  public status: boolean;
+  protected status: boolean;
 
-  constructor(private elementRef: ElementRef, private utils: UtilsService) {
+  public constructor(private elementRef: ElementRef, private utils: UtilsService) {
     this.options  = [];
     this.status = false;
   }
 
-  switchStatus() {
+  protected switchStatus() {
     this.status = !this.status;
   }
 
-  execute(calback: Callback) {
+  protected execute(calback: Callback) {
     this.utils.executeCallback(calback);
     this.status = false;
   }
 
   @HostListener('document:click', ['$event'])
-  onClick(event: Event) {
+  protected onClick(event: Event) {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.status = false
     }

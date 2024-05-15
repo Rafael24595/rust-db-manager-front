@@ -172,7 +172,7 @@ export class RustDbManagerService {
   }
 
   collectionImport(service: string, database: string, collection: string, documents: string[]): Observable<void> {
-    return this.http.post<void>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/export`, documents, CREDENTIALS_OPTIONS)
+    return this.http.post<void>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/import`, documents, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );
