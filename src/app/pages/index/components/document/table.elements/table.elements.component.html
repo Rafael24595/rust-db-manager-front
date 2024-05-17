@@ -1,7 +1,7 @@
 @if(documents != undefined) {
     <div>
         <div class="table-title">
-            <h3 class="title-text">Documents [{{documents.length}}]</h3>
+            <h3 class="title-text">Documents [{{documents.documents.length}}]</h3>
             <div class="title-combo">
                 <button class="title-button" (click)="switchExpand()">
                     <span class="expand-icon">▼</span>
@@ -14,12 +14,12 @@
                 </button>
             </div>
         </div>
-        <div class="table-content" [ngClass]="{'empty': documents.length === 0}">
-            @if (documents.length == 0) {
+        <div class="table-content" [ngClass]="{'empty': documents.documents.length === 0}">
+            @if (documents.documents.length == 0) {
                 <p style="text-align: center;">No documents found.</p>
             } @else {
                 <table class="table-base">
-                    @for (document of documents; track $index) {
+                    @for (document of documents.documents; track $index) {
                         <tr>
                             <td (click)="load(document)">
                                 <p class="light-link">{{ keyValue(document) }}</p>
@@ -62,6 +62,11 @@
                         </tr>
                     }
                 </table>
+            }
+        </div>
+        <div class="table-pagination">
+            @for (cursor of findPages(); track $index) {
+                <button class="title-button page-button" (click)="_refreshData(cursor)" [ngClass]="{'page-cursor': cursor.position === page.position}">{{ cursor.title }}</button>
             }
         </div>
     </div>

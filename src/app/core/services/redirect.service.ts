@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { WorkshopFormRequest } from '../../interfaces/worksop.form.request';
 import { DocumentKeysParserService } from './utils/document.keys.parser.service';
+import { Page } from '../../interfaces/page';
+import { Dict } from '../../types/dict';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +29,14 @@ export class RedirectService {
     this.router.navigate(["/service", service, "data-base", dataBase, "new-collection"]);
   }
 
-  public goToCollection(service: string, dataBase: string, collection: string): void {
-    this.router.navigate(["/service", service, "data-base", dataBase, "collection", collection]);
+  public goToCollection(service: string, dataBase: string, collection: string, page?: Page): void {
+    let queryParams: Dict<string> = {};
+    if(page) {
+      queryParams = {
+        limit: `${page.limit}`
+      }
+    }
+    this.router.navigate(["/service", service, "data-base", dataBase, "collection", collection], {queryParams});
   }
 
   public goToNewWorkshop(service: string, dataBase: string, collection: string): void {

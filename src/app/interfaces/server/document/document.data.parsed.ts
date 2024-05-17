@@ -7,5 +7,6 @@ export interface DocumentDataParser {
     collection: string,
     base_key: Optional<DocumentKey>,
     keys: DocumentKey[],
+    size: number,
     document: Dict<any>
 }

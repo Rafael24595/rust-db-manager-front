@@ -20,6 +20,7 @@ import { DocumentKey } from '../../interfaces/server/document/document.key';
 import { UpdateDocument } from '../../interfaces/update.document';
 import { DocumentSchema } from '../../interfaces/server/document/document.schema';
 import { RenameCollectionQuery } from '../../interfaces/server/collection/rename.collection.query';
+import { CollectionData } from '../../interfaces/server/collection/collection.data';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -179,8 +180,8 @@ export class RustDbManagerService {
   }
 
 
-  documentFindAll(service: string, database: string, collection: string): Observable<DocumentData[]> {
-    return this.http.get<DocumentData[]>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/document/find`, CREDENTIALS_OPTIONS)
+  documentFindAll(service: string, database: string, collection: string, limit: number, offset: number): Observable<CollectionData> {
+    return this.http.get<CollectionData>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/document/find?limit=${limit}&offset=${offset}`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

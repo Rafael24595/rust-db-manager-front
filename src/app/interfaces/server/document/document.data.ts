@@ -5,5 +5,6 @@ export interface DocumentData {
     collection: string,
     base_key: DocumentKey | undefined,
     keys: DocumentKey[],
+    size: number,
     document: string
 }

@@ -15,6 +15,8 @@ import { Dict } from '../../../../../types/dict';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { DocumentKey } from '../../../../../interfaces/server/document/document.key';
+import { CollectionDataParsed } from '../../../../../interfaces/server/collection/collection.data copy';
+import { Page } from '../../../../../interfaces/page';
 
 @Component({
   selector: 'app-table-elements',
@@ -32,12 +34,22 @@ export class TableElementsComponent {
   protected dataBase!: string;
   protected collection!: string;
 
-  protected documents: Optional<DocumentDataParser[]>;
+  protected documents: Optional<CollectionDataParsed>;
   protected details: boolean[];
+
+  protected offset: number = 10;
+  protected maxPages: number = 10;
+  protected page: Page;
 
   public constructor(private route: ActivatedRoute, private sanitized: DomSanitizer, public utils: UtilsService, private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
     this.details = [];
+    this.page = {
+      title: "1",
+      position: 0,
+      limit: 0,
+      offset: this.offset,
+    }
   }
 
   protected ngOnInit(): void {
@@ -50,6 +62,19 @@ export class TableElementsComponent {
     const oCollection = snapshot.paramMap.get("collection");
     this.collection = oCollection ? oCollection : "";
 
+    const query = snapshot.queryParamMap;
+    const sLimit = query.get("limit");
+
+    const position = sLimit ? Math.round(Number(sLimit) / this.offset) : 0;
+    const limit = sLimit ? Number(sLimit) : 0;
+
+    this.page = {
+      title: `${position + 1}`,
+      position: position,
+      limit: limit,
+      offset: this.offset
+    }
+
     this.refreshData();
   }
 
@@ -61,6 +86,10 @@ export class TableElementsComponent {
   }
 
   protected fieldValue(field: string, document: DocumentDataParser): SafeHtml {
+    if(this.utils.bytesCalculator(document.document[field], 100) == undefined) {
+      return this.sanitized.bypassSecurityTrustHtml("File is too long.");
+    }
+    
     const stringify = JSON.stringify(document.document[field], null, 2);
     const beautify = this.utils.beautifyDocument(stringify);
     return this.sanitized.bypassSecurityTrustHtml(beautify);
@@ -70,29 +99,48 @@ export class TableElementsComponent {
     return Object.keys(document.document).sort();
   }
 
-  public refreshData(): void  {
-    this.resolver.documentFindAll(this.service, this.dataBase, this.collection).pipe(
+  public refreshData(): void {
+    this._refreshData(this.page);
+  }
+
+  public _refreshData(page: Page): void  {  
+    this.loadPage(page);
+    this.resolver.documentFindAll(this.service, this.dataBase, this.collection, page.limit, page.offset).pipe(
       map(documents => {
-        this.details = Array.apply(null, Array(documents.length)).map(() => false)
-        this.documents = documents.map(document => {
+        this.details = Array.apply(null, Array(documents.documents.length)).map(() => false);
+        const documentsParsed = documents.documents.map(document => {
           let parsed: Dict<any>;
           try {
             parsed = JSON.parse(document.document)
           } catch (error) {
             parsed = {};
           }
-
+          
           const documentParsed: DocumentDataParser = {
             data_base: document.data_base,
             collection: document.collection,
             base_key: document.base_key,
             keys: document.keys,
+            size: document.size,
             document: parsed
           }
           return documentParsed;
         });
+
+        this.documents = {
+          total: documents.total,
+          limit: documents.limit,
+          offset: documents.offset,
+          documents: documentsParsed
+        };
+
       })
     ).subscribe();
+  }
+
+  public loadPage(page: Page) {
+    this.page = page;
+    this.redirect.goToCollection(this.service, this.dataBase, this.collection, page);
   }
 
   protected switchExpand(): void  {
@@ -147,6 +195,49 @@ export class TableElementsComponent {
         this.refreshData();
       }
     });
+  }
+
+  protected findPages(): Page[] {
+    let length = 0;
+    if(this.documents) {
+      length = Math.round(this.documents.total / 10);
+    }
+
+    const middlePoint = Math.round(this.maxPages / 2);
+    let sCursor = this.page.position - middlePoint;
+    sCursor = sCursor < 0 ? this.page.position - (middlePoint + sCursor) : sCursor;
+
+    let cursor = sCursor < 0 ? 0 : sCursor;
+
+    const range = length - cursor;
+    const pagesLength = range > this.maxPages ? this.maxPages : range;
+    const pages: Page[] = Array(pagesLength + 2).fill(undefined);
+
+    pages[0] = {
+      title: `<<`,
+      position: 0,
+      limit: 0,
+      offset: this.offset
+    };
+
+    pages[pages.length-1] = {
+      title: `>>`,
+      position: length - 1,
+      limit: (length - 1) * this.offset,
+      offset: this.offset
+    }
+
+    for (let index = 1; index < pages.length - 1; (index++, cursor++)) {
+      pages[index] = {
+        title: `${cursor + 1}`,
+        position: cursor,
+        limit: cursor * this.offset,
+        offset: this.offset
+      };
+      
+    }
+
+    return pages;
   }
 
   protected load(document: DocumentDataParser): void {
