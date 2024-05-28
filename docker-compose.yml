@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+  rs-api:
+    image: rafaelruiztorres/rust-db-manager-api:0.1.0
+    container_name: rust_db_manager_api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./rust-db-manager-core:/core
+      - ./rust-db-manager-api:/api
+    networks:
+      - rs_network
+
+  rs-front:
+    image: rafaelruiztorres/rust-db-manager-front:0.1.0
+    container_name: rust_db_manager_front
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./rust-db-manager-front:/front
+    networks:
+      - rs_network
+    depends_on:
+      - rust_db_manager_api
+
+  mongodb:
+    image: mongo  
+    container_name: mongodb
+    volumes:
+      - ./mongodb:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    networks:
+      - rs_network
+
+networks:
+  rs_network:
