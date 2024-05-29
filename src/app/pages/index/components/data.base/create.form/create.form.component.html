@@ -1,0 +1,23 @@
+<app-dialog-form 
+    [widht]="'550px'"
+    [height]="'250px'"
+    [title]="'New DataBase'"
+    [buttons]="[
+        {title: 'Create', callback: {func: formSubmit.bind(this)}},
+        {title: 'Close', callback: {func: closeModal.bind(this)}}
+    ]"
+    #form_dialog>
+    <form>
+        <table class="table-form">
+            <tbody>
+                <tr>
+                    <td>
+                        <label for="name"><span class="required"></span> Name:</label>
+                        <br>
+                        <input type="text" name="connection" [(ngModel)]="dataBase" required>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</app-dialog-form>

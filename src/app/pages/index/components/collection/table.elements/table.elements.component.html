@@ -1,0 +1,74 @@
+@if(collections | async; as collections) {
+    <div>
+        <div class="table-title">
+            <h3 class="title-text">Collections [{{collections.length}}]</h3>
+            <div class="title-combo">
+                <button class="title-button" (click)="openForm()">
+                    <span class="plus-icon">+</span>
+                </button>
+            </div>
+        </div>
+        <div class="table-content" [ngClass]="{'empty': collections.length === 0}">
+            @if (collections.length == 0) {
+                <p style="text-align: center;">No collections found.</p>
+            } @else {
+                <table class="table-base">
+                    @for (collection of collections; track $index) {
+                        <tr>
+                            <td (click)="load(collection)">
+                                <p class="light-link">{{collection}}</p>
+                            </td>
+                            <td class="combo-field">
+                                <app-combo-selector [options]="[
+                                {
+                                    title: 'View', 
+                                    callback: {func: load.bind(this), args: [collection]}, 
+                                    icon: {icon: '⤇'}
+                                },
+                                {
+                                    title: 'Rename', 
+                                    callback: {func: rename.bind(this), args: [collection]}, 
+                                    icon: {icon: '···'}
+                                },
+                                {
+                                    title: 'Remove', 
+                                    callback: {func: remove.bind(this), args: [collection]}, 
+                                    icon: {icon: '🗑'}
+                                },
+                                {
+                                    title: 'Export JSON', 
+                                    callback: {func: exportJson.bind(this), args: [collection]}, 
+                                    icon: {icon: '🖫'}
+                                },
+                                {
+                                    title: 'Import JSON', 
+                                    callback: {func: importJson.bind(this), args: [collection]}, 
+                                    icon: {icon: '🖬'}
+                                }
+                                ]"/>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+}
+
+<app-rename-form
+    [service]="service"
+    [dataBase]="dataBase"
+    [collection]="cursor"
+    [onSubmit]="{
+        func: refreshBranch.bind(this)
+    }"
+/>
+
+<app-import-form
+    [service]="service"
+    [dataBase]="dataBase"
+    [collection]="cursor"
+    [onSubmit]="{
+        func: refreshBranch.bind(this)
+    }"
+/>

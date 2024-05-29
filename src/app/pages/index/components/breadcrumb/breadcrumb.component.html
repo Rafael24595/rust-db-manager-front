@@ -1,0 +1,9 @@
+<div class="breadcrumb-container">
+    <span class="breadcrumb-root">/</span>
+    @for (breadcrumb of breadcrumbs; track $index) {
+        <span class="breadcrumb-link" [routerLink]="breadcrumb.path">{{ breadcrumb.title }}</span>
+        @if ($index != breadcrumbs.length-1) {
+            <span class="breadcrumb-separator">></span>
+        }
+    }
+</div>

@@ -1,0 +1,56 @@
+@if(metadata | async; as metadata) {
+    <div>
+        <div class="table-title">
+            <h3 class="title-text">Server Status</h3>
+        </div>
+        <div class="table-content">
+            <table class="table-base even-odd">
+                <tr>
+                    <td class="data-key">Session Id</td>
+                    <td>{{metadata.session_id}}</td>
+                    <td class="data-key">Started</td>
+                    <td>{{formatDate(metadata.timestamp)}}</td>
+                </tr>
+                <tr>
+                    <td class="data-key">Uptime</td>
+                    <td>{{executionTime(metadata.timestamp)}}</td>
+                    <td class="data-key">Services</td>
+                    <td>{{metadata.services}}</td>
+                </tr>
+                <tr>
+                    <td colspan=4><br></td>
+                </tr>
+                <tr>
+                    <td class="data-key">Web Name</td>
+                    <td>{{metadata.web_name}}</td>
+                    <td class="data-key">Web Version</td>
+                    <td>{{metadata.web_version}}</td>
+                </tr>
+                <tr>
+                    <td class="data-key">Core Name</td>
+                    <td>{{metadata.core_name}}</td>
+                    <td class="data-key">Core Version</td>
+                    <td>{{metadata.core_version}}</td>
+                </tr>
+                <tr>
+                    <td colspan=4><br></td>
+                </tr>
+                <tr>
+                    <td class="data-key">Rustc Version</td>
+                    <td>{{metadata.rustc_version}}</td>
+                    <td class="data-key">Cargo Version</td>
+                    <td>{{metadata.cargo_version}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+} @else {
+    <div>
+        <div class="table-title">
+            <h3 class="title-text">Server Status</h3>
+        </div>
+        <div class="table-content empty">
+            <p style="text-align: center;">Loading...</p>
+        </div>
+    </div>
+}

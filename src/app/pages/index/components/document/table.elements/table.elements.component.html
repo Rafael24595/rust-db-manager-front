@@ -1,0 +1,87 @@
+@if(documents != undefined) {
+    <div>
+        <div class="table-title">
+            <h3 class="title-text">Documents [{{documents.documents.length}}]</h3>
+            <div class="title-combo">
+                <button class="title-button" (click)="switchExpand()">
+                    <span class="expand-icon">▼</span>
+                </button>
+                <button class="title-button" (click)="removeAll()">
+                    <span class="delete-icon">🗑</span>
+                </button>
+                <button class="title-button" (click)="openForm()">
+                    <span class="plus-icon">+</span>
+                </button>
+            </div>
+        </div>
+        <div class="table-content" [ngClass]="{'empty': documents.documents.length === 0}">
+            @if (documents.documents.length == 0) {
+                <p style="text-align: center;">No documents found.</p>
+            } @else {
+                <table class="table-base">
+                    @for (document of documents.documents; track $index) {
+                        <tr>
+                            <td (click)="load(document)">
+                                <p class="light-link">{{ keyValue(document) }}</p>
+                            </td>
+                            <td class="details-field">
+                                <button class="title-button smoke" (click)="switchDetails($index)">Details</button>
+                            </td>
+                            <td class="combo-field">
+                                <app-combo-selector [options]="[
+                                    {
+                                        title: 'View', 
+                                        callback: {func: load.bind(this), args: [document]}, 
+                                        icon: {icon: '⤇'}
+                                    },
+                                    {
+                                        title: 'Remove', 
+                                        callback: {func: remove.bind(this), args: [document]}, 
+                                        icon: {icon: '🗑'}
+                                    }
+                                ]"/>
+                            </td>
+                        </tr>
+                        <tr [ngClass]="{'hide-details': !details[$index]}">
+                            <td class="sub-table-row" colspan="3">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            @for (field of documentKeys(document); track $index) {
+                                                <th>{{ field }}</th>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            @for (field of documentKeys(document); track $index) {
+                                                <td><div class="value-content"><pre [innerHTML]="fieldValue(field, document)"></pre></div></td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+        <div class="table-pagination">
+            @for (cursor of findPages(); track $index) {
+                <button class="title-button page-button" (click)="_refreshData(cursor)" [ngClass]="{'page-cursor': cursor.position === page.position}">{{ cursor.title }}</button>
+            }
+        </div>
+    </div>
+} @else {
+    <div>
+        <div class="table-title">
+            <h3 class="title-text">Documents [0]</h3>
+            <div class="title-combo">
+                <button class="title-button" disabled>
+                    <span class="plus-icon">+</span>
+                </button>
+            </div>
+        </div>
+        <div class="table-content empty">
+            <p style="text-align: center;">Loading...</p>
+        </div>
+    </div>
+}

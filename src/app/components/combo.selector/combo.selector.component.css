@@ -1,0 +1,105 @@
+:host {
+    display: flex;
+    justify-content: center;
+}
+
+.combo-container {
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.candies-button {
+    display: flex;
+    flex-direction: column;
+    background: none;
+    border: none;
+    font-weight: bolder;
+    font-size: medium;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.candies-button:hover .candy-button  {
+    background-color: dimgray;
+}
+
+.candy-button {
+    position: relative;
+    width: 4px;
+    height: 4px;
+    background-color: black;
+    border-radius: 50%;
+    margin: 1px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.combo-close {
+    display: flex;
+    justify-content: flex-end;
+    font-family: cursive;
+    font-size: small;
+    font-weight: bold;
+    padding: 5px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin: 5px;
+    margin-bottom: 0px;
+    border-bottom: 1px solid lightgray;
+}
+
+.combo-table {
+    width: 100%;
+    padding: 15px;
+}
+
+.combo-table th, .combo-table td {
+    border: none;
+    padding: 0px;
+}
+
+.combo-close-icon {
+    cursor: pointer;
+    text-shadow: 1px 1px 0px lightgray;
+}
+
+.combo-options {
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    background-color: whitesmoke;
+    border: 1px solid lightgray;
+    z-index: 1;
+}
+
+.combo-options.opened {
+    display: block;
+    box-shadow: 1px 1px 2px -1px;
+}
+
+.combo-options ol {
+    padding: 15px;
+    margin: 0px;
+}
+
+.combo-options li {
+    list-style: none;
+}
+
+.combo-button {
+    display: flex;
+    align-items: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333333;
+    text-align: left;
+}
+
+.combo-icon {
+    font-size: 1.55em;
+    margin-right: 5px;
+}

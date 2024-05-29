@@ -1,0 +1,15 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10%;
+    padding-right: 10%;
+    flex: 1 1 auto;
+    scrollbar-gutter: stable;
+    overflow: auto;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}

@@ -1,0 +1,121 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+#form-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid lightgray;
+}
+
+.form-content {
+    display: flex;
+    align-items: flex-start;
+    flex: 1 1 auto;
+    width: 100%;
+}
+
+#form-buttons {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    padding-bottom: 0px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-top: 1px solid lightgray;
+}
+
+#form-title { 
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    border-bottom: 1px solid black;
+    margin-bottom: 25px;
+}
+
+#form-column {
+    width: 65%;
+    padding: 0px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 25px;
+    vertical-align: baseline;
+}
+
+#form-column-title {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+
+#form-column table {
+    width: 100%;
+}
+
+#base-selector {
+    width: 50%;
+}
+
+#fields-column {
+    width: 35%;
+    padding: 0px;
+    padding-top: 5px;
+    padding-right: 5px;
+    vertical-align: baseline;
+}
+
+#fields-column-title {
+    padding: 10px;
+    border: 1px solid lightgray;
+    background-color: ghostwhite;
+}
+
+#fields-column-title h4{
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+#empty-fields {
+    text-align: center;
+}
+
+#fields-column table {
+    width: 100%;
+    background-color: white;
+}
+
+.action-icon {
+    font-weight: bold;
+    text-align: center;
+    font-size: large;
+}
+
+.action-icon p {
+    cursor: pointer;
+}
+
+.code-field {
+    font-weight: bold;
+}
+
+.code-field p, .value-field p, .action-icon p {
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+}
+
+.form-button {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.attribute-code-field {
+    width: 125px;
+}

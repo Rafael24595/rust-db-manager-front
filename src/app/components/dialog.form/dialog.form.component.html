@@ -1,0 +1,13 @@
+<dialog type="modal" id="dialog" class="modal" [ngStyle]="{'height': height, 'width': widht}"  #dialog >
+    <div class="modal-title">
+        <h3 class="title-text">{{title}}</h3>
+    </div>
+    <div class="modal-body">
+        <ng-content></ng-content>
+    </div>
+    <div class="modal-buttons">
+        @for (button of buttons; track $index) {
+            <button class="modal-button" (click)="utils.executeCallback(button.callback)">{{button.title}}</button>
+        }
+    </div>
+</dialog>

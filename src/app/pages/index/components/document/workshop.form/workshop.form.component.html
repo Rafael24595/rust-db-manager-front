@@ -1,0 +1,19 @@
+<div id="button-container">
+    @if (documentData) {
+        <button class="title-button smoke" (click)="update()">Save</button>
+        <button class="title-button smoke" (click)="remove()">Delete</button>
+    } @else {
+        <button class="title-button smoke" (click)="create()">Create</button>
+    }
+</div>
+@if (documentOriginal) {
+    <div id="text-area-container">
+        <ngx-codemirror
+              [options]="options"
+              [ngModel]="documentOriginal"
+              [disabled]="false"
+              [autoFocus]="true"
+              (ngModelChange)="handleChange($event)"
+        />
+    </div>
+}

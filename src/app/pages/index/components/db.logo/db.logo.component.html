@@ -1,0 +1,8 @@
+<div id="title">
+    @if (title == undefined) {
+        <h2>RustDataBaseManager</h2>
+    } @else {
+        <h2>{{title.title}}</h2>
+        <img class="db-logo" src="{{title.service.connection_data.resources.image}}" alt="Logo of {{title.service.connection_data.category}}">
+    }
+</div>

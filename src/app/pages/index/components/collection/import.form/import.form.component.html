@@ -1,0 +1,25 @@
+<app-dialog-form 
+    [widht]="'550px'"
+    [height]="'275px'"
+    [title]="'Import documents into \'' + collection + '\''"
+    [buttons]="[
+        {title: 'Import', callback: {func: submitForm.bind(this)}},
+        {title: 'Close', callback: {func: closeModal.bind(this)}}
+    ]"
+    #form_dialog>
+    <form>
+        <table class="table-form">
+            <tbody>
+                <tr>
+                    <td>
+                        <label for="name"><span class="required"></span> File:</label>
+                        <br><br>
+                        <input type="file" (change)="onFileSelected($event)">
+                        <br>
+                        <p class="form-description">Documents loaded: {{ documents.length }}</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</app-dialog-form>

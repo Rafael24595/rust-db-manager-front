@@ -1,0 +1,33 @@
+
+<div class="combo-container">
+    <div class="combo-options" [ngClass]="status ? 'opened' : ''" #combo>
+        <span class="combo-close">
+            <div class="combo-close-icon" (click)="switchStatus()">X</div>
+        </span>
+        <table class="combo-table">
+            <tbody>
+                @for (button of options; track $index) {
+                    <tr>
+                        @if (button.icon != undefined) {
+                            <td>
+                                <button class="combo-button combo-icon" (click)="execute(button.callback)"  [ngStyle]="{'color': button.icon.color}">
+                                    {{ button.icon.icon }}
+                                </button>
+                            </td>
+                        }
+                        <td>
+                            <button class="combo-button" (click)="execute(button.callback)">
+                                {{ button.title }}
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <button class="candies-button" (click)="switchStatus()">
+        <div class="candy-button"></div>
+        <div class="candy-button"></div>
+        <div class="candy-button"></div>
+    </button>
+</div>
