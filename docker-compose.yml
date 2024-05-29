@@ -22,7 +22,7 @@ services:
     networks:
       - rs_network
     depends_on:
-      - rust_db_manager_api
+      - rs-api
 
   mongodb:
     image: mongo  
