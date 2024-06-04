@@ -3,6 +3,13 @@
         <div class="table-title">
             <h3 class="title-text">Documents [{{documents.documents.length}}]</h3>
             <div class="title-combo">
+                <button class="title-button" (click)="openFormFilter()">
+                    @if (filter.value.children.length > 0) {
+                        <span class="expand-icon">⛊</span>
+                    } @else {
+                        <span class="expand-icon">⛉</span>
+                    }
+                </button>
                 <button class="title-button" (click)="switchExpand()">
                     <span class="expand-icon">▼</span>
                 </button>
@@ -85,3 +92,9 @@
         </div>
     </div>
 }
+
+<app-filter-form
+    [onSubmit]="{
+        func: refreshBranch.bind(this)
+    }"
+/>

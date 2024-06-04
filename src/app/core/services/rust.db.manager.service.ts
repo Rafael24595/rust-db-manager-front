@@ -21,6 +21,7 @@ import { UpdateDocument } from '../../interfaces/update.document';
 import { DocumentSchema } from '../../interfaces/server/document/document.schema';
 import { RenameCollectionQuery } from '../../interfaces/server/collection/rename.collection.query';
 import { CollectionData } from '../../interfaces/server/collection/collection.data';
+import { FilterResources } from '../../interfaces/server/field/filter/filter.resources';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -40,6 +41,9 @@ export class RustDbManagerService {
     return this.http.get<ServiceCategoryLite[]>(`${environment.URL_SERVICE}/api/v1/available`);
   }
   
+  resourcesFilter(): Observable<FilterResources> {
+  return this.http.get<FilterResources>(`${environment.URL_SERVICE}/api/v1/resources/filter`);
+}
 
   serviceFindAll(): Observable<PaginatedCollection<ServiceLite>> {
     return this.http.get<PaginatedCollection<ServiceLite>>(`${environment.URL_SERVICE}/api/v1/service`);

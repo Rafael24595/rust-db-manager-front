@@ -1,0 +1,58 @@
+<table class="table-filter disable-layout">
+    <tbody>
+        @if (filter.key != "") {
+            <tr>
+                <td class="attribute-title">
+                    <p>Field</p>
+                </td>
+                <td>
+                    <p>{{ filter.key }}</p>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="attribute-title">
+                <p>Category</p>
+            </td>
+            <td>
+                <p>{{ filter.value.category }}</p>
+            </td>
+        </tr>
+        @if (filter.value.value != "") {
+            <tr>
+                <td class="attribute-title">
+                    <p>Value</p>
+                </td>
+                <td>
+                    <p>
+                        @if (filter.negation) {
+                            <span class="negate-symbol">!</span>
+                        }
+                        <span>{{ filter.value.value }}</span>
+                    </p>
+                </td>
+            </tr>
+        }
+        @if (filter.value.children.length > 0) {
+            <tr>
+                <td class="attribute-title" colspan="2">
+                    <p>Children</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="filter-fields" colspan="2">
+                    <div class="filter-fields-list" >
+                        @for (child of filter.value.children; track $index) {
+                            <div class="filter-actions">
+                                <p (click)="removeField(child)">🗑</p>
+                            </div>
+                            <app-filter-element-preview
+                                [filter]="child"
+                            />
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from '../../../../../core/services/view/alert.service';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
@@ -17,15 +17,21 @@ import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { DocumentKey } from '../../../../../interfaces/server/document/document.key';
 import { CollectionDataParsed } from '../../../../../interfaces/server/collection/collection.data copy';
 import { Page } from '../../../../../interfaces/page';
+import { FilterFormComponent } from '../filter.form/filter.form.component';
+import { FilterElement } from '../../../../../interfaces/server/field/filter/filter.element';
+import { FilterResources } from '../../../../../interfaces/server/field/filter/filter.resources';
 
 @Component({
   selector: 'app-table-elements',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, ComboSelectorComponent],
+  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, FilterFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
 export class TableElementsComponent {
+
+  @ViewChild(FilterFormComponent) 
+  protected filterFormComponent!: FilterFormComponent;
 
   @Input() 
   public refreshBranch: Function;
@@ -41,6 +47,8 @@ export class TableElementsComponent {
   protected maxPages: number = 10;
   protected page: Page;
 
+  protected filter!: FilterElement;
+
   public constructor(private route: ActivatedRoute, private sanitized: DomSanitizer, public utils: UtilsService, private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
     this.details = [];
@@ -49,7 +57,8 @@ export class TableElementsComponent {
       position: 0,
       limit: 0,
       offset: this.offset,
-    }
+    };
+    this.emptyFilter();
   }
 
   protected ngOnInit(): void {
@@ -141,6 +150,10 @@ export class TableElementsComponent {
   public loadPage(page: Page) {
     this.page = page;
     this.redirect.goToCollection(this.service, this.dataBase, this.collection, page);
+  }
+
+  protected openFormFilter() {
+    this.filterFormComponent.openModal();
   }
 
   protected switchExpand(): void  {
@@ -246,6 +259,22 @@ export class TableElementsComponent {
       keys: document.keys
     };
     this.redirect.goToWorkshop(this.service, this.dataBase, this.collection, request);
+  }
+
+  private emptyFilter(): void {
+    this.resolver.resourcesFilter().subscribe((value: FilterResources) => {
+      this.filter = {
+        key: "",
+        value: {
+          category: value.root_category,
+          value: "",
+          attributes: [],
+          children: []
+        },
+        direction: true,
+        negation: false
+      };
+    });
   }
 
 }

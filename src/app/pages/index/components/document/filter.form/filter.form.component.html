@@ -1,0 +1,69 @@
+<app-dialog-form 
+    [widht]="'750px'"
+    [height]="'450px'"
+    [title]="'Define filter'"
+    [buttons]="[
+        {title: 'Search', callback: {func: formSubmit.bind(this)}},
+        {title: 'Close', callback: {func: closeModal.bind(this)}}
+    ]"
+    #form_dialog>
+    <div id="filter-body">
+        <form id="filter-form">
+            <div id="form-header">
+                <button class="title-button smoke form-button" (click)="addValue()">+</button>
+            </div>
+            <table class="table-form">
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <label for="field"><span class="required"></span> Field:</label>
+                            <br>
+                            <input type="text" name="field" [(ngModel)]="name" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label for="category"><span class="required"></span> Category:</label>
+                            <br>
+                            <select name="category" id="category" [(ngModel)]="category" required>
+                                <option value="" disabled selected>-- select one --</option>
+                                @if(resources | async; as resources) { 
+                                    @for (category of resources.categories; track $index) {
+                                        <option value="{{ category }}">{{ category }}</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label for="value"><span class="required"></span> Value:</label>
+                            <br>
+                            <input type="text" name="value" [(ngModel)]="value" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="direction"><span class="required"></span> Direction:</label>
+                            <br>
+                            <input type="checkbox" name="direction" [(ngModel)]="direction" required>
+                        </td>
+                        <td>
+                            <label for="negation"><span class="required"></span> Negation:</label>
+                            <br>
+                            <input type="checkbox" name="negation" [(ngModel)]="negation" required>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        <div id="filter-resume">
+            <div id="fields-column-title">
+                <h3>Filter resume:</h3>
+            </div>
+            <app-filter-element-preview
+                [filter]="filter"
+            />
+        </div>
+    </div>
+</app-dialog-form>
