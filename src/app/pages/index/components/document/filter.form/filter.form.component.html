@@ -16,13 +16,6 @@
                 <tbody>
                     <tr>
                         <td colspan="2">
-                            <label for="field"><span class="required"></span> Field:</label>
-                            <br>
-                            <input type="text" name="field" [(ngModel)]="name" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
                             <label for="category"><span class="required"></span> Category:</label>
                             <br>
                             <select name="category" id="category" [(ngModel)]="category" required>
@@ -33,6 +26,13 @@
                                     }
                                 }
                             </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label for="field"><span class="required"></span> Field:</label>
+                            <br>
+                            <input type="text" name="field" [(ngModel)]="name" required>
                         </td>
                     </tr>
                     <tr>

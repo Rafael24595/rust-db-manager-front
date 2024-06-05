@@ -20,6 +20,7 @@ import { Page } from '../../../../../interfaces/page';
 import { FilterFormComponent } from '../filter.form/filter.form.component';
 import { FilterElement } from '../../../../../interfaces/server/field/filter/filter.element';
 import { FilterResources } from '../../../../../interfaces/server/field/filter/filter.resources';
+import { CollectionData } from '../../../../../interfaces/server/collection/collection.data';
 
 @Component({
   selector: 'app-table-elements',
@@ -108,43 +109,66 @@ export class TableElementsComponent {
     return Object.keys(document.document).sort();
   }
 
+  public setFilter(filter: FilterElement): void {
+    this.filter = filter;
+    this.filterFormComponent.closeModal();
+    this.refreshData();
+  }
+
   public refreshData(): void {
     this._refreshData(this.page);
   }
 
-  public _refreshData(page: Page): void  {  
+  protected _refreshData(page: Page): void {
+    if(this.filter) {
+      this.refreshDataByFilter(page);
+      return;
+    }
+    this.refreshDataByKey(page);
+  }
+
+  public refreshDataByFilter(page: Page): void  {  
+    this.loadPage(page);
+    this.resolver.documentQuery(this.service, this.dataBase, this.collection, this.filter, page.limit, page.offset).pipe(
+      map(this.parseCollection.bind(this))
+    ).subscribe();
+  }
+
+  public refreshDataByKey(page: Page): void  {  
     this.loadPage(page);
     this.resolver.documentFindAll(this.service, this.dataBase, this.collection, page.limit, page.offset).pipe(
-      map(documents => {
-        this.details = Array.apply(null, Array(documents.documents.length)).map(() => false);
-        const documentsParsed = documents.documents.map(document => {
-          let parsed: Dict<any>;
-          try {
-            parsed = JSON.parse(document.document)
-          } catch (error) {
-            parsed = {};
-          }
-          
-          const documentParsed: DocumentDataParser = {
-            data_base: document.data_base,
-            collection: document.collection,
-            base_key: document.base_key,
-            keys: document.keys,
-            size: document.size,
-            document: parsed
-          }
-          return documentParsed;
-        });
-
-        this.documents = {
-          total: documents.total,
-          limit: documents.limit,
-          offset: documents.offset,
-          documents: documentsParsed
-        };
-
-      })
+      map(this.parseCollection.bind(this))
     ).subscribe();
+  }
+
+  private parseCollection(documents: CollectionData): void {console.log(documents)
+    this.details = Array.apply(null, Array(documents.documents.length)).map(() => false);
+    const documentsParsed = documents.documents.map(document => {
+      let parsed: Dict<any>;
+      try {
+        parsed = JSON.parse(document.document)
+      } catch (error) {
+        parsed = {};
+      }
+      
+      const documentParsed: DocumentDataParser = {
+        data_base: document.data_base,
+        collection: document.collection,
+        base_key: document.base_key,
+        keys: document.keys,
+        size: document.size,
+        document: parsed
+      }
+      return documentParsed;
+    });
+
+    this.documents = {
+      total: documents.total,
+      limit: documents.limit,
+      offset: documents.offset,
+      documents: documentsParsed
+    };
+
   }
 
   public loadPage(page: Page) {

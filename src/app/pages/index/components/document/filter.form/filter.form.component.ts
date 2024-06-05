@@ -74,7 +74,8 @@ export class FilterFormComponent {
   }
 
   protected formSubmit(): void {
-    console.log(this.filter)
+    this.cleanForm();
+    this.onSubmit.func(this.filter);
   }
 
   protected addValue(): void {

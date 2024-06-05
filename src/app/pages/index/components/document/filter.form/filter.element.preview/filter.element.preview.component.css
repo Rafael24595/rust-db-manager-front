@@ -1,6 +1,7 @@
 :host {
-    overflow: auto;
-    scrollbar-gutter: stable;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .table-filter {
@@ -8,7 +9,7 @@
     padding: 5px;
 }
 
-.table-filter, .table-filter th, .table-filter td {
+.table-filter, .table-filter th, .table-filter td, .filter-fields {
     border-collapse: collapse;
     border: 1px solid lightgrey;
     padding: 5px;
@@ -19,16 +20,15 @@
     margin: 0px;
 }
 
-.table-filter {
-    margin-top: 7px;
-    margin-bottom: 7px;
-}
-
 .filter-fields {
-    padding: 0px !important;
-    padding-left: 7px !important;
-    padding-right: 7px !important;
-    background-color: ghostwhite !important;
+    padding: 0px;
+    padding-left: 7px;
+    padding-right: 7px;
+    background-color: ghostwhite;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    overflow: auto;
+    scrollbar-gutter: stable;
 }
 
 .filter-fields-list {
@@ -51,13 +51,28 @@
     color: darkcyan;
 }
 
+.filter-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.filter-meta p {
+    margin: 0px;
+}
+
 .filter-actions {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 5px;
 }
 
 .filter-actions p {
     font-weight: bold;
     cursor: pointer;
+}
+
+.filter-direction {
+    font-weight: bold;
+    font-size: small;
 }

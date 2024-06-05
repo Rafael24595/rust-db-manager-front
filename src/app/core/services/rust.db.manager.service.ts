@@ -22,6 +22,7 @@ import { DocumentSchema } from '../../interfaces/server/document/document.schema
 import { RenameCollectionQuery } from '../../interfaces/server/collection/rename.collection.query';
 import { CollectionData } from '../../interfaces/server/collection/collection.data';
 import { FilterResources } from '../../interfaces/server/field/filter/filter.resources';
+import { FilterElement } from '../../interfaces/server/field/filter/filter.element';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -193,6 +194,13 @@ export class RustDbManagerService {
 
   documentFind(service: string, database: string, collection: string, document: DocumentKey[]): Observable<DocumentData> {
     return this.http.post<DocumentData>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/document/find`, document, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  documentQuery(service: string, database: string, collection: string, filter: FilterElement, limit: number, offset: number): Observable<CollectionData> {
+    return this.http.post<CollectionData>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/document/query?limit=${limit}&offset=${offset}`, filter, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

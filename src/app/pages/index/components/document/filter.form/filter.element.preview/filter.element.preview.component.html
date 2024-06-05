@@ -26,9 +26,12 @@
                 <td>
                     <p>
                         @if (filter.negation) {
-                            <span class="negate-symbol">!</span>
+                            <span class="negate-symbol">NOT[</span>
                         }
                         <span>{{ filter.value.value }}</span>
+                        @if (filter.negation) {
+                            <span class="negate-symbol">]</span>
+                        }
                     </p>
                 </td>
             </tr>
@@ -39,20 +42,29 @@
                     <p>Children</p>
                 </td>
             </tr>
-            <tr>
-                <td class="filter-fields" colspan="2">
-                    <div class="filter-fields-list" >
-                        @for (child of filter.value.children; track $index) {
-                            <div class="filter-actions">
-                                <p (click)="removeField(child)">🗑</p>
-                            </div>
-                            <app-filter-element-preview
-                                [filter]="child"
-                            />
-                        }
-                    </div>
-                </td>
-            </tr>
         }
     </tbody>
 </table>
+@if (filter.value.children.length > 0) {
+    <div class="filter-fields">
+        <div class="filter-fields-list" >
+            @for (child of filter.value.children; track $index) {
+                <div class="filter-meta">
+                    <span class="filter-direction">
+                        @if (child.direction) {
+                            AND
+                        } @else {
+                            OR
+                        }
+                    </span>
+                    <div class="filter-actions">
+                        <p (click)="removeField(child)">🗑</p>
+                    </div>
+                </div>
+                <app-filter-element-preview
+                    [filter]="child"
+                />
+            }
+        </div>
+    </div>
+}
