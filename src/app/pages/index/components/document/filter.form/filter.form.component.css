@@ -15,6 +15,12 @@
     padding-right: 10px;
 }
 
+#filter-form {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
 #filter-resume {
     width: 35%;
     display: flex;
@@ -23,4 +29,46 @@
 
 #form-header, #fields-column-title h3 {
     margin-top: 5px;
+}
+
+#attributes-form {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#attributes-form h4 {
+    font-weight: 500;
+    margin-top: 5px;
+    margin-bottom: 7px;
+}
+
+#attributes-list {
+    overflow: auto;
+    scrollbar-gutter: stable;
+    direction: rtl;
+}
+
+#attributes-list td {
+    padding-left: 3px;
+}
+
+#attributes-list table {
+    direction: ltr;
+}
+
+#fields-column-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+#clean-filter {
+    font-weight: bold;
+    font-size: large;
+    margin: 0px;
+    cursor: pointer;
 }

@@ -35,6 +35,21 @@
                     </p>
                 </td>
             </tr>
+            @if (filter.value.attributes.length > 0) {
+            <tr>
+                <td class="attribute-title">
+                    <p>Attributes</p>
+                </td>
+                    <td>
+                        @for (attribute of filter.value.attributes; track $index) {
+                            <span class="attribute-preview" title="{{ attribute.key }} : {{ attribute.value }}">{{ attribute.key[0] }}</span>
+                            @if ($index < filter.value.attributes.length -1) {
+                                <span>, </span>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
         }
         @if (filter.value.children.length > 0) {
             <tr>
@@ -58,6 +73,7 @@
                         }
                     </span>
                     <div class="filter-actions">
+                        <p (click)="modifyField(child)">⇦</p>
                         <p (click)="removeField(child)">🗑</p>
                     </div>
                 </div>

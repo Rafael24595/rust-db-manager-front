@@ -45,7 +45,7 @@ export class UtilsService {
     return callback.func();
   }
 
-  groupInPairs(collection: TableDataField[]) {
+  groupInPairs<T>(collection: T[]) {
     const pairs = [];
   
     for (let i = 0; i < collection.length; i += 2) {

@@ -23,6 +23,7 @@ import { RenameCollectionQuery } from '../../interfaces/server/collection/rename
 import { CollectionData } from '../../interfaces/server/collection/collection.data';
 import { FilterResources } from '../../interfaces/server/field/filter/filter.resources';
 import { FilterElement } from '../../interfaces/server/field/filter/filter.element';
+import { FilterDefinition } from '../../interfaces/server/field/filter/definition/filter.definition';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -96,6 +97,10 @@ export class RustDbManagerService {
         map(this.utils.sortCollectionDefinition),
         catchError(this.handleError)
       );
+  }
+
+  serviceSchemaFilter(service: string): Observable<FilterDefinition> {
+    return this.http.get<FilterDefinition>(`${environment.URL_SERVICE}/api/v1/service/${service}/schema-filter`, CREDENTIALS_OPTIONS);
   }
 
 
