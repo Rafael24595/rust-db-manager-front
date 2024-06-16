@@ -1,5 +1,5 @@
 @if(metadata | async; as metadata) {
-    <div>
+    <div class="table-container">
         <div class="table-title">
             <h3 class="title-text">Data Base Status</h3>
         </div>
@@ -29,4 +29,32 @@
             </table>
         </div>
     </div>
+}
+
+@if(information | async; as information) {
+    @for (table of information; track $index) {
+        <div class="table-container">
+            <div class="table-title">
+                <h3 class="title-text">{{ table.title }}</h3>
+            </div>
+            @if (table.rows.length == 0) {
+                <div class="table-content empty">
+                    <p style="text-align: center;">No items found.</p>
+                </div>
+            }
+            <div class="table-content">
+                <table class="table-base even-odd">
+                    @for (row of table.rows; track $index) {
+                        <tr>
+                            @for (field of row.fields; track $index) {
+                                <td [class.data-key]="field.sw_title">
+                                    {{ field.data }}
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
 }

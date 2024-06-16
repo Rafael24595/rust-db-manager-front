@@ -3,7 +3,7 @@ import { RustDbManagerService } from '../../../../../core/services/rust.db.manag
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
-import { TableDataGroup } from '../../../../../interfaces/server/table/data.base.group';
+import { TableDataGroup } from '../../../../../interfaces/server/table/group/data.base.group';
 import { UtilsService } from '../../../../../core/services/utils/utils.service';
 
 @Component({

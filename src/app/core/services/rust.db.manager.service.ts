@@ -9,7 +9,7 @@ import { ServiceCategoryLite } from '../../interfaces/server/service/definition/
 import { ServiceCreateRequest } from '../../interfaces/server/service/generate/service.create.request';
 import { ServiceSuscribeRequest } from '../../interfaces/server/service/generate/service.suscribe.request';
 import { ResponseException } from '../commons/response.exception';
-import { TableDataGroup } from '../../interfaces/server/table/data.base.group';
+import { TableDataGroup } from '../../interfaces/server/table/group/data.base.group';
 import { UtilsService } from './utils/utils.service';
 import { GenerateDatabaseQuery } from '../../interfaces/server/data.base/generate.data.base.quey';
 import { Service } from '../../interfaces/server/service/definition/service';
@@ -24,6 +24,7 @@ import { CollectionData } from '../../interfaces/server/collection/collection.da
 import { FilterResources } from '../../interfaces/server/field/filter/filter.resources';
 import { FilterElement } from '../../interfaces/server/field/filter/filter.element';
 import { FilterDefinition } from '../../interfaces/server/field/filter/definition/filter.definition';
+import { TableDefinition } from '../../interfaces/server/table/definition/table.definition';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -163,6 +164,13 @@ export class RustDbManagerService {
   
   collectionMetadata(service: string, database: string, collection: string): Observable<TableDataGroup[]> {
     return this.http.get<TableDataGroup[]>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/metadata`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionInformation(service: string, database: string, collection: string): Observable<TableDefinition[]> {
+    return this.http.get<TableDefinition[]>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/information`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

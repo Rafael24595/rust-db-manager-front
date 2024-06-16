@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TableDataGroup } from '../../../../../interfaces/server/table/data.base.group';
+import { TableDataGroup } from '../../../../../interfaces/server/table/group/data.base.group';
 import { ActivatedRoute } from '@angular/router';
 import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
