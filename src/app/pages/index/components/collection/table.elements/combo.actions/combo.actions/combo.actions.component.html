@@ -1,0 +1,21 @@
+@if (actions | async; as actions) {
+    <app-combo-selector [options]="actions"/>
+}
+
+<app-rename-form
+    [service]="service"
+    [dataBase]="dataBase"
+    [collection]="cursor"
+    [onSubmit]="{
+        func: refreshBranch.bind(this)
+    }"
+/>
+
+<app-import-form
+    [service]="service"
+    [dataBase]="dataBase"
+    [collection]="cursor"
+    [onSubmit]="{
+        func: refreshBranch.bind(this)
+    }"
+/>

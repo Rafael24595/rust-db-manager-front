@@ -25,6 +25,8 @@ import { FilterResources } from '../../interfaces/server/field/filter/filter.res
 import { FilterElement } from '../../interfaces/server/field/filter/filter.element';
 import { FilterDefinition } from '../../interfaces/server/field/filter/definition/filter.definition';
 import { TableDefinition } from '../../interfaces/server/table/definition/table.definition';
+import { ActionDefinition } from '../../interfaces/server/action/definition/action.definition';
+import { Action } from '../../interfaces/server/action/generate/action';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -171,6 +173,20 @@ export class RustDbManagerService {
 
   collectionInformation(service: string, database: string, collection: string): Observable<TableDefinition[]> {
     return this.http.get<TableDefinition[]>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/information`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionActionsList(service: string, database: string, collection: string): Observable<ActionDefinition[]> {
+    return this.http.get<ActionDefinition[]>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/action`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionActionExecute(service: string, database: string, collection: string, form: Action): Observable<void> {
+    return this.http.post<void>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/action`, form, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );
