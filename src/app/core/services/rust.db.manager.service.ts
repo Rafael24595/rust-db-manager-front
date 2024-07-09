@@ -185,6 +185,13 @@ export class RustDbManagerService {
       );
   }
 
+  collectionAction(service: string, database: string, collection: string, code: string): Observable<ActionDefinition> {
+    return this.http.get<ActionDefinition>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/action/${code}`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   collectionActionExecute(service: string, database: string, collection: string, form: Action): Observable<void> {
     return this.http.post<void>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/action`, form, CREDENTIALS_OPTIONS)
       .pipe(

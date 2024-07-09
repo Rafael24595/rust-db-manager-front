@@ -6,7 +6,7 @@ import { AlertService } from '../../../../../../../core/services/view/alert.serv
 import { UtilsService } from '../../../../../../../core/services/utils/utils.service';
 import { RedirectService } from '../../../../../../../core/services/redirect.service';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, map, merge, Observable, of } from 'rxjs';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import { ActionDefinition } from '../../../../../../../interfaces/server/action/definition/action.definition';
 import { RenameFormComponent } from '../../../rename.form/rename.form.component';
 import { ImportFormComponent } from '../../../import.form/import.form.component';
@@ -14,6 +14,7 @@ import { AsyncPipe } from '@angular/common';
 import { ComboSelectorComponent } from "../../../../../../../components/combo.selector/combo.selector.component";
 import { ResponseException } from '../../../../../../../core/commons/response.exception';
 import { Action } from '../../../../../../../interfaces/server/action/generate/action';
+import { ActionService } from '../../../../../../../core/services/view/action.service';
 
 @Component({
     selector: 'app-combo-actions',
@@ -70,7 +71,7 @@ export class ComboActionsComponent {
 
     protected actions!: Observable<ModalButton[]>;
 
-    public constructor(private route: ActivatedRoute, private redirect: RedirectService, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+    public constructor(private route: ActivatedRoute, private redirect: RedirectService, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private actionService: ActionService, private resolver: RustDbManagerService) {
       this.refreshBranch = () => {};
       this.cursor = "";
     }
@@ -173,8 +174,8 @@ export class ComboActionsComponent {
       this.importForm.openModal();
     }
     
-    protected openActionForm(collection: string, action: Action) {
-      console.log(collection, action)
+    protected openActionForm(collection: string, action: ActionDefinition) {
+      this.redirect.goToActionForm(action.action, this.service, this.dataBase, collection);
     }
 
     protected executeAction(collection: string, action: Action) {
