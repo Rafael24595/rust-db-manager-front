@@ -181,8 +181,10 @@ export class ActionFormComponent {
   protected filterValues(form: FormFieldDefinition): FormDefault[] {
     const formData = this.actionData.form.find(f => f.code == form.code);
     if(formData) {
-      console.log(form, formData.fields.flat())
-      return form.values.filter(v => !formData.fields.flat().find(v2 => v2.code != v.key));
+      const flatFields = formData.fields.flat();
+      return form.values.filter(v => 
+        !flatFields.find(v2 => (v2.code === form.code && v2.value === v.value))
+      );
     }
     return form.values;
   }
