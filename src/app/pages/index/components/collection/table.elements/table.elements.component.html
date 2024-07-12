@@ -1,33 +1,38 @@
-@if(collections | async; as collections) {
-    <div>
-        <div class="table-title">
-            <h3 class="title-text">Collections [{{collections.length}}]</h3>
-            <div class="title-combo">
-                <button class="title-button" (click)="openForm()">
-                    <span class="plus-icon">+</span>
-                </button>
-            </div>
-        </div>
-        <div class="table-content" [ngClass]="{'empty': collections.length === 0}">
-            @if (collections.length == 0) {
-                <p style="text-align: center;">No collections found.</p>
-            } @else {
-                <table class="table-base">
-                    @for (collection of collections; track $index) {
-                        <tr>
-                            <td (click)="load(collection)">
-                                <p class="light-link">{{collection}}</p>
-                            </td>
-                            <td class="combo-field">
-                                <app-combo-actions 
-                                    [refreshBranch]="refreshBranch" 
-                                    [collection]="collection"
-                                />
-                            </td>
-                        </tr>
-                    }
-                </table>
+<div>
+    <div class="table-title">
+        <h3 class="title-text">
+            Collections 
+            @if (collections) {
+                [{{collections.length}}]
             }
+        </h3>
+        <div class="title-combo">
+            <button class="title-button" [disabled]="!collections" (click)="openForm()">
+                <span class="plus-icon">+</span>
+            </button>
         </div>
     </div>
-}
+    <div class="table-content" [ngClass]="{'empty': !collections || collections.length === 0}">
+        @if(!collections) {
+            <p style="text-align: center;">Data not found.</p>
+        } @else if (collections.length == 0) {
+            <p style="text-align: center;">No collections found.</p>
+        } @else {
+            <table class="table-base">
+                @for (collection of collections; track $index) {
+                    <tr>
+                        <td (click)="load(collection)">
+                            <p class="light-link">{{collection}}</p>
+                        </td>
+                        <td class="combo-field">
+                            <app-combo-actions 
+                                [refreshBranch]="refreshBranch" 
+                                [collection]="collection"
+                            />
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>

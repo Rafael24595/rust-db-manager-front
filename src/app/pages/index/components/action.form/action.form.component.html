@@ -1,9 +1,15 @@
-@if (definition) {
-    <form id="form">
-        <div class="table-title">
-            <h3 class="title-text">{{ definition.title }}</h3>
-        </div>
-        <div id="form-body">
+<form id="form">
+    <div class="table-title">
+        <h3 class="title-text">
+            @if(definition) {
+                {{ definition.title }}
+            } @else {
+                {{ action }}
+            }
+        </h3>
+    </div>
+    <div id="form-body">
+        @if(definition) {
             @for (form of definition.form.forms; track $index) {
                 <div class="form-content">
                     <table class="table-form" [ngClass]="tableSpace(definition.form, $index)">
@@ -24,7 +30,11 @@
                                                 <tr>
                                                     @for (field of pair; track $index) {
                                                         <td colspan="2">
-                                                            <label for="collection"><span class="required"></span> {{ field.name }}:</label>
+                                                            <label for="collection">
+                                                                @if(field.sw_key) {
+                                                                    <span class="required"></span> 
+                                                                }
+                                                                {{ field.name }}:</label>
                                                             <br>
                                                             @if (field.values.length == 0) {
                                                                 <input type="text" name="{{field.code}}" [(ngModel)]="formFields[form.code][field.code]" required>
@@ -52,46 +62,55 @@
                                         <table class="table-base disable-layout">
                                             <tbody>
                                                 @if (findForm(form.code); as formData) {
-                                                    @for (fieldCursor of formData.fields; track $index) {
-                                                        <tr>
-                                                            <td class="actions-field">
-                                                                <p>Actions: </p>
-                                                            </td>
-                                                            <td>
-                                                                <app-combo-selector [options]="[
-                                                                    {
-                                                                        title: 'Copy', 
-                                                                        callback: {func: copyField.bind(this), args: [form.code, $index]}, 
-                                                                        icon: {icon: '+'}
-                                                                    },
-                                                                    {
-                                                                        title: 'Update', 
-                                                                        callback: {func: updateField.bind(this), args: [form.code, $index]}, 
-                                                                        icon: {icon: '⇦'}
-                                                                    },
-                                                                    {
-                                                                        title: 'Remove', 
-                                                                        callback: {func: removeField.bind(this), args: [form.code, $index]}, 
-                                                                        icon: {icon: '🗑'}
-                                                                    },
-                                                                ]"/>
-                                                            </td>
-                                                        </tr>
-                                                        @for (field of fieldCursor; track $index) {
+                                                    @if(formData.fields.length > 0) {
+                                                        @for (fieldCursor of formData.fields; track $index) {
                                                             <tr>
-                                                                <td class="code-field">
-                                                                    <p>
-                                                                        {{ field.code }}
-                                                                    </p>
+                                                                <td class="actions-field">
+                                                                    <p>Actions: </p>
                                                                 </td>
-                                                                <td class="value-field" colspan="2">
-                                                                    <p>{{ field.value }}</p>
+                                                                <td>
+                                                                    <app-combo-selector [options]="[
+                                                                        {
+                                                                            title: 'Copy', 
+                                                                            callback: {func: copyField.bind(this), args: [form.code, $index]}, 
+                                                                            icon: {icon: '+'}
+                                                                        },
+                                                                        {
+                                                                            title: 'Update', 
+                                                                            callback: {func: updateField.bind(this), args: [form.code, $index]}, 
+                                                                            icon: {icon: '⇦'}
+                                                                        },
+                                                                        {
+                                                                            title: 'Remove', 
+                                                                            callback: {func: removeField.bind(this), args: [form.code, $index]}, 
+                                                                            icon: {icon: '🗑'}
+                                                                        },
+                                                                    ]"/>
                                                                 </td>
                                                             </tr>
+                                                            @for (field of fieldCursor; track $index) {
+                                                                <tr>
+                                                                    <td class="code-field">
+                                                                        <p>
+                                                                            {{ field.code }}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td class="value-field" colspan="2">
+                                                                        <p>{{ field.value }}</p>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            @if(formData.fields.length > 1 && $index < formData.fields.length - 1) {
+                                                                <tr><td class="separator" colspan="2"></td></tr>
+                                                            }
                                                         }
-                                                        @if(formData.fields.length > 1 && $index < formData.fields.length - 1) {
-                                                            <tr><td class="separator" colspan="2"></td></tr>
-                                                        }
+
+                                                    } @else {
+                                                        <tr>
+                                                            <td>
+                                                                <p id="empty-fields">No fields defined.</p>
+                                                            </td>
+                                                        </tr>
                                                     }
                                                 } @else {
                                                     <tr>
@@ -113,6 +132,6 @@
                 <button class="title-button smoke form-button" (click)="onSubmit()">Create</button>
                 <button class="title-button smoke form-button" (click)="exitForm()">Exit</button>
             </div>
-        </div>
-    </form>
-}
+        }
+    </div>
+</form>

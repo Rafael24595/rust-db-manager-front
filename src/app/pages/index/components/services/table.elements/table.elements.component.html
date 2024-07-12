@@ -1,75 +1,66 @@
-@if(services | async; as services) {
-    <div>
-        <div class="table-title">
-            <h3 class="title-text">Services [{{services.services.length}}]</h3>
-            <div class="title-combo">
-                <button class="title-button" (click)="openForm()">
-                    <span class="plus-icon">+</span>
-                </button>
-            </div>
-        </div>
-        <div class="table-content" [ngClass]="{'empty': services.services.length === 0}">
-            @if (services.services.length == 0) {
-                <p style="text-align: center;">No services found.</p>
-            } @else {
-                <table class="table-base">
-                    @for (service of services.services; track $index) {
-                        <tr>
-                            <td class="db-status">
-                                <div>
-                                    <div class="status-point" [ngClass]="'status-'+status[service.name]"></div>
-                                    <span>{{ status[service.name] }}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="trade-mark" href="{{service.category.resources.web_site}}" target="_blank" [ngStyle]="{'color': service.category.resources.color}">
-                                    <img class="db-logo" src="{{service.category.resources.image}}" alt="Logo of {{service.category.category}}">
-                                    <span class="db-title">{{service.category.category}}</span>
-                                </a>
-                            </td>
-                            <td (click)="load(service.name)">
-                                <p class="light-link">{{service.name}}</p>
-                            </td>
-                            <td class="combo-field">
-                                <app-combo-selector [options]="[
-                                    {
-                                        title: 'View', 
-                                        callback: {func: load.bind(this), args: [service.name]}, 
-                                        icon: {icon: '⤇'}
-                                    },
-                                    {
-                                        title: 'Remove', 
-                                        callback: {func: remove.bind(this), args: [service.name]}, 
-                                        icon: {icon: '🗑'}
-                                    },
-                                    {
-                                        title: 'Status', 
-                                        callback: {func: verifyStatus.bind(this), args: [service.name]}, 
-                                        icon: {icon: '✓'}
-                                    }
-                                ]"/>
-                            </td>
-                        </tr>
-                    }
-                </table>
+<div>
+    <div class="table-title">
+        <h3 class="title-text">
+            Services
+            @if(services) {
+                [{{services.services.length}}]
             }
+        </h3>
+        <div class="title-combo">
+            <button class="title-button" [disabled]="!services" (click)="openForm()">
+                <span class="plus-icon">+</span>
+            </button>
         </div>
     </div>
-} @else {
-    <div>
-        <div class="table-title">
-            <h3 class="title-text">Services [0]</h3>
-            <div class="title-combo">
-                <button class="title-button" disabled>
-                    <span class="plus-icon">+</span>
-                </button>
-            </div>
-        </div>
-        <div class="table-content empty">
-            <p style="text-align: center;">Loading...</p>
-        </div>
+    <div class="table-content" [ngClass]="{'empty': !services || services.services.length === 0}">
+        @if(!services) {
+            <p style="text-align: center;">Data not found.</p>
+        } @else if (services.services.length == 0) {
+            <p style="text-align: center;">No services found.</p>
+        } @else {
+            <table class="table-base">
+                @for (service of services.services; track $index) {
+                    <tr>
+                        <td class="db-status">
+                            <div>
+                                <div class="status-point" [ngClass]="'status-'+status[service.name]"></div>
+                                <span>{{ status[service.name] }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="trade-mark" href="{{service.category.resources.web_site}}" target="_blank" [ngStyle]="{'color': service.category.resources.color}">
+                                <img class="db-logo" src="{{service.category.resources.image}}" alt="Logo of {{service.category.category}}">
+                                <span class="db-title">{{service.category.category}}</span>
+                            </a>
+                        </td>
+                        <td (click)="load(service.name)">
+                            <p class="light-link">{{service.name}}</p>
+                        </td>
+                        <td class="combo-field">
+                            <app-combo-selector [options]="[
+                                {
+                                    title: 'View', 
+                                    callback: {func: load.bind(this), args: [service.name]}, 
+                                    icon: {icon: '⤇'}
+                                },
+                                {
+                                    title: 'Remove', 
+                                    callback: {func: remove.bind(this), args: [service.name]}, 
+                                    icon: {icon: '🗑'}
+                                },
+                                {
+                                    title: 'Status', 
+                                    callback: {func: verifyStatus.bind(this), args: [service.name]}, 
+                                    icon: {icon: '✓'}
+                                }
+                            ]"/>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
     </div>
-}
+</div>
 
 <app-publish-form
     [onSubmit]="{

@@ -1,12 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from '../../../../../core/services/view/alert.service';
-import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { UtilsService } from '../../../../../core/services/utils/utils.service';
+import { CommonModule } from '@angular/common';
 import { CreateFormComponent } from '../create.form/create.form.component';
 import { RedirectService } from '../../../../../core/services/redirect.service';
 import { ComboActionsComponent } from './combo.actions/combo.actions/combo.actions.component';
@@ -14,7 +11,7 @@ import { ComboActionsComponent } from './combo.actions/combo.actions/combo.actio
 @Component({
   selector: 'app-table-elements',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, CreateFormComponent, ComboActionsComponent],
+  imports: [CommonModule, ComboSelectorComponent, CreateFormComponent, ComboActionsComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
@@ -26,10 +23,10 @@ export class TableElementsComponent {
   protected service!: string;
   protected dataBase!: string;
 
-  protected collections!: Observable<string[]>;
+  protected collections!: string[];
   protected cursor: string;
 
-  public constructor(private route: ActivatedRoute, private redirect: RedirectService, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  public constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
     this.cursor = "";
   }
@@ -46,7 +43,14 @@ export class TableElementsComponent {
   }
 
   public refreshData(): void {
-    this.collections = this.resolver.collectionFindAll(this.service, this.dataBase);
+    this.resolver.collectionFindAll(this.service, this.dataBase).subscribe({
+      error: (e) => {
+        this.alert.alert(e.message);
+      },
+      next: (collections) => {
+        this.collections = collections;
+      }
+    });
   }
 
   protected openForm(): void {

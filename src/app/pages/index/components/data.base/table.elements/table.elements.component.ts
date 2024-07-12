@@ -1,10 +1,8 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
-import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
 import { CreateFormComponent } from '../create.form/create.form.component';
 import { ResponseException } from '../../../../../core/commons/response.exception';
 import { AlertService } from '../../../../../core/services/view/alert.service';
@@ -14,7 +12,7 @@ import { RedirectService } from '../../../../../core/services/redirect.service';
 @Component({
   selector: 'app-table-elements',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, RouterModule, ComboSelectorComponent, CreateFormComponent],
+  imports: [CommonModule, RouterModule, ComboSelectorComponent, CreateFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
@@ -27,7 +25,7 @@ export class TableElementsComponent {
   public refreshBranch: Function;
   
   protected service!: string;
-  protected dataBases!: Observable<string[]>;
+  protected dataBases!: string[];
 
   public constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
@@ -41,7 +39,14 @@ export class TableElementsComponent {
   }
 
   public refreshData() {
-    this.dataBases = this.resolver.dataBaseFindAll(this.service);
+    this.resolver.dataBaseFindAll(this.service).subscribe({
+      error: (e) => {
+        this.alert.alert(e.message);
+      },
+      next: (dataBases) => {
+        this.dataBases = dataBases;
+      }
+    });
   }
 
   protected openForm() {

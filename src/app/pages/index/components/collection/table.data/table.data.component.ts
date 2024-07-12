@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { TableDataGroup } from '../../../../../interfaces/server/table/group/data.base.group';
 import { ActivatedRoute } from '@angular/router';
 import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
-import { AsyncPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { AlertService } from '../../../../../core/services/view/alert.service';
 
 @Component({
   selector: 'app-table-data',
   standalone: true,
-  imports: [AsyncPipe],
+  imports: [CommonModule],
   templateUrl: './table.data.component.html',
   styleUrl: './table.data.component.css'
 })
@@ -18,9 +18,9 @@ export class TableDataComponent {
   public service!: string;
   public dataBase!: string;
 
-  public metadata!: Observable<TableDataGroup[]>;
+  public metadata!: TableDataGroup[];
 
-  constructor(private route: ActivatedRoute, public utils: UtilsService, private resolver: RustDbManagerService) {
+  constructor(private route: ActivatedRoute, public utils: UtilsService, private alert: AlertService, private resolver: RustDbManagerService) {
   }
 
   ngOnInit(): void {
@@ -35,7 +35,14 @@ export class TableDataComponent {
   }
 
   refreshData() {
-    this.metadata = this.resolver.dataBaseMetadata(this.service, this.dataBase);
+    this.resolver.dataBaseMetadata(this.service, this.dataBase).subscribe({
+      error: (e) => {
+        this.alert.alert(e.message);
+      },
+      next: (metadata) => {
+        this.metadata = metadata;
+      }
+    });
   }
 
 }

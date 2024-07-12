@@ -1,9 +1,8 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ServiceLite } from '../../../../../interfaces/server/service/definition/service.lite';
-import { Observable } from 'rxjs';
 import { PaginatedCollection } from '../../../../../interfaces/server/pagination/paginated.collection';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { PublishFormComponent } from '../publish.form/publish.form.component';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
 import { ResponseException } from '../../../../../core/commons/response.exception';
@@ -17,7 +16,7 @@ import { Dict } from '../../../../../types/dict';
 @Component({
   selector: 'app-table-elements',
   standalone: true, 
-  imports: [AsyncPipe, CommonModule, RouterModule, AlertModalComponent, ComboSelectorComponent, PublishFormComponent],
+  imports: [CommonModule, RouterModule, AlertModalComponent, ComboSelectorComponent, PublishFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
@@ -29,7 +28,7 @@ export class TableElementsComponent {
   @ViewChild(PublishFormComponent)
   private formComponent!: PublishFormComponent;
 
-  protected services!: Observable<PaginatedCollection<ServiceLite>>;
+  protected services!: PaginatedCollection<ServiceLite>;
   protected status: Dict<string>;
 
   public constructor(private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
@@ -42,12 +41,19 @@ export class TableElementsComponent {
   }
 
   public refreshData(): void {
-    this.services = this.resolver.serviceFindAll();
-    this.verifyAllStatus();
+    this.resolver.serviceFindAll().subscribe({
+      error: (e) => {
+        this.alert.alert(e.message);
+      },
+      next: (services) => {
+        this.services = services;
+        this.verifyAllStatus();
+      }
+    });
   }
 
   private verifyAllStatus(): void {
-    this.services.forEach(n => n.services.forEach(v => this.verifyStatus(v.name)))
+    this.services.services.forEach(v => this.verifyStatus(v.name));
   }
 
   protected verifyStatus(service: string): void {

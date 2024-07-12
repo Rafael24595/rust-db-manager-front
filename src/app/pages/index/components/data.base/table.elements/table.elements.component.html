@@ -1,44 +1,49 @@
-@if(dataBases | async; as dataBases) {
-    <div>
-        <div class="table-title">
-            <h3 class="title-text">Data Bases [{{dataBases.length}}]</h3>
-            <div class="title-combo">
-                <button class="title-button" (click)="openForm()">
-                    <span class="plus-icon">+</span>
-                </button>
-            </div>
-        </div>
-        <div class="table-content" [ngClass]="{'empty': dataBases.length === 0}">
-            @if (dataBases.length == 0) {
-                <p style="text-align: center;">No data bases found.</p>
-            } @else {
-                <table class="table-base">
-                    @for (dataBase of dataBases; track $index) {
-                        <tr>
-                            <td (click)="load(dataBase)">
-                                <p class="light-link">{{dataBase}}</p>
-                            </td>
-                            <td class="combo-field">
-                                <app-combo-selector [options]="[
-                                    {
-                                        title: 'View', 
-                                        callback: {func: load.bind(this), args: [dataBase]}, 
-                                        icon: {icon: '⤇'}
-                                    },
-                                    {
-                                        title: 'Remove', 
-                                        callback: {func: remove.bind(this), args: [dataBase]}, 
-                                        icon: {icon: '🗑'}
-                                    }
-                                ]"/>
-                            </td>
-                        </tr>
-                    }
-                </table>
+<div>
+    <div class="table-title">
+        <h3 class="title-text">
+            Data Bases
+            @if (dataBases) {
+                [{{dataBases.length}}]
             }
+        </h3>
+        <div class="title-combo">
+            <button class="title-button" [disabled]="!dataBases" (click)="openForm()">
+                <span class="plus-icon">+</span>
+            </button>
         </div>
     </div>
-}
+    <div class="table-content" [ngClass]="{'empty': !dataBases || dataBases.length === 0}">
+        @if(!dataBases) {
+            <p style="text-align: center;">Data not found.</p>
+        } @else if (dataBases.length == 0) {
+            <p style="text-align: center;">No data bases found.</p>
+        } @else {
+            <table class="table-base">
+                @for (dataBase of dataBases; track $index) {
+                    <tr>
+                        <td (click)="load(dataBase)">
+                            <p class="light-link">{{dataBase}}</p>
+                        </td>
+                        <td class="combo-field">
+                            <app-combo-selector [options]="[
+                                {
+                                    title: 'View', 
+                                    callback: {func: load.bind(this), args: [dataBase]}, 
+                                    icon: {icon: '⤇'}
+                                },
+                                {
+                                    title: 'Remove', 
+                                    callback: {func: remove.bind(this), args: [dataBase]}, 
+                                    icon: {icon: '🗑'}
+                                }
+                            ]"/>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>
 
 <app-create-form
     [service]="service"
