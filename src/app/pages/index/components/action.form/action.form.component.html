@@ -31,7 +31,7 @@
                                                             } @else {
                                                                 <select name="{{field.code}}" [(ngModel)]="formFields[form.code][field.code]" required>
                                                                     <option value="default" disabled selected>-- select one --</option>
-                                                                    @for (value of field.values; track $index) {
+                                                                    @for (value of filterValues(field); track $index) {
                                                                         <option value="{{ value.value }}">{{ value.key }}</option>
                                                                     }
                                                                 </select>

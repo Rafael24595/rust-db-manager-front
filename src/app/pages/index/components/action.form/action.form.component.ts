@@ -16,6 +16,9 @@ import { ComboSelectorComponent } from '../../../../components/combo.selector/co
 import { CommonModule } from '@angular/common';
 import { ActionFormCollection } from '../../../../interfaces/server/action/definition/action.form.collection';
 import { UtilsService } from '../../../../core/services/utils/utils.service';
+import { FormDefault } from '../../../../interfaces/server/action/definition/form.default';
+import { FormFieldDefinition } from '../../../../interfaces/server/action/definition/form.field.definition';
+import { ResponseHandlerService } from '../../../../core/services/response.handler.service';
 
 @Component({
   selector: 'app-action-form',
@@ -25,7 +28,7 @@ import { UtilsService } from '../../../../core/services/utils/utils.service';
   styleUrl: './action.form.component.css'
 })
 export class ActionFormComponent {
-
+  
   protected service!: string;
   protected dataBase!: string;
   protected collection!: Optional<string>;
@@ -36,7 +39,7 @@ export class ActionFormComponent {
   protected formFields!: Dict<Dict<any>>;
   protected actionData!: Action;
 
-  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, protected utils: UtilsService, private resolver: RustDbManagerService) {
+  constructor(private route: ActivatedRoute, private redirect: RedirectService, private alert: AlertService, private logo: DbLogoService, protected utils: UtilsService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
   }
 
   public ngOnInit(): void {
@@ -94,7 +97,7 @@ export class ActionFormComponent {
   }
 
   protected findForm(code: string): Optional<ActionForm> {
-    return this.actionData.form.find(f => f.code = code);
+    return this.actionData.form.find(f => f.code == code);
   }
 
   protected tableSpace(forms: ActionFormCollection, index: number): string|string[]|Set<string>|{ [klass: string]: any; }|null|undefined {
@@ -109,8 +112,18 @@ export class ActionFormComponent {
 
   protected addField(formCode: string) {
     const formValues = this.formFields[formCode];
+    if(Object.keys(formValues).length == 0) {
+      return;
+    }
     
-    let form = this.actionData.form.find(f => f.code = formCode);
+    let form = this.actionData.form.find(f => f.code == formCode);
+
+    const formDefinition = this.definition?.form.forms.find(f => f.code == formCode);
+    if(form && !formDefinition?.sw_vector) {
+      const index = this.actionData.form.indexOf(form)
+      this.actionData.form.splice(index, 1);
+    }
+    
     if(!form) {
       form = { code: formCode, fields: [] };
       this.actionData.form.push(form);
@@ -130,7 +143,7 @@ export class ActionFormComponent {
   }
 
   protected removeField(formCode: string, index: number) {
-    const form = this.actionData.form.find(f => f.code = formCode);
+    const form = this.actionData.form.find(f => f.code == formCode);
     if(form) {
       form.fields.splice(index, 1);
     }
@@ -142,7 +155,7 @@ export class ActionFormComponent {
   }
 
   protected copyField(formCode: string, index: number) {
-    const form = this.actionData.form.find(f => f.code = formCode);
+    const form = this.actionData.form.find(f => f.code == formCode);
     if(!form) {
       return;
     }
@@ -165,11 +178,53 @@ export class ActionFormComponent {
     this.formFields[formCode] = {};
   }
 
-  protected exitForm() {
-    throw new Error('Method not implemented.');
+  protected filterValues(form: FormFieldDefinition): FormDefault[] {
+    const formData = this.actionData.form.find(f => f.code == form.code);
+    if(formData) {
+      console.log(form, formData.fields.flat())
+      return form.values.filter(v => !formData.fields.flat().find(v2 => v2.code != v.key));
+    }
+    return form.values;
   }
-  protected onSubmit() {
-    throw new Error('Method not implemented.');
+
+  protected exitForm() {
+    if(this.collection) {
+      this.redirect.goToCollection(this.service, this.dataBase, this.collection);
+    }
+  }
+  protected onSubmit(attemps: number = 0) {
+    for (const key of Object.keys(this.formFields)) {
+      const form = this.definition?.form.forms.find(f => f.code == key);
+      if(!form?.sw_vector) {
+        this.addField(key);
+      }
+      this.cleanForm(key);
+    }
+
+    if(this.collection) {
+      this.resolver.collectionActionExecute(this.service, this.dataBase, this.collection, this.actionData).subscribe({
+        error: (e: ResponseException) => {
+          if(this.handler.autentication(e, {
+            key: "Collection action",
+            name: this.dataBase,
+            service: this.service,
+            nextCallback: {
+              func: this.onSubmit.bind(this)
+            }
+          })) {
+            return;
+          }
+  
+          this.handler.requestAttemp(e, this.onSubmit.bind(this), attemps);
+        },
+        complete: () => {
+          for (const key of Object.keys(this.formFields)) {
+            this.cleanForm(key);
+          }
+          this.exitForm();
+        }
+      });
+    }
   }
 
 }
