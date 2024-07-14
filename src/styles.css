@@ -200,7 +200,13 @@ html, body {
     vertical-align: bottom;
 }
 
-.table-form label {
+.table-form-label {
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.table-form label, .table-form-label {
     margin-right: 10px;
     font-weight: 500;
 }

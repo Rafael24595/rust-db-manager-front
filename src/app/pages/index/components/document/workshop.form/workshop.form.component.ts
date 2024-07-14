@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentKey } from '../../../../../interfaces/server/document/document.key';
 import { DocumentKeysParserService } from '../../../../../core/services/utils/document.keys.parser.service';

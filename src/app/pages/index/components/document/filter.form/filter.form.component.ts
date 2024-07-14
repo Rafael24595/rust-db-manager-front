@@ -14,11 +14,12 @@ import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { FilterValueAttribute } from '../../../../../interfaces/server/field/filter/filter.value.attribute';
 import { FilterAttributeDefinition } from '../../../../../interfaces/server/field/filter/definition/filter.attribute.definition';
 import { FilterAttributeDefaultDefinition } from '../../../../../interfaces/server/field/filter/definition/filter.attribute.default.definition';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
 @Component({
   selector: 'app-filter-form',
   standalone: true,
-  imports: [AsyncPipe, FormsModule, DialogFormComponent, FilterElementPreviewComponent],
+  imports: [AsyncPipe, FormsModule, DialogFormComponent, FilterElementPreviewComponent, CodemirrorModule],
   templateUrl: './filter.form.component.html',
   styleUrl: './filter.form.component.css'
 })
@@ -44,7 +45,20 @@ export class FilterFormComponent {
   protected category: string;
   protected value: string;
 
-  protected attributes: FilterValueAttribute[]
+  protected attributes: FilterValueAttribute[];
+
+  protected query = "";
+
+  public options = {
+    mode: "application/ld+json",
+    lineNumbers: false,
+    lineWrapping: false,
+    foldGutter: true,
+    gutters: ['CodeMirror-lint-markers'],
+    autoCloseBrackets: true,
+    matchBrackets: true,
+    lint: true
+  };
   
   public constructor(private route: ActivatedRoute, public utils: UtilsService, private resolver: RustDbManagerService) {
     this.name = "";
@@ -166,6 +180,10 @@ export class FilterFormComponent {
     }
     
     return true;
+  }
+
+  protected handleChange($event: string): void {
+    this.value = $event;
   }
 
 }
