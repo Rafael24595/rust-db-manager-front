@@ -141,7 +141,7 @@ export class TableElementsComponent {
     ).subscribe();
   }
 
-  private parseCollection(documents: CollectionData): void {console.log(documents)
+  private parseCollection(documents: CollectionData): void {
     this.details = Array.apply(null, Array(documents.documents.length)).map(() => false);
     const documentsParsed = documents.documents.map(document => {
       let parsed: Dict<any>;
@@ -181,7 +181,7 @@ export class TableElementsComponent {
   }
 
   protected switchExpand(): void  {
-    const direction = this.details.filter(d => d).length < this.details.length / 2;console.log(direction)
+    const direction = this.details.filter(d => d).length < this.details.length / 2;
     this.details = this.details.map(d => direction);
   }
 

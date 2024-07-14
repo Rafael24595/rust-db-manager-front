@@ -64,7 +64,6 @@ export class ActionFormComponent {
         },
         next: (definition: ActionDefinition) => {
           this.logo.set(definition.title, this.service);
-          console.log(definition)
           this.definition = definition;
           this.initializeAction(definition);
           this.initializeForm(definition);
