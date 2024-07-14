@@ -93,6 +93,11 @@ html, body {
     margin-left: 10px;
 }
 
+.cover-all {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 .title-button:hover {
     background-color: whitesmoke;
 }

@@ -103,7 +103,10 @@ export class RustDbManagerService {
   }
 
   serviceSchemaFilter(service: string): Observable<FilterDefinition> {
-    return this.http.get<FilterDefinition>(`${environment.URL_SERVICE}/api/v1/service/${service}/schema-filter`, CREDENTIALS_OPTIONS);
+    return this.http.get<FilterDefinition>(`${environment.URL_SERVICE}/api/v1/service/${service}/schema-filter`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
 

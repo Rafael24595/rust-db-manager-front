@@ -73,11 +73,13 @@
                             />
                         </div>
                     </div>
+                    @if(schema) {
+                        <button (click)="showExample()" class="title-button cover-all smoke form-button">Apply example</button>
+                    }
                 }
             }
 
-
-            @if(schema | async; as schema) {
+            @if(schema) {
                 @if (filterAttributes(schema.attributes); as attributes) {
                     @if (attributes.length > 0) {
                         <div id="attributes-form">

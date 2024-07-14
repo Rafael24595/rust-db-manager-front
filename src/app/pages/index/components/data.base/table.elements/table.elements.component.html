@@ -14,7 +14,7 @@
     </div>
     <div class="table-content" [ngClass]="{'empty': !dataBases || dataBases.length === 0}">
         @if(!dataBases) {
-            <p style="text-align: center;">Data not found.</p>
+            <p style="text-align: center;">Connecting to the service...</p>
         } @else if (dataBases.length == 0) {
             <p style="text-align: center;">No data bases found.</p>
         } @else {

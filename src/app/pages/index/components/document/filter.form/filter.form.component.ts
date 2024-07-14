@@ -15,6 +15,8 @@ import { FilterValueAttribute } from '../../../../../interfaces/server/field/fil
 import { FilterAttributeDefinition } from '../../../../../interfaces/server/field/filter/definition/filter.attribute.definition';
 import { FilterAttributeDefaultDefinition } from '../../../../../interfaces/server/field/filter/definition/filter.attribute.default.definition';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { AlertService } from '../../../../../core/services/view/alert.service';
+import { ResponseException } from '../../../../../core/commons/response.exception';
 
 @Component({
   selector: 'app-filter-form',
@@ -32,7 +34,7 @@ export class FilterFormComponent {
   public onSubmit!: Callback;
   
   protected resources!: Observable<FilterResources>;
-  protected schema!: Observable<FilterDefinition>;
+  protected schema!: FilterDefinition;
   
   public filter!: FilterElement;
   public cursor!: FilterElement;
@@ -60,7 +62,7 @@ export class FilterFormComponent {
     lint: true
   };
   
-  public constructor(private route: ActivatedRoute, public utils: UtilsService, private resolver: RustDbManagerService) {
+  public constructor(private route: ActivatedRoute, private alert: AlertService, public utils: UtilsService, private resolver: RustDbManagerService) {
     this.name = "";
     this.direction = true;
     this.negation = false;
@@ -95,7 +97,17 @@ export class FilterFormComponent {
   }
 
   private loadFilterDefinition(): void {
-    this.schema = this.resolver.serviceSchemaFilter(this.service);
+    this.resolver.serviceSchemaFilter(this.service).subscribe({
+      error: (e: ResponseException) => {
+        this.alert.alert(e.message);
+      },
+      next: (schema: FilterDefinition) => {
+        this.schema = schema;
+        if(this.schema.query_type == "JSON") {
+          this.options.mode = "application/ld+json";
+        }
+      }
+    });
   }
 
   public openModal(): void {
@@ -180,6 +192,19 @@ export class FilterFormComponent {
     }
     
     return true;
+  }
+
+  protected showExample() {
+    let example = this.schema.query_example;
+    if(this.schema.query_type == "JSON") {
+      try {
+        const parse = JSON.parse(this.schema.query_example);
+        example = JSON.stringify(parse, null, 2)
+      } catch (error) {
+        this.alert.alert(`Cannot load example: ${error}`)
+      }
+    }
+    this.value = example;
   }
 
   protected handleChange($event: string): void {

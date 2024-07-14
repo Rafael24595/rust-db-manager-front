@@ -4,7 +4,7 @@
     </div>
     <div class="table-content" [ngClass]="{'empty': !metadata}">
         @if(!metadata) {
-            <p style="text-align: center;">Data not found.</p>
+            <p style="text-align: center;">Connecting to the service...</p>
         } @else {
             <table class="table-base even-odd">
                 @for (group of metadata; track $index) {

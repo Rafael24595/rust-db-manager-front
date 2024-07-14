@@ -14,7 +14,7 @@
     </div>
     <div class="table-content" [ngClass]="{'empty': !collections || collections.length === 0}">
         @if(!collections) {
-            <p style="text-align: center;">Data not found.</p>
+            <p style="text-align: center;">Connecting to the service...</p>
         } @else if (collections.length == 0) {
             <p style="text-align: center;">No collections found.</p>
         } @else {

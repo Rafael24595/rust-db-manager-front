@@ -27,7 +27,7 @@
     </div>
     <div class="table-content" [ngClass]="{'empty': !documents || documents.documents.length === 0}">
         @if(!documents) {
-            <p style="text-align: center;">Data not found.</p>
+            <p style="text-align: center;">Connecting to the service...</p>
         } @else if (documents.documents.length == 0) {
             <p style="text-align: center;">No documents found.</p>
         } @else {
