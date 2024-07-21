@@ -6,6 +6,7 @@ import { CreateFormComponent } from './pages/index/components/collection/create.
 import { DocumentComponent } from './pages/index/components/document/document.component';
 import { WorkshopFormComponent } from './pages/index/components/document/workshop.form/workshop.form.component';
 import { DocumentKeysParserService } from './core/services/utils/document.keys.parser.service';
+import { ActionFormComponent } from './pages/index/components/action.form/action.form.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/service', pathMatch: 'full' },
@@ -14,6 +15,7 @@ export const routes: Routes = [
     { path: 'service/:service/data-base/:data_base', component: CollectionComponent },
     { path: 'service/:service/data-base/:data_base/new-collection', component: CreateFormComponent },
     { path: 'service/:service/data-base/:data_base/collection/:collection', component: DocumentComponent },
+    { path: 'service/:service/data-base/:data_base/collection/:collection/action/:action', component: ActionFormComponent },
     { path: 'service/:service/data-base/:data_base/collection/:collection/document', component: WorkshopFormComponent,
         data: { hide: true }
     },

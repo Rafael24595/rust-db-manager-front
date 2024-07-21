@@ -1,9 +1,11 @@
-@if(metadata | async; as metadata) {
-    <div>
-        <div class="table-title">
-            <h3 class="title-text">Data Base Status</h3>
-        </div>
-        <div class="table-content">
+<div class="table-container">
+    <div class="table-title">
+        <h3 class="title-text">Data Base Status</h3>
+    </div>
+    <div class="table-content" [ngClass]="{'empty': !metadata}">
+        @if(!metadata) {
+            <p style="text-align: center;">Connecting to the service...</p>
+        } @else {
             <table class="table-base even-odd">
                 @for (group of metadata; track $index) {
                     @if (group.fields.length > 0) {
@@ -27,6 +29,34 @@
                     }
                 }
             </table>
-        </div>
+        }
     </div>
+</div>
+
+@if (information) {
+    @for (table of information; track $index) {
+        <div class="table-container">
+            <div class="table-title">
+                <h3 class="title-text">{{ table.title }}</h3>
+            </div>
+            @if (table.rows.length == 0) {
+                <div class="table-content empty">
+                    <p style="text-align: center;">No items found.</p>
+                </div>
+            }
+            <div class="table-content">
+                <table class="table-base even-odd">
+                    @for (row of table.rows; track $index) {
+                        <tr>
+                            @for (field of row.fields; track $index) {
+                                <td [class.data-key]="field.sw_title">
+                                    {{ field.data }}
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
 }

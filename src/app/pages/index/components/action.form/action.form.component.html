@@ -1,0 +1,137 @@
+<form id="form">
+    <div class="table-title">
+        <h3 class="title-text">
+            @if(definition) {
+                {{ definition.title }}
+            } @else {
+                {{ action }}
+            }
+        </h3>
+    </div>
+    <div id="form-body">
+        @if(definition) {
+            @for (form of definition.form.forms; track $index) {
+                <div class="form-content">
+                    <table class="table-form" [ngClass]="tableSpace(definition.form, $index)">
+                        <tbody>
+                            <tr>
+                                <td id="form-column">
+                                    <div id="form-column-title">
+                                        @if (form.title) {
+                                            <h4 class="title-text">{{ form.title }}</h4>
+                                        }
+                                        @if (form.sw_vector) {
+                                            <button class="title-button smoke form-button"(click)="addField(form.code)">+</button>
+                                        }
+                                    </div>
+                                    <table>
+                                        <tbody>
+                                            @for (pair of utils.groupInPairs(form.fields); track $index) {
+                                                <tr>
+                                                    @for (field of pair; track $index) {
+                                                        <td colspan="2">
+                                                            <label for="collection">
+                                                                @if(field.sw_key) {
+                                                                    <span class="required"></span> 
+                                                                }
+                                                                {{ field.name }}:</label>
+                                                            <br>
+                                                            @if (field.values.length == 0) {
+                                                                <input type="text" name="{{field.code}}" [(ngModel)]="formFields[form.code][field.code]" required>
+                                                            } @else {
+                                                                <select name="{{field.code}}" [(ngModel)]="formFields[form.code][field.code]" required>
+                                                                    <option value="default" disabled selected>-- select one --</option>
+                                                                    @for (value of filterValues(field); track $index) {
+                                                                        <option value="{{ value.value }}">{{ value.key }}</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            <br>
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </td>
+                                @if (form.sw_vector) {
+                                    <td id="fields-column">
+                                        <div id="fields-column-title">
+                                            <h4>Values</h4>
+                                        </div>
+                                        <table class="table-base disable-layout">
+                                            <tbody>
+                                                @if (findForm(form.code); as formData) {
+                                                    @if(formData.fields.length > 0) {
+                                                        @for (fieldCursor of formData.fields; track $index) {
+                                                            <tr>
+                                                                <td class="actions-field">
+                                                                    <p>Actions: </p>
+                                                                </td>
+                                                                <td>
+                                                                    <app-combo-selector [options]="[
+                                                                        {
+                                                                            title: 'Copy', 
+                                                                            callback: {func: copyField.bind(this), args: [form.code, $index]}, 
+                                                                            icon: {icon: '+'}
+                                                                        },
+                                                                        {
+                                                                            title: 'Update', 
+                                                                            callback: {func: updateField.bind(this), args: [form.code, $index]}, 
+                                                                            icon: {icon: '⇦'}
+                                                                        },
+                                                                        {
+                                                                            title: 'Remove', 
+                                                                            callback: {func: removeField.bind(this), args: [form.code, $index]}, 
+                                                                            icon: {icon: '🗑'}
+                                                                        },
+                                                                    ]"/>
+                                                                </td>
+                                                            </tr>
+                                                            @for (field of fieldCursor; track $index) {
+                                                                <tr>
+                                                                    <td class="code-field">
+                                                                        <p>
+                                                                            {{ field.code }}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td class="value-field" colspan="2">
+                                                                        <p>{{ field.value }}</p>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            @if(formData.fields.length > 1 && $index < formData.fields.length - 1) {
+                                                                <tr><td class="separator" colspan="2"></td></tr>
+                                                            }
+                                                        }
+
+                                                    } @else {
+                                                        <tr>
+                                                            <td>
+                                                                <p id="empty-fields">No fields defined.</p>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                } @else {
+                                                    <tr>
+                                                        <td>
+                                                            <p id="empty-fields">No fields defined.</p>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            }
+            <div id="form-buttons">
+                <button class="title-button smoke form-button" (click)="onSubmit()">Create</button>
+                <button class="title-button smoke form-button" (click)="exitForm()">Exit</button>
+            </div>
+        }
+    </div>
+</form>

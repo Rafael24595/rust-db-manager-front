@@ -1,0 +1,85 @@
+:host {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-filter {
+    width: 100%;
+    padding: 5px;
+}
+
+.table-filter, .table-filter th, .table-filter td, .filter-fields {
+    border-collapse: collapse;
+    border: 1px solid lightgrey;
+    padding: 5px;
+    background-color: white;
+}
+
+.table-filter p {
+    margin: 0px;
+}
+
+.filter-fields {
+    padding: 0px;
+    padding-left: 7px;
+    padding-right: 7px;
+    background-color: ghostwhite;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    overflow: auto;
+    scrollbar-gutter: stable;
+}
+
+.filter-fields-list {
+    overflow: auto;
+}
+
+.attribute-title {
+    font-weight: bold;
+}
+
+.negate-symbol {
+    font-weight: bold;
+    color: crimson;
+}
+
+.direction-box {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    color: darkcyan;
+}
+
+.filter-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.filter-meta p {
+    margin: 0px;
+}
+
+.filter-actions {
+    display: flex;
+    align-items: baseline;
+}
+
+.filter-actions p {
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.filter-direction {
+    font-weight: bold;
+    font-size: small;
+}
+
+.attribute-preview {
+    font-weight: bold;
+}

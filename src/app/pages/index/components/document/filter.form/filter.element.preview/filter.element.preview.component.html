@@ -1,0 +1,86 @@
+<table class="table-filter disable-layout">
+    <tbody>
+        @if (filter.key != "") {
+            <tr>
+                <td class="attribute-title">
+                    <p>Field</p>
+                </td>
+                <td>
+                    <p>{{ filter.key }}</p>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="attribute-title">
+                <p>Category</p>
+            </td>
+            <td>
+                <p>{{ filter.value.category }}</p>
+            </td>
+        </tr>
+        @if (filter.value.value != "") {
+            <tr>
+                <td class="attribute-title">
+                    <p>Value</p>
+                </td>
+                <td>
+                    <p>
+                        @if (filter.negation) {
+                            <span class="negate-symbol">NOT[</span>
+                        }
+                        <span>{{ filter.value.value }}</span>
+                        @if (filter.negation) {
+                            <span class="negate-symbol">]</span>
+                        }
+                    </p>
+                </td>
+            </tr>
+            @if (filter.value.attributes.length > 0) {
+            <tr>
+                <td class="attribute-title">
+                    <p>Attributes</p>
+                </td>
+                    <td>
+                        @for (attribute of filter.value.attributes; track $index) {
+                            <span class="attribute-preview" title="{{ attribute.key }} : {{ attribute.value }}">{{ attribute.key[0] }}</span>
+                            @if ($index < filter.value.attributes.length -1) {
+                                <span>, </span>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        @if (filter.value.children.length > 0) {
+            <tr>
+                <td class="attribute-title" colspan="2">
+                    <p>Children</p>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (filter.value.children.length > 0) {
+    <div class="filter-fields">
+        <div class="filter-fields-list" >
+            @for (child of filter.value.children; track $index) {
+                <div class="filter-meta">
+                    <span class="filter-direction">
+                        @if (child.direction) {
+                            AND
+                        } @else {
+                            OR
+                        }
+                    </span>
+                    <div class="filter-actions">
+                        <p (click)="modifyField(child)">⇦</p>
+                        <p (click)="removeField(child)">🗑</p>
+                    </div>
+                </div>
+                <app-filter-element-preview
+                    [filter]="child"
+                />
+            }
+        </div>
+    </div>
+}

@@ -3,141 +3,143 @@
         <h3 class="title-text">New Collection</h3>
     </div>
     <div id="form-body">
-        <div class="form-content">
-            <table class="table-form">
-                <tbody>
-                    <tr><td colspan="2"></td></tr>
-                    <tr>
-                        <td colspan="2">
-                            <label for="collection"><span class="required"></span> Collection name:</label>
-                            <br>
-                            <input type="text" name="collection" [(ngModel)]="collection" required>
-                            <br>
-                        </td>
-                    </tr>
-                    <tr><td colspan="2"><br></td></tr>
-                    <tr>
-                        <td id="form-column">
-                            <div id="form-column-title">
-                                <h4>New field:</h4>
-                                @if (base && field) {
-                                    <button class="title-button smoke form-button"(click)="addField()">+</button>
-                                }
-                            </div>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="2">
-                                            <label for="category"><span class="required"></span> Type:</label>
-                                            <br>
-                                            <select name="category" id="base-selector" [(ngModel)]="baseCode" (change)="selectBase()" required>
-                                                <option value="default" disabled selected>-- select one --</option>
-                                                @for (definition of definition.definition; track $index) {
-                                                    <option value="{{ definition.code }}">{{ definition.name }}</option>
-                                                }
-                                            </select>
-                                        </td>
-                                    </tr>
+        @if(fields.length > 0) {
+            <div class="form-content">
+                <table class="table-form">
+                    <tbody>
+                        <tr><td colspan="2"></td></tr>
+                        <tr>
+                            <td colspan="2">
+                                <label for="collection"><span class="required"></span> Collection name:</label>
+                                <br>
+                                <input type="text" name="collection" [(ngModel)]="collection" required>
+                                <br>
+                            </td>
+                        </tr>
+                        <tr><td colspan="2"><br></td></tr>
+                        <tr>
+                            <td id="form-column">
+                                <div id="form-column-title">
+                                    <h4>New field:</h4>
                                     @if (base && field) {
+                                        <button class="title-button smoke form-button"(click)="addField()">+</button>
+                                    }
+                                </div>
+                                <table>
+                                    <tbody>
                                         <tr>
-                                            <td>
-                                                <label for="code"><span class="required"></span> Code:</label>
-                                                <input type="text" name="code" [(ngModel)]="field.value" required>
+                                            <td colspan="2">
+                                                <label for="category"><span class="required"></span> Type:</label>
+                                                <br>
+                                                <select name="category" id="base-selector" [(ngModel)]="baseCode" (change)="selectBase()" required>
+                                                    <option value="default" disabled selected>-- select one --</option>
+                                                    @for (definition of definition.definition; track $index) {
+                                                        <option value="{{ definition.code }}">{{ definition.name }}</option>
+                                                    }
+                                                </select>
                                             </td>
-                                            @if (base.swsize) {
-                                                <td>
-                                                    <label for="lenght"><span class="required"></span> Length:</label>
-                                                    <br>
-                                                    <input type="text" name="lenght" [(ngModel)]="field.size" required>
-                                                </td>
-                                            }
                                         </tr>
-                                        @if (base.attributes.length != 0) {
+                                        @if (base && field) {
                                             <tr>
                                                 <td>
-                                                    <h4>Attributes:</h4>
-                                                    <div>
-                                                        <table>
-                                                            @for (attribute of base.attributes; track $index) {
-                                                                @if (findAttribute(attribute.code); as field) {
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td class="attribute-code-field">
-                                                                                <label for="{{attribute.code}}"><span class="required"></span> {{ attribute.name }}:</label>
-                                                                            </td>
-                                                                            <td>
-                                                                                @if (attribute.values.length == 0) {
-                                                                                    <input type="text" name="{{attribute.code}}" [(ngModel)]="field.value" required>
-                                                                                } @else {
-                                                                                    <select name="{{attribute.code}}" id="base-selector" [(ngModel)]="field.value" required>
-                                                                                        <option value="default" disabled selected>-- select one --</option>
-                                                                                        @for (value of attribute.values; track $index) {
-                                                                                            <option value="{{ value.value }}">{{ value.key }}</option>
-                                                                                        }
-                                                                                    </select>
-                                                                                }
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
+                                                    <label for="code"><span class="required"></span> Code:</label>
+                                                    <input type="text" name="code" [(ngModel)]="field.value" required>
+                                                </td>
+                                                @if (base.swsize) {
+                                                    <td>
+                                                        <label for="lenght"><span class="required"></span> Length:</label>
+                                                        <br>
+                                                        <input type="text" name="lenght" [(ngModel)]="field.size" required>
+                                                    </td>
+                                                }
+                                            </tr>
+                                            @if (base.attributes.length != 0) {
+                                                <tr>
+                                                    <td>
+                                                        <h4>Attributes:</h4>
+                                                        <div>
+                                                            <table>
+                                                                @for (attribute of base.attributes; track $index) {
+                                                                    @if (findAttribute(attribute.code); as field) {
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td class="attribute-code-field">
+                                                                                    <label for="{{attribute.code}}"><span class="required"></span> {{ attribute.name }}:</label>
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if (attribute.values.length == 0) {
+                                                                                        <input type="text" name="{{attribute.code}}" [(ngModel)]="field.value" required>
+                                                                                    } @else {
+                                                                                        <select name="{{attribute.code}}" id="base-selector" [(ngModel)]="field.value" required>
+                                                                                            <option value="default" disabled selected>-- select one --</option>
+                                                                                            @for (value of attribute.values; track $index) {
+                                                                                                <option value="{{ value.value }}">{{ value.key }}</option>
+                                                                                            }
+                                                                                        </select>
+                                                                                    }
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    }
                                                                 }
-                                                            }
-                                                        </table>
-                                                    </div>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td id="fields-column">
+                                <div id="fields-column-title">
+                                    <h4>Fields</h4>
+                                </div>
+                                <table class="table-base disable-layout">
+                                    <tbody>
+                                        @if (fields.length == 0) {
+                                            <tr>
+                                                <td>
+                                                    <p id="empty-fields">No fields defined.</p>
                                                 </td>
                                             </tr>
                                         }
-                                    }
-                                </tbody>
-                            </table>
-                        </td>
-                        <td id="fields-column">
-                            <div id="fields-column-title">
-                                <h4>Fields</h4>
-                            </div>
-                            <table class="table-base disable-layout">
-                                <tbody>
-                                    @if (fields.length == 0) {
-                                        <tr>
-                                            <td>
-                                                <p id="empty-fields">No fields defined.</p>
-                                            </td>
-                                        </tr>
-                                    }
-                                    @for (field of fields; track $index) {
-                                        <tr>
-                                            <td class="code-field">
-                                                <p>
-                                                    {{ field.code }}
-                                                    @if (field.swsize) {
-                                                        ({{ field.size }})
-                                                    }
-                                                </p>
-                                            </td>
-                                            <td class="value-field">
-                                                <p>{{ field.value }}</p>
-                                            </td>
-                                            <td class="action-icon">
-                                                <p (click)="copyField($index)">+</p>
-                                            </td>
-                                            <td class="action-icon">
-                                                <p (click)="updateField($index)" [class.disabled-icon]="!field.mutable">⇦</p>
-                                            </td>
-                                            <td class="action-icon">
-                                                <p (click)="removeField($index)" [class.disabled-icon]="!field.mutable">🗑</p>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </td>
-                        
-                    </tr>    
-                </tbody>
-            </table>
-        </div>
-        <div id="form-buttons">
-            <button class="title-button smoke form-button" (click)="onSubmit()">Create</button>
-            <button class="title-button smoke form-button" (click)="exitForm()">Exit</button>
-        </div>
+                                        @for (field of fields; track $index) {
+                                            <tr>
+                                                <td class="code-field">
+                                                    <p>
+                                                        {{ field.code }}
+                                                        @if (field.swsize) {
+                                                            ({{ field.size }})
+                                                        }
+                                                    </p>
+                                                </td>
+                                                <td class="value-field">
+                                                    <p>{{ field.value }}</p>
+                                                </td>
+                                                <td class="action-icon">
+                                                    <p (click)="copyField($index)">+</p>
+                                                </td>
+                                                <td class="action-icon">
+                                                    <p (click)="updateField($index)" [class.disabled-icon]="!field.mutable">⇦</p>
+                                                </td>
+                                                <td class="action-icon">
+                                                    <p (click)="removeField($index)" [class.disabled-icon]="!field.mutable">🗑</p>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                            
+                        </tr>    
+                    </tbody>
+                </table>
+            </div>
+            <div id="form-buttons">
+                <button class="title-button smoke form-button" (click)="onSubmit()">Create</button>
+                <button class="title-button smoke form-button" (click)="exitForm()">Exit</button>
+            </div>
+        }
     </div>
 </form>

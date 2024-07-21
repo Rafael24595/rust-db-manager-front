@@ -1,0 +1,128 @@
+<app-dialog-form 
+    [widht]="'750px'"
+    [height]="'550px'"
+    [title]="'Define filter'"
+    [buttons]="[
+        {title: 'Search', callback: {func: formSubmit.bind(this)}},
+        {title: 'Close', callback: {func: closeModal.bind(this)}}
+    ]"
+    #form_dialog>
+    <div id="filter-body">
+        <div id="filter-form">
+            <div id="form-header">
+                <button class="title-button smoke form-button" (click)="addValue()">+</button>
+            </div>
+            @if (resources | async; as resources) {
+                <table class="table-form">
+                    <tbody>
+                        <tr>
+                            <td colspan="2">
+                                <label for="category"><span class="required"></span> Category:</label>
+                                <br>
+                                <select name="category" id="category" [(ngModel)]="category" required>
+                                    <option value="" disabled selected>-- select one --</option>
+                                        @for (category of resources.categories; track $index) {
+                                            <option value="{{ category }}">{{ category }}</option>
+                                        }
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        @if (category != resources.query_category) {
+                            <tr>
+                                <td colspan="2">
+                                    <label for="field"><span class="required"></span> Field:</label>
+                                    <br>
+                                    <input type="text" name="field" [(ngModel)]="name" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <label for="value"><span class="required"></span> Value:</label>
+                                    <br>
+                                    <input type="text" name="value" [(ngModel)]="value" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="direction"><span class="required"></span> Direction:</label>
+                                    <br>
+                                    <input type="checkbox" name="direction" [(ngModel)]="direction" required>
+                                </td>
+                                <td>
+                                    <label for="negation"><span class="required"></span> Negation:</label>
+                                    <br>
+                                    <input type="checkbox" name="negation" [(ngModel)]="negation" required>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @if (category == resources.query_category) {
+                    <label class="table-form-label" for="value"><span class="required"></span> Value:</label>
+                    <br>
+                    <div id="query-container">
+                        <div>
+                            <ngx-codemirror
+                                [options]="options"
+                                [ngModel]="value"
+                                [disabled]="false"
+                                [autoFocus]="true"
+                                (ngModelChange)="handleChange($event)"
+                            />
+                        </div>
+                    </div>
+                    @if(schema) {
+                        <button (click)="showExample()" class="title-button cover-all smoke form-button">Apply example</button>
+                    }
+                }
+            }
+
+            @if(schema) {
+                @if (filterAttributes(schema.attributes); as attributes) {
+                    @if (attributes.length > 0) {
+                        <div id="attributes-form">
+                            <h4>Attributes:</h4>
+                            <div id="attributes-list">
+                                <table class="table-form">
+                                    <tbody>
+                                        @for (duple of utils.groupInPairs(attributes); track $index) {
+                                            <tr>
+                                                @for (attribute of duple; track $index) {
+                                                    <td>
+                                                        <label for="{{ attribute.code }}">{{ attribute.name }}:</label>
+                                                        <br>
+                                                        <select name="{{ attribute.code }}" id="{{ attribute.code }}" (change)="updateAttribute($event, attribute)" required>
+                                                            @for (value of attribute.values; track $index) {
+                                                                <option value="{{ value.value }}" [selected]="isDefault(attribute, value)">{{ value.key }}</option>
+                                                            }
+                                                        </select>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                }
+            } 
+        </div>
+        <div id="filter-resume">
+            <div id="fields-column-title">
+                <h3>Filter resume:</h3>
+                <p id="clean-filter" (click)="loadEmptyFilter()">🗑</p>
+            </div>
+            @if (filter) {
+                <app-filter-element-preview
+                    [filter]="filter"
+                    [modifyCallback]="{
+                        func: fillForm.bind(this)
+                    }"
+                />
+            }
+        </div>
+    </div>
+</app-dialog-form>

@@ -48,4 +48,12 @@ export class RedirectService {
     this.router.navigate(["/service", service, "data-base", dataBase, "collection", collection, "document", pathParam], {queryParams});
   }
 
+  public goToActionForm(action: string, service: string, dataBase: string, collection?: string): void {
+    if(dataBase != undefined && collection != undefined) {
+      this.router.navigate(["/service", service, "data-base", dataBase, "collection", collection, "action", action]);
+      return;
+    }
+    this.router.navigate(["/service", service, "data-base", dataBase, "action", action]);
+  }
+
 }

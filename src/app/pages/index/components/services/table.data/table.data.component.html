@@ -1,9 +1,11 @@
-@if(metadata | async; as metadata) {
-    <div>
-        <div class="table-title">
-            <h3 class="title-text">Server Status</h3>
-        </div>
-        <div class="table-content">
+<div>
+    <div class="table-title">
+        <h3 class="title-text">Server Status</h3>
+    </div>
+    <div class="table-content" [ngClass]="{'empty': !metadata}">
+        @if(!metadata) {
+            <p style="text-align: center;">Connecting to the service...</p>
+        } @else {
             <table class="table-base even-odd">
                 <tr>
                     <td class="data-key">Session Id</td>
@@ -42,15 +44,6 @@
                     <td>{{metadata.cargo_version}}</td>
                 </tr>
             </table>
-        </div>
+        }
     </div>
-} @else {
-    <div>
-        <div class="table-title">
-            <h3 class="title-text">Server Status</h3>
-        </div>
-        <div class="table-content empty">
-            <p style="text-align: center;">Loading...</p>
-        </div>
-    </div>
-}
+</div>

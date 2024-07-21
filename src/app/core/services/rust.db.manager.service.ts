@@ -9,7 +9,7 @@ import { ServiceCategoryLite } from '../../interfaces/server/service/definition/
 import { ServiceCreateRequest } from '../../interfaces/server/service/generate/service.create.request';
 import { ServiceSuscribeRequest } from '../../interfaces/server/service/generate/service.suscribe.request';
 import { ResponseException } from '../commons/response.exception';
-import { TableDataGroup } from '../../interfaces/server/table/data.base.group';
+import { TableDataGroup } from '../../interfaces/server/table/group/data.base.group';
 import { UtilsService } from './utils/utils.service';
 import { GenerateDatabaseQuery } from '../../interfaces/server/data.base/generate.data.base.quey';
 import { Service } from '../../interfaces/server/service/definition/service';
@@ -21,6 +21,12 @@ import { UpdateDocument } from '../../interfaces/update.document';
 import { DocumentSchema } from '../../interfaces/server/document/document.schema';
 import { RenameCollectionQuery } from '../../interfaces/server/collection/rename.collection.query';
 import { CollectionData } from '../../interfaces/server/collection/collection.data';
+import { FilterResources } from '../../interfaces/server/field/filter/filter.resources';
+import { FilterElement } from '../../interfaces/server/field/filter/filter.element';
+import { FilterDefinition } from '../../interfaces/server/field/filter/definition/filter.definition';
+import { TableDefinition } from '../../interfaces/server/table/definition/table.definition';
+import { ActionDefinition } from '../../interfaces/server/action/definition/action.definition';
+import { Action } from '../../interfaces/server/action/generate/action';
 
 const CREDENTIALS_OPTIONS = { withCredentials: true };
 
@@ -40,6 +46,9 @@ export class RustDbManagerService {
     return this.http.get<ServiceCategoryLite[]>(`${environment.URL_SERVICE}/api/v1/available`);
   }
   
+  resourcesFilter(): Observable<FilterResources> {
+  return this.http.get<FilterResources>(`${environment.URL_SERVICE}/api/v1/resources/filter`);
+}
 
   serviceFindAll(): Observable<PaginatedCollection<ServiceLite>> {
     return this.http.get<PaginatedCollection<ServiceLite>>(`${environment.URL_SERVICE}/api/v1/service`);
@@ -89,6 +98,13 @@ export class RustDbManagerService {
     return this.http.get<CollectionDefinition>(`${environment.URL_SERVICE}/api/v1/service/${service}/schema`, CREDENTIALS_OPTIONS)
       .pipe(
         map(this.utils.sortCollectionDefinition),
+        catchError(this.handleError)
+      );
+  }
+
+  serviceSchemaFilter(service: string): Observable<FilterDefinition> {
+    return this.http.get<FilterDefinition>(`${environment.URL_SERVICE}/api/v1/service/${service}/schema-filter`, CREDENTIALS_OPTIONS)
+      .pipe(
         catchError(this.handleError)
       );
   }
@@ -158,6 +174,34 @@ export class RustDbManagerService {
       );
   }
 
+  collectionInformation(service: string, database: string, collection: string): Observable<TableDefinition[]> {
+    return this.http.get<TableDefinition[]>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/information`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionActionsList(service: string, database: string, collection: string): Observable<ActionDefinition[]> {
+    return this.http.get<ActionDefinition[]>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/action`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionAction(service: string, database: string, collection: string, code: string): Observable<ActionDefinition> {
+    return this.http.get<ActionDefinition>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/action/${code}`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  collectionActionExecute(service: string, database: string, collection: string, form: Action): Observable<void> {
+    return this.http.post<void>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/action`, form, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   collectionShema(service: string, database: string, collection: string): Observable<DocumentSchema> {
     return this.http.get<DocumentSchema>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/schema`, CREDENTIALS_OPTIONS)
       .pipe(
@@ -189,6 +233,13 @@ export class RustDbManagerService {
 
   documentFind(service: string, database: string, collection: string, document: DocumentKey[]): Observable<DocumentData> {
     return this.http.post<DocumentData>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/document/find`, document, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  documentQuery(service: string, database: string, collection: string, filter: FilterElement, limit: number, offset: number): Observable<CollectionData> {
+    return this.http.post<CollectionData>(`${environment.URL_SERVICE}/api/v1/service/${service}/data-base/${database}/collection/${collection}/document/query?limit=${limit}&offset=${offset}`, filter, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { TableDataGroup } from '../../../interfaces/server/table/data.base.group';
+import { TableDataGroup } from '../../../interfaces/server/table/group/data.base.group';
 import { Callback } from '../../../interfaces/callback';
-import { TableDataField } from '../../../interfaces/server/table/data.base.field';
 import { CollectionDefinition } from '../../../interfaces/server/collection/collection.definition';
 import { Optional } from '../../../types/optional';
 
@@ -45,7 +44,7 @@ export class UtilsService {
     return callback.func();
   }
 
-  groupInPairs(collection: TableDataField[]) {
+  groupInPairs<T>(collection: T[]) {
     const pairs = [];
   
     for (let i = 0; i < collection.length; i += 2) {

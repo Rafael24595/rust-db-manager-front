@@ -26,7 +26,7 @@ export class ServicesComponent {
 
   protected refreshChilds(): void {
     this.tableElement.refreshData();
-    this.tableData.refreshData()
+    this.tableData.refreshData();
   }
 
 }
