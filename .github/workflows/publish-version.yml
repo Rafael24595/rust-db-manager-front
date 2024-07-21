@@ -81,7 +81,7 @@ jobs:
       run: |
         PROJECT_VERSION=$(node -p "require('./package.json').version")
         echo "Version extracted: $PROJECT_VERSION"
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
