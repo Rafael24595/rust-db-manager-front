@@ -40,7 +40,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Extract project version
-      id: cargo_version
+      id: package_version
       run: |
         PROJECT_VERSION=$(node -p "require('./package.json').version")
         echo "Version extracted: $PROJECT_VERSION"
@@ -81,10 +81,10 @@ push_image:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Extract version from Cargo.toml
-      id: cargo_version
+    - name: Extract project version
+      id: package_version
       run: |
-        VERSION=$(grep '^version' Cargo.toml | sed -E 's/version = "(.*)"/\1/')
+        PROJECT_VERSION=$(node -p "require('./package.json').version")
         echo "Version extracted: $PROJECT_VERSION"
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
