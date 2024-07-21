@@ -64,8 +64,6 @@ export class ComboActionsComponent {
       },
     ];
 
-    protected cursor: string;
-
     protected service!: string;
     protected dataBase!: string;
 
@@ -73,7 +71,6 @@ export class ComboActionsComponent {
 
     public constructor(private route: ActivatedRoute, private redirect: RedirectService, private utils: UtilsService, private alert: AlertService, private handler: ResponseHandlerService, private actionService: ActionService, private resolver: RustDbManagerService) {
       this.refreshBranch = () => {};
-      this.cursor = "";
     }
 
     public ngOnInit(): void {
@@ -114,21 +111,20 @@ export class ComboActionsComponent {
       this.redirect.goToCollectionForm(this.service, this.dataBase);
     }
   
-    protected rename(collection: string): void {
-      this.cursor = collection;
+    protected rename(): void {
       this.renameForm.openModal();
     }
   
-    protected remove(collection: string): void {
-      this.resolver.collectionRemove(this.service, this.dataBase, collection).subscribe({
+    protected remove(): void {
+      this.resolver.collectionRemove(this.service, this.dataBase, this.collection).subscribe({
         error: (e: ResponseException) => {
           if(this.handler.autentication(e, {
             key: "Collection",
-            name: collection,
+            name: this.collection,
             service: this.service,
             nextCallback: {
               func: this.remove.bind(this),
-              args: [collection]
+              args: [this.collection]
             }
           })) {
             return;
@@ -169,8 +165,7 @@ export class ComboActionsComponent {
         });
     }
   
-    protected importJson(collection: string): void {
-      this.cursor = collection;
+    protected importJson(): void {
       this.importForm.openModal();
     }
     
