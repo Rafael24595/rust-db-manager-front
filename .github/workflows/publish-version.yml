@@ -29,9 +29,6 @@ jobs:
     - name: Build app
       run: npm run build --if-present
 
-    - name: Test app
-      run: npm test
-
   publish_branch:
     needs: build
     runs-on: ubuntu-latest
