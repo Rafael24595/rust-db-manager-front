@@ -2,19 +2,21 @@ version: '3.3'
 
 services:
   rs-api:
-    image: rafaelruiztorres/rust-db-manager-api:0.1.0
-    container_name: rust_db_manager_api
+    image: rafaelruiztorres/rust-db-manager-api:0.1.1
+    container_name: rust_db_manager_api_0_1_1
     ports:
       - "3000:3000"
     volumes:
       - ./rust-db-manager-core:/core
       - ./rust-db-manager-api:/api
+    environment:
+      - KEEP_SERVICES=true
     networks:
       - rs_network
 
   rs-front:
-    image: rafaelruiztorres/rust-db-manager-front:0.1.0
-    container_name: rust_db_manager_front
+    image: rafaelruiztorres/rust-db-manager-front:0.1.1
+    container_name: rust_db_manager_front_0_1_1
     ports:
       - "4200:4200"
     volumes:
