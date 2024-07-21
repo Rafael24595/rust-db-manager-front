@@ -70,7 +70,7 @@ jobs:
         git remote set-url origin https://x-access-token:"$GITHUB_TOKEN"@github.com/${{ github.repository }}.git
         git push origin "$PROJECT_VERSION"
 
-push_image:
+  push_image:
     needs: publish_branch
     runs-on: ubuntu-latest
 
