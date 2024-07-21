@@ -93,9 +93,10 @@ jobs:
       id: check_tag
       run: |
         REPO="${{ secrets.DOCKER_USER }}/rust-db-manager-front"
-        TAG_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: JWT $(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${{ secrets.DOCKER_USER }}'", "password": "'${{ secrets.DOCKER_TOKEN }}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)" https://hub.docker.com/v2/repositories/${REPO}/tags/${PROJECT_VERSION})
+        echo "Checking ${{ env.PROJECT_VERSION }} version."
+        TAG_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: JWT $(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${{ secrets.DOCKER_USER }}'", "password": "'${{ secrets.DOCKER_TOKEN }}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)" https://hub.docker.com/v2/repositories/${REPO}/tags/${{ env.PROJECT_VERSION }})
         if [ $TAG_EXISTS -eq 200 ]; then
-          echo "Tag ${PROJECT_VERSION} already exists. Exiting."
+          echo "Tag ${{ env.PROJECT_VERSION }} already exists. Exiting."
           exit 1
         fi
 
@@ -104,4 +105,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKER_USER }}/rust-db-manager-front:${{ env.VERSION }}
+        tags: ${{ secrets.DOCKER_USER }}/rust-db-manager-front:${{ env.PROJECT_VERSION }}
