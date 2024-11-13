@@ -21,6 +21,7 @@ import { FilterFormComponent } from '../filter.form/filter.form.component';
 import { FilterElement } from '../../../../../interfaces/server/field/filter/filter.element';
 import { FilterResources } from '../../../../../interfaces/server/field/filter/filter.resources';
 import { CollectionData } from '../../../../../interfaces/server/collection/collection.data';
+import { LocalStorageService } from '../../../../../core/services/local.storage.service';
 
 @Component({
   selector: 'app-table-elements',
@@ -50,7 +51,7 @@ export class TableElementsComponent {
 
   protected filter!: FilterElement;
 
-  public constructor(private route: ActivatedRoute, private sanitized: DomSanitizer, public utils: UtilsService, private redirect: RedirectService, private alert: AlertService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  public constructor(private route: ActivatedRoute, private sanitized: DomSanitizer, public utils: UtilsService, private redirect: RedirectService, private alert: AlertService, private localstorage: LocalStorageService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
     this.details = [];
     this.page = {
@@ -59,7 +60,6 @@ export class TableElementsComponent {
       limit: 0,
       offset: this.offset,
     };
-    this.emptyFilter();
   }
 
   protected ngOnInit(): void {
@@ -85,7 +85,7 @@ export class TableElementsComponent {
       offset: this.offset
     }
 
-    this.refreshData();
+    this.initializeFilter(this.service, this.dataBase, this.collection);
   }
 
   protected keyValue(document: DocumentDataParser): string {
@@ -109,9 +109,15 @@ export class TableElementsComponent {
     return Object.keys(document.document).sort();
   }
 
+  public getFilter(): FilterElement {
+    return this.filter;
+  }
+
   public setFilter(filter: FilterElement): void {
     this.filter = filter;
     this.filterFormComponent.closeModal();
+    const key = this.makeKey(this.service, this.dataBase, this.collection);
+    this.localstorage.insert(key, filter);
     this.refreshData();
   }
 
@@ -285,6 +291,22 @@ export class TableElementsComponent {
     this.redirect.goToWorkshop(this.service, this.dataBase, this.collection, request);
   }
 
+  private initializeFilter(service: string, dataBase: string, collection: string) {
+    const key = this.makeKey(service, dataBase, collection);
+    const filter = this.localstorage.find(key);
+    console.log(filter)
+    if(filter == null) {
+      this.emptyFilter();
+      return;
+    }
+    this.filter = filter;
+    this.refreshData();
+  }
+
+  private makeKey(service: string, dataBase: string, collection: string): string {
+    return `DOCUMENT_FILTER_${service}#${dataBase}#${collection}#`;
+  }
+
   private emptyFilter(): void {
     this.resolver.resourcesFilter().subscribe((value: FilterResources) => {
       this.filter = {
@@ -298,6 +320,7 @@ export class TableElementsComponent {
         direction: true,
         negation: false
       };
+      this.refreshData();
     });
   }
 

@@ -73,6 +73,7 @@ export class CollectionComponent {
     this.dataBase = dataBase;
     const title = "Viewing collection";
     this.logo.set(title, this.service);
+    this.refreshChilds();
   }
 
   refreshChilds() {

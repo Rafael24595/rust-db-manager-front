@@ -22,7 +22,7 @@
                 @for (collection of collections; track $index) {
                     <tr>
                         <td (click)="load(collection)">
-                            <p class="light-link">{{collection}}</p>
+                            <p class="light-link" title="{{collection}}">{{collection}}</p>
                         </td>
                         <td class="combo-field">
                             <app-combo-actions 

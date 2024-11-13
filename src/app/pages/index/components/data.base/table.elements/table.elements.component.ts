@@ -41,7 +41,10 @@ export class TableElementsComponent {
   public refreshData() {
     this.resolver.dataBaseFindAll(this.service).subscribe({
       error: (e) => {
-        this.alert.alert(e.message);
+        const status = e.status;
+        if(status != 401 && status != 403) {
+          this.alert.alert(e.message);
+        }
       },
       next: (dataBases) => {
         this.dataBases = dataBases;

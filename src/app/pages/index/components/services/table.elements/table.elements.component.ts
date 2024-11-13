@@ -59,8 +59,14 @@ export class TableElementsComponent {
   protected verifyStatus(service: string): void {
     this.status[service] = "connecting";
     this.resolver.serviceStatus(service).subscribe({
-      next: (status: string) => this.status[service] = status,
-      error: () => this.status[service] = "error",
+      error: (err) => {
+        const responseStatus = err.status;
+        const status =  responseStatus == 401 || responseStatus == 403 ? "unautorized" : "error" ;
+        this.status[service] = status;
+      },
+      next: (status: string) => {
+        this.status[service] = status;
+      },
     });
   }
 

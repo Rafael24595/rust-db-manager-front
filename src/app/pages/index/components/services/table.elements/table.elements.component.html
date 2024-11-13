@@ -19,44 +19,49 @@
             <p style="text-align: center;">No services found.</p>
         } @else {
             <table class="table-base">
-                @for (service of services.services; track $index) {
-                    <tr>
-                        <td class="db-status">
-                            <div>
-                                <div class="status-point" [ngClass]="'status-'+status[service.name]"></div>
-                                <span>{{ status[service.name] }}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <a class="trade-mark" href="{{service.category.resources.web_site}}" target="_blank" [ngStyle]="{'color': service.category.resources.color}">
-                                <img class="db-logo" src="{{service.category.resources.image}}" alt="Logo of {{service.category.category}}">
-                                <span class="db-title">{{service.category.category}}</span>
-                            </a>
-                        </td>
-                        <td (click)="load(service.name)">
-                            <p class="light-link">{{service.name}}</p>
-                        </td>
-                        <td class="combo-field">
-                            <app-combo-selector [options]="[
-                                {
-                                    title: 'View', 
-                                    callback: {func: load.bind(this), args: [service.name]}, 
-                                    icon: {icon: '⤇'}
-                                },
-                                {
-                                    title: 'Remove', 
-                                    callback: {func: remove.bind(this), args: [service.name]}, 
-                                    icon: {icon: '🗑'}
-                                },
-                                {
-                                    title: 'Status', 
-                                    callback: {func: verifyStatus.bind(this), args: [service.name]}, 
-                                    icon: {icon: '✓'}
-                                }
-                            ]"/>
-                        </td>
-                    </tr>
-                }
+                <tbody>
+                    @for (service of services.services; track $index) {
+                        <tr>
+                            <td class="db-status">
+                                <div>
+                                    <div class="status-point" [ngClass]="'status-'+status[service.name]" title="{{ status[service.name] }}"></div>
+                                    @if(service.protected) {
+                                        <span class="protected" title="Protected"></span>
+                                    }
+                                    <span>{{ status[service.name] }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <a class="trade-mark" href="{{service.category.resources.web_site}}" target="_blank" [ngStyle]="{'color': service.category.resources.color}">
+                                    <img class="db-logo" src="{{service.category.resources.image}}" alt="Logo of {{service.category.category}}">
+                                    <span class="db-title">{{service.category.category}}</span>
+                                </a>
+                            </td>
+                            <td (click)="load(service.name)">
+                                <p class="light-link" title="{{service.name}}">{{service.name}}</p>
+                            </td>
+                            <td class="combo-field">
+                                <app-combo-selector [options]="[
+                                    {
+                                        title: 'View', 
+                                        callback: {func: load.bind(this), args: [service.name]}, 
+                                        icon: {icon: '⤇'}
+                                    },
+                                    {
+                                        title: 'Remove', 
+                                        callback: {func: remove.bind(this), args: [service.name]}, 
+                                        icon: {icon: '🗑'}
+                                    },
+                                    {
+                                        title: 'Status', 
+                                        callback: {func: verifyStatus.bind(this), args: [service.name]}, 
+                                        icon: {icon: '✓'}
+                                    }
+                                ]"/>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
             </table>
         }
     </div>

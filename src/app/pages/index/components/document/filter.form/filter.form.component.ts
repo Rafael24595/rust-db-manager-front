@@ -32,6 +32,9 @@ export class FilterFormComponent {
 
   @Input() 
   public onSubmit!: Callback;
+
+  @Input() 
+  public getFilter!: Callback;
   
   protected resources!: Observable<FilterResources>;
   protected schema!: FilterDefinition;
@@ -75,7 +78,6 @@ export class FilterFormComponent {
     const oService = this.route.snapshot.paramMap.get("service");
     this.service = oService ? oService : "";
     this.resources = this.resolver.resourcesFilter();
-    this.loadEmptyFilter();
     this.loadFilterDefinition();
   }
 
@@ -111,6 +113,7 @@ export class FilterFormComponent {
   }
 
   public openModal(): void {
+    this.filter = this.utils.executeCallback(this.getFilter)
     this.formDialog.openModal();
   }
 

@@ -5,7 +5,7 @@
     [title]="'Suscribe Service'"
     [buttons]="[
         {title: 'Suscribe', callback: {func: onSubmit.bind(this)}},
-        {title: 'Close', 'callback': {func: closeModal.bind(this)}}
+        {title: 'Close', close: true, 'callback': {func: closeModal.bind(this)}}
     ]"
     #suscribe_dialog>
     @if (request) {

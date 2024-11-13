@@ -35,7 +35,7 @@
                 @for (document of documents.documents; track $index) {
                     <tr>
                         <td (click)="load(document)">
-                            <p class="light-link">{{ keyValue(document) }}</p>
+                            <p class="light-link" title="{{ keyValue(document) }}">{{ keyValue(document) }}</p>
                         </td>
                         <td class="details-field">
                             <button class="title-button smoke" (click)="switchDetails($index)">Details</button>
@@ -90,6 +90,9 @@
 
 @if(documents) {
     <app-filter-form
+        [getFilter]="{
+            func: getFilter.bind(this)
+        }"
         [onSubmit]="{
             func: setFilter.bind(this)
         }"

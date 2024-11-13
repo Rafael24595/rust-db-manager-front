@@ -78,6 +78,7 @@ export class DocumentComponent {
     this.dataBase = dataBase;
     const title = "Viewing document";
     this.logo.set(title, this.service);
+    this.refreshChilds();
   }
 
   protected refreshChilds(): void {

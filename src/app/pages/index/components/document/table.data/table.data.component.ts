@@ -42,7 +42,10 @@ export class TableDataComponent {
   refreshData() {
     this.resolver.collectionMetadata(this.service, this.dataBase, this.collection).subscribe({
       error: (e) => {
-        this.alert.alert(e.message);
+        const status = e.status;
+        if(status != 401 && status != 403) {
+          this.alert.alert(e.message);
+        }
       },
       next: (metadata) => {
         this.metadata = metadata;
@@ -50,7 +53,10 @@ export class TableDataComponent {
     });
     this.resolver.collectionInformation(this.service, this.dataBase, this.collection).subscribe({
       error: (e) => {
-        this.alert.alert(e.message);
+        const status = e.status;
+        if(status != 401 && status != 403) {
+          this.alert.alert(e.message);
+        }
       },
       next: (information) => {
         this.information = information;

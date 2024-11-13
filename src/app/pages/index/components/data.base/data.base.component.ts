@@ -69,6 +69,7 @@ export class DataBaseComponent {
     this.service = service;
     const title = "Viewing data base";
     this.logo.set(title, this.service);
+    this.refreshChilds();
   }
 
   protected refreshChilds() {

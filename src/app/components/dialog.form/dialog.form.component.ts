@@ -18,7 +18,7 @@ export class DialogFormComponent {
   @Input() height: string = "300px";
   @Input() title!: string;
   @Input() buttons: ModalButton[] = [
-    {title: "Close", callback: {func: this.closeModal.bind(this)}}
+    {title: "Close", close: true, callback: {func: this.closeModal.bind(this)}}
   ]
 
   constructor(public utils: UtilsService) {
@@ -27,6 +27,16 @@ export class DialogFormComponent {
   closeModal() {
     this.dialog.nativeElement.close();
     this.dialog.nativeElement.classList.remove('opened');
+  }
+
+  closeModalExtended() {
+    for (const button of this.buttons) {
+      if(button.close) {
+        this.utils.executeCallback(button.callback);
+        return;
+      }
+    }
+    this.closeModal();
   }
 
   openModal() {
@@ -38,7 +48,7 @@ export class DialogFormComponent {
     this.dialog.nativeElement.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as Element;
       if (target.nodeName === 'DIALOG') {
-        this.closeModal();
+        this.closeModalExtended();
       }
     });
   }

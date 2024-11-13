@@ -29,12 +29,19 @@ html, body {
     font-weight: bold;
     text-decoration: underline;
     margin: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .required:after {
     content: '\002A';
     font-weight: bold;
     color: crimson;
+}
+
+.protected::after {
+    content: '🔒 ' ;
+    font-weight: bold;
 }
 
 .table-container {

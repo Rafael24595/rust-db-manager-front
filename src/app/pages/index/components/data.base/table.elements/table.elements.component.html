@@ -22,7 +22,7 @@
                 @for (dataBase of dataBases; track $index) {
                     <tr>
                         <td (click)="load(dataBase)">
-                            <p class="light-link">{{dataBase}}</p>
+                            <p class="light-link" title="{{dataBase}}">{{dataBase}}</p>
                         </td>
                         <td class="combo-field">
                             <app-combo-selector [options]="[

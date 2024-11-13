@@ -37,7 +37,10 @@ export class TableDataComponent {
   refreshData() {
     this.resolver.dataBaseMetadata(this.service, this.dataBase).subscribe({
       error: (e) => {
-        this.alert.alert(e.message);
+        const status = e.status;
+        if(status != 401 && status != 403) {
+          this.alert.alert(e.message);
+        }
       },
       next: (metadata) => {
         this.metadata = metadata;

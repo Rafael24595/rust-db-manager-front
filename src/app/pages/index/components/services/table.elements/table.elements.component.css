@@ -17,6 +17,10 @@
     background-color: orange;
 }
 
+.status-unautorized {
+    background-color: blueviolet;
+}
+
 .status-error {
     background-color: red;
 }
