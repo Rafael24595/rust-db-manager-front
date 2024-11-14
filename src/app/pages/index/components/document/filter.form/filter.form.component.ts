@@ -113,7 +113,8 @@ export class FilterFormComponent {
   }
 
   public openModal(): void {
-    this.filter = this.utils.executeCallback(this.getFilter)
+    this.filter = this.utils.executeCallback(this.getFilter);
+    this.cursor = this.filter;
     this.formDialog.openModal();
   }
 

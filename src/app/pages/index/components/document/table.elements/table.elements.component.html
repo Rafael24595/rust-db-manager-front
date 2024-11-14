@@ -78,13 +78,23 @@
         }
     </div>
     <div class="table-pagination">
-        @if (findPages(); as pages) {
+        <div class="pagination-form left">
+            <label for="offset"></label>
+            <input id="offset" name="offset" type="number" [(ngModel)]="formOffset">
+            <button class="title-button" (click)="gotoPage()">Go</button>
+        </div>
+        <div>
             @for (cursor of pages; track $index) {
                 <button class="title-button page-button" (click)="_refreshData(cursor)" 
                     [ngClass]="{'page-cursor': pages.length > 2 && cursor.position === page.position}" 
                     [disabled]="!documents">{{ cursor.title }}</button>
             }
-        }
+        </div>
+        <div class="pagination-form right">
+            <label for="offset"></label>
+            <input id="offset" name="offset" type="number" [(ngModel)]="formOffset">
+            <button class="title-button" (click)="gotoPage()">Go</button>
+        </div>
     </div>
 </div>
 

@@ -33,7 +33,8 @@ export class RedirectService {
     let queryParams: Dict<string> = {};
     if(page) {
       queryParams = {
-        limit: `${page.limit}`
+        limit: `${page.limit}`,
+        offset: `${page.offset}`
       }
     }
     this.router.navigate(["/service", service, "data-base", dataBase, "collection", collection], {queryParams});

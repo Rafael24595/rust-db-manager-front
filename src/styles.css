@@ -66,8 +66,17 @@ html, body {
     background-color: ghostwhite;
     padding: 15px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     border: 1px solid lightgrey;
+}
+
+.pagination-form input {
+    width: 50px;
+    margin-right: 5px;
+}
+
+.pagination-form.left {
+    visibility: hidden;
 }
 
 .page-button {

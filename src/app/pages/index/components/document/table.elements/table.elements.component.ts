@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AlertService } from '../../../../../core/services/view/alert.service';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
@@ -22,15 +22,18 @@ import { FilterElement } from '../../../../../interfaces/server/field/filter/fil
 import { FilterResources } from '../../../../../interfaces/server/field/filter/filter.resources';
 import { CollectionData } from '../../../../../interfaces/server/collection/collection.data';
 import { LocalStorageService } from '../../../../../core/services/local.storage.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-table-elements',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, ComboSelectorComponent, FilterFormComponent],
+  imports: [FormsModule, CommonModule, ComboSelectorComponent, FilterFormComponent],
   templateUrl: './table.elements.component.html',
   styleUrl: './table.elements.component.css'
 })
 export class TableElementsComponent {
+
+  private static readonly DEFAULT_OFFSET: number = 10;
 
   @ViewChild(FilterFormComponent) 
   protected filterFormComponent!: FilterFormComponent;
@@ -45,11 +48,13 @@ export class TableElementsComponent {
   protected documents: Optional<CollectionDataParsed>;
   protected details: boolean[];
 
-  protected offset: number = 10;
-  protected maxPages: number = 10;
+  protected offset: number = TableElementsComponent.DEFAULT_OFFSET;
+  protected maxPages: number = TableElementsComponent.DEFAULT_OFFSET;
   protected page: Page;
+  protected pages: Page[];
 
   protected filter!: FilterElement;
+  protected formOffset: number = TableElementsComponent.DEFAULT_OFFSET;
 
   public constructor(private route: ActivatedRoute, private sanitized: DomSanitizer, public utils: UtilsService, private redirect: RedirectService, private alert: AlertService, private localstorage: LocalStorageService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
@@ -60,6 +65,7 @@ export class TableElementsComponent {
       limit: 0,
       offset: this.offset,
     };
+    this.pages = [];
   }
 
   protected ngOnInit(): void {
@@ -77,7 +83,9 @@ export class TableElementsComponent {
 
     const position = sLimit ? Math.round(Number(sLimit) / this.offset) : 0;
     const limit = sLimit ? Number(sLimit) : 0;
-
+    this.offset = this.findOffset(query, this.service, this.dataBase, this.collection);
+    this.formOffset = this.offset;
+    
     this.page = {
       title: `${position + 1}`,
       position: position,
@@ -86,6 +94,21 @@ export class TableElementsComponent {
     }
 
     this.initializeFilter(this.service, this.dataBase, this.collection);
+  }
+
+  protected findOffset(query: ParamMap, service: string, dataBase: string, collection: string) {
+    const sOffset = query.get("offset");
+    if(sOffset) {
+      return Number(sOffset);
+    }
+
+    const key = this.makeOffsetKey(service, dataBase, collection);
+    const offset = this.localstorage.find(key);
+    if(offset) {
+      return offset;
+    }
+
+    return TableElementsComponent.DEFAULT_OFFSET;
   }
 
   protected keyValue(document: DocumentDataParser): string {
@@ -97,7 +120,7 @@ export class TableElementsComponent {
 
   protected fieldValue(field: string, document: DocumentDataParser): SafeHtml {
     if(this.utils.bytesCalculator(document.document[field], 100) == undefined) {
-      return this.sanitized.bypassSecurityTrustHtml("File is too long.");
+      return this.sanitized.bypassSecurityTrustHtml("Field is too long.");
     }
     
     const stringify = JSON.stringify(document.document[field], null, 2);
@@ -116,9 +139,19 @@ export class TableElementsComponent {
   public setFilter(filter: FilterElement): void {
     this.filter = filter;
     this.filterFormComponent.closeModal();
-    const key = this.makeKey(this.service, this.dataBase, this.collection);
+    const key = this.makeFilterKey(this.service, this.dataBase, this.collection);
     this.localstorage.insert(key, filter);
     this.refreshData();
+  }
+
+  public gotoPage(): void {
+    this.offset = this.formOffset;
+    this.page.offset = this.formOffset;
+
+    const key = this.makeOffsetKey(this.service, this.dataBase, this.collection);
+    this.localstorage.insert(key, this.offset);
+
+    this._refreshData(this.page);
   }
 
   public refreshData(): void {
@@ -175,6 +208,7 @@ export class TableElementsComponent {
       documents: documentsParsed
     };
 
+    this.pages = this.findPages();
   }
 
   public loadPage(page: Page) {
@@ -243,7 +277,7 @@ export class TableElementsComponent {
   protected findPages(): Page[] {
     let length = 0;
     if(this.documents) {
-      length = Math.round(this.documents.total / 10);
+      length = Math.round(this.documents.total / this.offset);
     }
 
     const middlePoint = Math.round(this.maxPages / 2);
@@ -292,9 +326,8 @@ export class TableElementsComponent {
   }
 
   private initializeFilter(service: string, dataBase: string, collection: string) {
-    const key = this.makeKey(service, dataBase, collection);
+    const key = this.makeFilterKey(service, dataBase, collection);
     const filter = this.localstorage.find(key);
-    console.log(filter)
     if(filter == null) {
       this.emptyFilter();
       return;
@@ -303,8 +336,12 @@ export class TableElementsComponent {
     this.refreshData();
   }
 
-  private makeKey(service: string, dataBase: string, collection: string): string {
+  private makeFilterKey(service: string, dataBase: string, collection: string): string {
     return `DOCUMENT_FILTER_${service}#${dataBase}#${collection}#`;
+  }
+
+  private makeOffsetKey(service: string, dataBase: string, collection: string): string {
+    return `DOCUMENT_OFFSET_${service}#${dataBase}#${collection}#`;
   }
 
   private emptyFilter(): void {
