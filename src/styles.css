@@ -40,7 +40,8 @@ html, body {
 }
 
 .protected::after {
-    content: '🔒 ' ;
+    content: '🔒' ;
+    margin-right: 5px;
     font-weight: bold;
 }
 

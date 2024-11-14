@@ -23,7 +23,7 @@
                     @for (service of services.services; track $index) {
                         <tr>
                             <td class="db-status">
-                                <div>
+                                <div class="status-box">
                                     <div class="status-point" [ngClass]="'status-'+status[service.name]" title="{{ status[service.name] }}"></div>
                                     @if(service.protected) {
                                         <span class="protected" title="Protected"></span>

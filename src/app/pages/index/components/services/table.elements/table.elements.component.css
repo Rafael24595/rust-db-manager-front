@@ -1,3 +1,9 @@
+.status-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .status-point {
     display: inline-block;
     position: relative;
