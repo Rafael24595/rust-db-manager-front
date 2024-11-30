@@ -5,6 +5,7 @@ import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../../../../core/services/view/alert.service';
+import { TableDataField } from '../../../../../interfaces/server/table/group/data.base.field';
 
 @Component({
   selector: 'app-table-data',
@@ -47,5 +48,33 @@ export class TableDataComponent {
       }
     });
   }
+
+  formatField(field: TableDataField) {
+    console.log(field)
+    switch (field.data_type.toLowerCase()) {
+      case "byte":
+        return this.formatBytes(Number(field.value))
+      default:
+        return field.value;
+    }
+  }
+
+  formatBytes(bytes: number): string {
+    const kb = bytes / 1024;
+    const mb = kb / 1024;
+    const gb = mb / 1024;
+
+    if (Math.round(gb) > 0) {
+        return `${gb.toFixed(2)} GB`;
+    }
+    if (Math.round(mb) > 0) {
+        return `${mb.toFixed(2)} MB`;
+    }
+    if (Math.round(kb) > 0) {
+        return `${kb.toFixed(2)} KB`;
+    }
+
+    return `${bytes.toFixed(2)} Bytes`;
+}
 
 }
