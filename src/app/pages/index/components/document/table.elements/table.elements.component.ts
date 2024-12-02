@@ -141,6 +141,7 @@ export class TableElementsComponent {
     this.filterFormComponent.closeModal();
     const key = this.makeFilterKey(this.service, this.dataBase, this.collection);
     this.localstorage.insert(key, filter);
+    this.page.limit = 0;
     this.refreshData();
   }
 
@@ -286,7 +287,8 @@ export class TableElementsComponent {
 
     let cursor = sCursor < 0 ? 0 : sCursor;
 
-    const range = length - cursor;
+    let range = length - cursor;
+    range = range < 0 ? 0 : range;
     const pagesLength = range > this.maxPages ? this.maxPages : range;
     const pages: Page[] = Array(pagesLength + 2).fill(undefined);
 
