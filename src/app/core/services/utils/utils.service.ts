@@ -3,6 +3,7 @@ import { TableDataGroup } from '../../../interfaces/server/table/group/data.base
 import { Callback } from '../../../interfaces/callback';
 import { CollectionDefinition } from '../../../interfaces/server/collection/collection.definition';
 import { Optional } from '../../../types/optional';
+import { TableDataField } from '../../../interfaces/server/table/group/data.base.field';
 
 @Injectable({
   providedIn: 'root'
@@ -127,6 +128,34 @@ export class UtilsService {
       }
     }
     return bytes;
+  }
+
+  public formatField(field: TableDataField) {
+    console.log(field)
+    switch (field.data_type.toLowerCase()) {
+      case "byte":
+        return this.formatBytes(Number(field.value))
+      default:
+        return field.value;
+    }
+  }
+
+  public formatBytes(bytes: number): string {
+    const kb = bytes / 1024;
+    const mb = kb / 1024;
+    const gb = mb / 1024;
+
+    if (Math.round(gb) > 0) {
+        return `${gb.toFixed(2)} GB`;
+    }
+    if (Math.round(mb) > 0) {
+        return `${mb.toFixed(2)} MB`;
+    }
+    if (Math.round(kb) > 0) {
+        return `${kb.toFixed(2)} KB`;
+    }
+
+    return `${bytes.toFixed(2)} Bytes`;
   }
 
 }

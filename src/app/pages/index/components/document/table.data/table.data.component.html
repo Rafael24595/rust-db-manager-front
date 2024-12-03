@@ -13,11 +13,11 @@
                             <tr>
                                 @if (field.length > 0) {
                                     <td class="data-key" [attr.colspan]="field.length == 1 ? 2 : 1">{{ field[0].name }}</td>
-                                    <td [attr.colspan]="field.length == 1 ? 2 : 1">{{ field[0].value }}</td>
+                                    <td [attr.colspan]="field.length == 1 ? 2 : 1">{{ utils.formatField(field[0]) }}</td>
                                 }
                                 @if (field.length > 1) {
                                     <td class="data-key">{{ field[1].name }}</td>
-                                    <td>{{ field[1].value }}</td>
+                                    <td>{{ utils.formatField(field[1]) }}</td>
                                 }
                             </tr>
                         }
