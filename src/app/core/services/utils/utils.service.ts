@@ -134,13 +134,17 @@ export class UtilsService {
     console.log(field)
     switch (field.data_type.toLowerCase()) {
       case "byte":
-        return this.formatBytes(Number(field.value))
+        return this.formatBytes(field)
+        case "timestamp":
+          return this.formatTimestamp(field)
       default:
         return field.value;
     }
   }
 
-  public formatBytes(bytes: number): string {
+  public formatBytes(field: TableDataField): string {
+    let bytes = Number(field.value);
+
     const kb = bytes / 1024;
     const mb = kb / 1024;
     const gb = mb / 1024;
@@ -157,5 +161,26 @@ export class UtilsService {
 
     return `${bytes.toFixed(2)} Bytes`;
   }
+
+  public formatTimestamp(field: TableDataField): string {
+    let timestamp = Date.now() - Number(field.value);
+    if (isNaN(timestamp) ||timestamp < 0) {
+        return field.value;
+    }
+
+    const days = Math.floor(timestamp / (24 * 60 * 60 * 1000));
+    timestamp %= (24 * 60 * 60 * 1000);
+
+    const hours = Math.floor(timestamp / (60 * 60 * 1000));
+    timestamp %= (60 * 60 * 1000);
+
+    const minutes = Math.floor(timestamp / (60 * 1000));
+
+    const formattedDays = String(days).padStart(3, "0");
+    const formattedHours = String(hours).padStart(2, "0");
+    const formattedMinutes = String(minutes).padStart(2, "0");
+
+    return `${formattedDays}:${formattedHours}:${formattedMinutes}`;
+}
 
 }
