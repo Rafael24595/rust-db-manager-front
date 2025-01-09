@@ -14,11 +14,11 @@
                     <td>
                         <label for="category"><span class="required"></span> Category:</label>
                         <br>
-                        <select name="category" id="category" [(ngModel)]="category" required>
-                            <option value="" disabled selected>-- select one --</option>
+                        <select name="category" id="category" [(ngModel)]="category" autocomplete="off" required>
                             @if(categories | async; as categories) { 
+                                <option value="" disabled selected>-- select one --</option>
                                 @for (category of categories; track $index) {
-                                    <option value="{{ category.category }}">{{ category.category }}</option>
+                                    <option value="{{ category.category }}" [attr.selected]="category.default ? true : null" >{{ category.category }}</option>
                                 }
                             }
                         </select>
