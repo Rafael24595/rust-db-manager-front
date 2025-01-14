@@ -5,7 +5,6 @@ import { ResponseHandlerService } from '../../../../../core/services/response.ha
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { map } from 'rxjs';
 import { FieldDefinition } from '../../../../../interfaces/server/field/definition/field.definition';
-import { AsyncPipe } from '@angular/common';
 import { FieldData } from '../../../../../interfaces/server/field/generate/field.data';
 import { FormsModule } from '@angular/forms';
 import { DbLogoService } from '../../../../../core/services/view/db.logo.service';
@@ -17,7 +16,7 @@ import { RedirectService } from '../../../../../core/services/redirect.service';
 @Component({
   selector: 'app-create-form',
   standalone: true,
-  imports: [AsyncPipe, FormsModule],
+  imports: [FormsModule],
   templateUrl: './create.form.component.html',
   styleUrl: './create.form.component.css'
 })
@@ -111,9 +110,11 @@ export class CreateFormComponent {
       order: this.fields.length,
       code: this.base.code,
       value: "",
+      swkey: false,
       swsize: this.base.swsize,
       size: 0,
       mutable: true,
+      json_type: "STRING",
       attributes: this.base.attributes.map(a => {
         return  {
           key: a.code,

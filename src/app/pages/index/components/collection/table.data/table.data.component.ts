@@ -5,7 +5,6 @@ import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../../../../core/services/view/alert.service';
-import { TableDataField } from '../../../../../interfaces/server/table/group/data.base.field';
 
 @Component({
   selector: 'app-table-data',

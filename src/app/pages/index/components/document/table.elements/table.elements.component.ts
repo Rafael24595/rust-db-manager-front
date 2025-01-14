@@ -4,7 +4,7 @@ import { AlertService } from '../../../../../core/services/view/alert.service';
 import { ResponseHandlerService } from '../../../../../core/services/response.handler.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { map } from 'rxjs';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ComboSelectorComponent } from '../../../../../components/combo.selector/combo.selector.component';
 import { DocumentDataParser } from '../../../../../interfaces/server/document/document.data.parsed';
 import { RedirectService } from '../../../../../core/services/redirect.service';
@@ -15,7 +15,7 @@ import { Dict } from '../../../../../types/dict';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { UtilsService } from '../../../../../core/services/utils/utils.service';
 import { DocumentKey } from '../../../../../interfaces/server/document/document.key';
-import { CollectionDataParsed } from '../../../../../interfaces/server/collection/collection.data copy';
+import { CollectionDataParsed } from '../../../../../interfaces/server/collection/collection.data.parsed';
 import { Page } from '../../../../../interfaces/page';
 import { FilterFormComponent } from '../filter.form/filter.form.component';
 import { FilterElement } from '../../../../../interfaces/server/field/filter/filter.element';
@@ -23,6 +23,8 @@ import { FilterResources } from '../../../../../interfaces/server/field/filter/f
 import { CollectionData } from '../../../../../interfaces/server/collection/collection.data';
 import { LocalStorageService } from '../../../../../core/services/local.storage.service';
 import { FormsModule } from '@angular/forms';
+import { DocumentSchema } from '../../../../../interfaces/server/document/document.schema';
+import { DocumentKeysParserService } from '../../../../../core/services/utils/document.keys.parser.service';
 
 @Component({
   selector: 'app-table-elements',
@@ -45,6 +47,8 @@ export class TableElementsComponent {
   protected dataBase!: string;
   protected collection!: string;
 
+  protected schema!: DocumentSchema;
+
   protected documents: Optional<CollectionDataParsed>;
   protected details: boolean[];
 
@@ -56,7 +60,7 @@ export class TableElementsComponent {
   protected filter!: FilterElement;
   protected formOffset: number = TableElementsComponent.DEFAULT_OFFSET;
 
-  public constructor(private route: ActivatedRoute, private sanitized: DomSanitizer, public utils: UtilsService, private redirect: RedirectService, private alert: AlertService, private localstorage: LocalStorageService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
+  public constructor(private route: ActivatedRoute, private sanitized: DomSanitizer, public utils: UtilsService, private redirect: RedirectService, private alert: AlertService, private localstorage: LocalStorageService, private keyParser: DocumentKeysParserService, private handler: ResponseHandlerService, private resolver: RustDbManagerService) {
     this.refreshBranch = () => {};
     this.details = [];
     this.page = {
@@ -112,10 +116,10 @@ export class TableElementsComponent {
   }
 
   protected keyValue(document: DocumentDataParser): string {
-    if(document.base_key) {
-      return document.base_key?.value;
-    }
-    return document.keys.map(k => k.value).join(" - ");
+    return this.keyParser
+      .keysFromDocument(this.schema, document)
+      .map(k => k.value)
+      .join(" - ");
   }
 
   protected fieldValue(field: string, document: DocumentDataParser): SafeHtml {
@@ -160,6 +164,8 @@ export class TableElementsComponent {
   }
 
   protected _refreshData(page: Page): void {
+    this.loadPage(page);
+    this.refreshSchema();
     if(this.filter) {
       this.refreshDataByFilter(page);
       return;
@@ -167,15 +173,24 @@ export class TableElementsComponent {
     this.refreshDataByKey(page);
   }
 
+  public refreshSchema(): void  {  
+    this.resolver.collectionShema(this.service, this.dataBase, this.collection).subscribe({
+      error: (e) => {
+        this.alert.alert(e.message);
+      },
+      next: (schema) => {
+          this.schema = schema;
+      },
+    });
+  }
+
   public refreshDataByFilter(page: Page): void  {  
-    this.loadPage(page);
     this.resolver.documentQuery(this.service, this.dataBase, this.collection, this.filter, page.limit, page.offset).pipe(
       map(this.parseCollection.bind(this))
     ).subscribe();
   }
 
   public refreshDataByKey(page: Page): void  {  
-    this.loadPage(page);
     this.resolver.documentFindAll(this.service, this.dataBase, this.collection, page.limit, page.offset).pipe(
       map(this.parseCollection.bind(this))
     ).subscribe();
@@ -194,8 +209,6 @@ export class TableElementsComponent {
       const documentParsed: DocumentDataParser = {
         data_base: document.data_base,
         collection: document.collection,
-        base_key: document.base_key,
-        keys: document.keys,
         size: document.size,
         document: parsed
       }
@@ -241,12 +254,8 @@ export class TableElementsComponent {
   }
 
   protected remove(document: DocumentDataParser): void  {
-    let keys = document.keys;
-    let title = document.keys.map(k => k.value).join("#");
-    if(document.base_key != undefined) {
-      keys = [document.base_key];
-      title = document.base_key.value
-    }
+    let keys = this.keyParser.keysFromDocument(this.schema, document);
+    let title = keys.map(k => k.value).join("#");
     this._remove(keys, title);
   }
 
@@ -321,8 +330,7 @@ export class TableElementsComponent {
 
   protected load(document: DocumentDataParser): void {
     const request: WorkshopFormRequest = {
-      base_key: document.base_key,
-      keys: document.keys
+      keys: this.keyParser.keysFromDocument(this.schema, document)
     };
     this.redirect.goToWorkshop(this.service, this.dataBase, this.collection, request);
   }

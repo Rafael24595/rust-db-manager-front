@@ -4,7 +4,6 @@ import { DocumentKey } from '../../../../../interfaces/server/document/document.
 import { DocumentKeysParserService } from '../../../../../core/services/utils/document.keys.parser.service';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
 import { DocumentData } from '../../../../../interfaces/server/document/document.data';
-import { AsyncPipe } from '@angular/common';
 import { DbLogoService } from '../../../../../core/services/view/db.logo.service';
 import { FormsModule } from '@angular/forms';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
@@ -16,12 +15,12 @@ import { RedirectService } from '../../../../../core/services/redirect.service';
 import { DocumentSchema } from '../../../../../interfaces/server/document/document.schema';
 import { Optional } from '../../../../../types/optional';
 import { Dict } from '../../../../../types/dict';
-import { WorkshopFormRequest } from '../../../../../interfaces/worksop.form.request';
+import { DocumentDataParser } from '../../../../../interfaces/server/document/document.data.parsed';
 
 @Component({
   selector: 'app-workshop-form',
   standalone: true,
-  imports: [AsyncPipe, FormsModule, CodemirrorModule],
+  imports: [FormsModule, CodemirrorModule],
   templateUrl: './workshop.form.component.html',
   styleUrl: './workshop.form.component.css'
 })
@@ -29,7 +28,9 @@ export class WorkshopFormComponent {
 
   @ViewChild('text_area') text_area!: ElementRef;
 
-  public documentData: Optional<DocumentData>;
+  protected schema!: DocumentSchema;
+
+  public document: Optional<DocumentDataParser>;
   public documentOriginal!: string;
   public documentUpdated!: string;
 
@@ -74,36 +75,74 @@ export class WorkshopFormComponent {
   }
 
   refreshData() {
-     this.resolver.documentFind(this.service, this.dataBase, this.collection, this.keys).subscribe({
-        error: (e: ResponseException) => {
-          if(this.handler.autentication(e, {
-            key: "Document",
-            name: this.documentTitle(),
-            service: this.service,
-            exitCallback: {
-              func: () => this.redirect.goToCollection(this.service, this.dataBase, this.collection)
-            }
-          })) {
-            return;
-          }
+     this.refreshSchema();
+  }
 
-          console.error(e);
-          this.alert.alert(e.message);
-        },
-        next: (documentData: DocumentData) => {
-          this.documentData = documentData;
-          try {
-            this.documentOriginal = JSON.stringify(JSON.parse(documentData.document), null, 2);
-            this.documentUpdated = this.documentOriginal;
-          } catch (error) {
-            this.documentOriginal = documentData.document;
-          }
+  public refreshSchema(): void  {  
+    this.resolver.collectionShema(this.service, this.dataBase, this.collection).subscribe({
+      error: (e) => {
+        this.alert.alert(e.message);
+      },
+      next: (schema) => {
+          this.schema = schema;
+          this.refreshDocument();
+      },
+    });
+  }
+
+  refreshDocument() {
+    this.resolver.documentFind(this.service, this.dataBase, this.collection, this.keys).subscribe({
+       error: (e: ResponseException) => {
+         if(this.handler.autentication(e, {
+           key: "Document",
+           name: this.documentTitle(),
+           service: this.service,
+           exitCallback: {
+             func: () => this.redirect.goToCollection(this.service, this.dataBase, this.collection)
+           }
+         })) {
+           return;
+         }
+
+         console.error(e);
+         this.alert.alert(e.message);
+       },
+       next: (documentData: DocumentData) => {
+         this.refreshDataByDocument(documentData);
+       },
+     }
+   );
+ }
+
+  refreshDataByDocument(document: DocumentData) {
+    this.document = this.parseDocument(document);
+    this.keys = this.keyParser.keysFromDocument(this.schema, this.document);
+    try {
+      this.documentOriginal = JSON.stringify(JSON.parse(document.document), null, 2);
+      this.documentUpdated = this.documentOriginal;
+    } catch (error) {
+      this.documentOriginal = document.document;
+    }
+
+    const title = `Editing document: ${this.documentTitle()}`;
+    this.logo.set(title, this.service);
+ }
+
+  private parseDocument(document: DocumentData): DocumentDataParser {
+    let parsed: Dict<any>;
+    try {
+      parsed = JSON.parse(document.document)
+    } catch (error) {
+      parsed = {};
+    }
     
-          const title = `Editing document: ${this.documentTitle()}`;
-          this.logo.set(title, this.service);
-        },
-      }
-    );
+    const documentParsed: DocumentDataParser = {
+      data_base: document.data_base,
+      collection: document.collection,
+      size: document.size,
+      document: parsed
+    }
+    return documentParsed;
   }
 
   newData() {
@@ -150,15 +189,14 @@ export class WorkshopFormComponent {
   }
 
   documentTitle() {
-    if(!this.documentData) {
+    if(!this.document) {
       return "";
     }
 
-    if(this.documentData.base_key) {
-      return this.documentData.base_key.value
-    }
-
-    return this.documentData.keys.map(k => k.value).join("#");
+    return this.keyParser
+      .keysFromDocument(this.schema, this.document)
+      .map(k => k.value)
+      .join("#");
   }
 
   create() {
@@ -185,19 +223,7 @@ export class WorkshopFormComponent {
       },
       next: (documentData) => {
         this.alert.message(`Document created successfully.`);
-
-        const request: WorkshopFormRequest = {
-          base_key: documentData.base_key,
-          keys: documentData.keys
-        }
-
-        if(documentData.base_key) {
-          this.keys = [documentData.base_key];
-        } else {
-          this.keys = document.keys;
-        }
-
-        this.refreshData();
+        this.refreshDataByDocument(documentData);
       }
     });
   }

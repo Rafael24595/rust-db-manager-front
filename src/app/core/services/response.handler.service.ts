@@ -16,7 +16,7 @@ export class ResponseHandlerService {
 
   autentication(e: ResponseException, action: AuthAction): boolean {
     let status = e.status;
-    if(status == 404) {
+    if(status == 404 || status == 422) {
       this.alert.alert(`${action.key} ${action.name} not found.`);
       if(action.exitCallback) {
         this.utils.executeCallback(action.exitCallback);
