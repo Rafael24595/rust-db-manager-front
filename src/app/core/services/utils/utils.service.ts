@@ -131,7 +131,6 @@ export class UtilsService {
   }
 
   public formatField(field: TableDataField) {
-    console.log(field)
     switch (field.data_type.toLowerCase()) {
       case "byte":
         return this.formatBytes(field)
