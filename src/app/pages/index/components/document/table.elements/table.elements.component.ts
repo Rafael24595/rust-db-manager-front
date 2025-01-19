@@ -197,7 +197,7 @@ export class TableElementsComponent {
   }
 
   private parseCollection(documents: CollectionData): void {
-    this.details = Array.apply(null, Array(documents.documents.length)).map(() => false);
+    this.details = Array.apply(null, Array(documents.documents.length)).map(() => this.schema.sw_relational);
     const documentsParsed = documents.documents.map(document => {
       let parsed: Dict<any>;
       try {
