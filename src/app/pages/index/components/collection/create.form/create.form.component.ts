@@ -101,6 +101,7 @@ export class CreateFormComponent {
     if(definition) {
       this.baseCode = code;
       this.base = definition;
+      this.base.attributes = this.definition.global_attributes.concat(this.base.attributes);
     }
     return definition;
   }
@@ -128,6 +129,7 @@ export class CreateFormComponent {
   addField() {
     if(this.field) {
       this.fields.push(this.field)
+      console.log(this.field)
       this.field = undefined;
       this.baseCode = "default";
     }
