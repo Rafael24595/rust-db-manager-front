@@ -133,7 +133,7 @@ export class ComboActionsComponent {
           console.error(e);
           this.alert.alert(e.message);
         },
-        complete: () => this.refreshData()
+        complete: () => this.refreshBranch()
       });
     }
   
