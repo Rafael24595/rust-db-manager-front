@@ -120,3 +120,8 @@
 .attribute-code-field {
     width: 125px;
 }
+
+.attribute-box {
+    display: flex;
+    flex-direction: column;
+}
