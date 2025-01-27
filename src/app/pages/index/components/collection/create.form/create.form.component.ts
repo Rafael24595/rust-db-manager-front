@@ -12,6 +12,7 @@ import { ResponseException } from '../../../../../core/commons/response.exceptio
 import { CollectionDefinition } from '../../../../../interfaces/server/collection/collection.definition';
 import { GenerateCollectionQuery } from '../../../../../interfaces/server/collection/generate.collection.query';
 import { RedirectService } from '../../../../../core/services/redirect.service';
+import { FieldReference } from '../../../../../interfaces/server/field/generate/field.reference';
 
 @Component({
   selector: 'app-create-form',
@@ -45,7 +46,7 @@ export class CreateFormComponent {
     const oDataBase = snapshot.paramMap.get("data_base");
     const dataBase = oDataBase ? oDataBase : "";
 
-    this.resolver.serviceSchema(service).pipe(
+    this.resolver.dataBaseSchema(service, dataBase).pipe(
       map(definition => {
         this.definition = definition;
         this.fields = this.fields.concat(this.definition.defaults);
@@ -101,7 +102,12 @@ export class CreateFormComponent {
     if(definition) {
       this.baseCode = code;
       this.base = definition;
-      this.base.attributes = this.definition.global_attributes.concat(this.base.attributes);
+      for (const attribute of this.definition.global_attributes) {
+        if(this.base.attributes.find(a => a.code == attribute.code)) {
+          continue;
+        }
+        this.base.attributes.push(attribute);
+      }
     }
     return definition;
   }
@@ -129,7 +135,6 @@ export class CreateFormComponent {
   addField() {
     if(this.field) {
       this.fields.push(this.field)
-      console.log(this.field)
       this.field = undefined;
       this.baseCode = "default";
     }
@@ -156,6 +161,25 @@ export class CreateFormComponent {
 
   findAttribute(code: string) {
     return this.field?.attributes.find(a => a.key == code);
+  }
+
+  protected findReferences(): FieldReference[] | undefined {
+    if(this.field?.reference.length == 0) {
+      this.field.reference.push({
+        collection: "",
+        field: ""
+      });
+    }
+    return this.field?.reference;
+  }
+
+  protected findFields(collection: string): string[]  {
+    const references = this.definition.references
+      .filter(r => r.collection == collection);
+    if(references.length == 0) {
+      return [];
+    }
+    return references[0].fields;
   }
 
   valideForm(): string | undefined {

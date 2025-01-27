@@ -53,8 +53,8 @@
                                                     </td>
                                                 }
                                             </tr>
-                                            @if (base.attributes.length != 0) {
-                                                <tr>
+                                            <tr>
+                                                @if (base.attributes.length != 0) {
                                                     <td>
                                                         <h4>Attributes:</h4>
                                                         <div>
@@ -70,7 +70,7 @@
                                                                                     @if (attribute.values.length == 0) {
                                                                                         <input type="text" name="{{attribute.code}}" [(ngModel)]="field.value" required>
                                                                                     } @else {
-                                                                                        <select name="{{attribute.code}}" id="base-selector" [(ngModel)]="field.value" required>
+                                                                                        <select name="{{attribute.code}}" [(ngModel)]="field.value" required>
                                                                                             <option value="default" disabled selected>-- select one --</option>
                                                                                             @for (value of attribute.values; track $index) {
                                                                                                 <option value="{{ value.value }}">{{ value.key }}</option>
@@ -85,8 +85,49 @@
                                                             </table>
                                                         </div>
                                                     </td>
-                                                </tr>
-                                            }
+                                                }
+                                                @if (definition.references.length != 0) {
+                                                    @if (findReferences(); as references) {
+                                                        <td>
+                                                            <h4>Reference:</h4>
+                                                            <div>
+                                                                <table>
+                                                                    <tbody>
+                                                                        @for (reference of references; track $index) {
+                                                                            <tr>
+                                                                                <td class="attribute-code-field">
+                                                                                    <label for="collection-reference-{{ $index }}">Collection</label>
+                                                                                </td>
+                                                                                <td class="attribute-code-field">
+                                                                                    <select name="collection-reference-{{ $index }}" [(ngModel)]="reference.collection" required>
+                                                                                        <option value="" selected>-- select one --</option>
+                                                                                        @for (collection of definition.references; track $index) {
+                                                                                            <option value="{{ collection.collection }}">{{ collection.collection }}</option>
+                                                                                        }
+                                                                                    </select>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td class="attribute-code-field">
+                                                                                    <label for="field-reference-{{ $index }}">Field</label>
+                                                                                </td>
+                                                                                <td class="attribute-code-field">
+                                                                                    <select name="field-reference-{{ $index }}" [(ngModel)]="reference.field" required>
+                                                                                        <option value="" selected>-- select one --</option>
+                                                                                        @for (field of findFields(reference.collection); track $index) {
+                                                                                            <option value="{{ field }}">{{ field }}</option>
+                                                                                        }
+                                                                                    </select>
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </td>
+                                                    }
+                                                }
+                                            </tr>
                                         }
                                     </tbody>
                                 </table>

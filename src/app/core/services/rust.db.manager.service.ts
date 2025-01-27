@@ -94,8 +94,8 @@ export class RustDbManagerService {
       );
   }
 
-  serviceSchema(service: string): Observable<CollectionDefinition> {
-    return this.http.get<CollectionDefinition>(`${environment.URL_SERVICE_HOST}/api/v1/service/${service}/schema`, CREDENTIALS_OPTIONS)
+  dataBaseSchema(service: string, database: string): Observable<CollectionDefinition> {
+    return this.http.get<CollectionDefinition>(`${environment.URL_SERVICE_HOST}/api/v1/service/${service}/data-base/${database}/schema`, CREDENTIALS_OPTIONS)
       .pipe(
         map(this.utils.sortCollectionDefinition),
         catchError(this.handleError)
