@@ -13,6 +13,7 @@ import { CollectionDefinition } from '../../../../../interfaces/server/collectio
 import { GenerateCollectionQuery } from '../../../../../interfaces/server/collection/generate.collection.query';
 import { RedirectService } from '../../../../../core/services/redirect.service';
 import { FieldReference } from '../../../../../interfaces/server/field/generate/field.reference';
+import { CollectionReferenceDefinition } from '../../../../../interfaces/server/collection/collection.reference.definition';
 
 @Component({
   selector: 'app-create-form',
@@ -167,10 +168,17 @@ export class CreateFormComponent {
     if(this.field?.reference.length == 0) {
       this.field.reference.push({
         collection: "",
-        field: ""
+        field: "",
+        cascade: false,
       });
     }
     return this.field?.reference;
+  }
+
+  protected findReferenceDefinition(collection: string): CollectionReferenceDefinition | undefined {
+    const references = this.definition.references
+      .filter(r => r.collection == collection);
+    return references[0];
   }
 
   protected findFields(collection: string): string[]  {

@@ -1,4 +1,5 @@
 export interface FieldReference {
     collection: string,
-    field: string
+    field: string,
+    cascade: boolean
 }
