@@ -222,6 +222,11 @@ export class CreateFormComponent {
           return;
         }
 
+        if(e.status == 500) {
+          this.alert.alert(`${e.error}`, "Data base error");
+          return;
+        }
+
         this.handler.requestAttemp(e, this.onSubmit.bind(this), attemps);
       },
       complete: () => {

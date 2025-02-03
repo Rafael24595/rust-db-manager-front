@@ -119,15 +119,17 @@
                                                                                         }
                                                                                     </select>
                                                                                 </td>
-                                                                                @if (findReferenceDefinition(reference.collection)?.cascade) {
+                                                                            </tr>
+                                                                            @if (findReferenceDefinition(reference.collection)?.cascade) {
+                                                                                <tr>
                                                                                     <td class="attribute-code-field">
                                                                                         <label for="field-cascade-{{ $index }}">Cascade</label>
                                                                                     </td>
                                                                                     <td class="attribute-code-field">
                                                                                         <input type="checkbox" name="field-cascade-{{ $index }}" [(ngModel)]="reference.cascade" required>
                                                                                     </td>
-                                                                                }
-                                                                            </tr>
+                                                                                </tr>
+                                                                            }
                                                                         }
                                                                     </tbody>
                                                                 </table>
