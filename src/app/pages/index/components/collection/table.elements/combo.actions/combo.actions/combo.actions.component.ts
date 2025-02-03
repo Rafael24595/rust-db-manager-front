@@ -39,27 +39,27 @@ export class ComboActionsComponent {
   protected readonly defaultActions: ModalButton[] = [
       {
           title: 'View', 
-          callback: {func: this.load.bind(this), args: [this.collection]}, 
+          callback: {func: this.load.bind(this), args: []}, 
           icon: {icon: '⤇'}
       },
       {
           title: 'Rename', 
-          callback: {func: this.rename.bind(this), args: [this.collection]}, 
+          callback: {func: this.rename.bind(this), args: []}, 
           icon: {icon: '···'}
       },
       {
           title: 'Remove', 
-          callback: {func: this.remove.bind(this), args: [this.collection]}, 
+          callback: {func: this.remove.bind(this), args: []}, 
           icon: {icon: '🗑'}
       },
       {
           title: 'Export JSON', 
-          callback: {func: this.exportJson.bind(this), args: [this.collection]}, 
+          callback: {func: this.exportJson.bind(this), args: []}, 
           icon: {icon: '🖫'}
       },
       {
           title: 'Import JSON', 
-          callback: {func: this.importJson.bind(this), args: [this.collection]}, 
+          callback: {func: this.importJson.bind(this), args: []}, 
           icon: {icon: '🖬'}
       },
     ];
@@ -137,11 +137,11 @@ export class ComboActionsComponent {
       });
     }
   
-    protected exportJson(collection: string): void {
-      this.resolver.collectionExport(this.service, this.dataBase, collection)
+    protected exportJson(): void {
+      this.resolver.collectionExport(this.service, this.dataBase, this.collection)
         .pipe(
           map(json => {
-            const filename = `${this.service}-${this.dataBase}-${collection}_${Date.now()}.json`;
+            const filename = `${this.service}-${this.dataBase}-${this.collection}_${Date.now()}.json`;
             const vector = `[\n${json.map(d => d.document).join(",\n")}\n]`;
             this.utils.downloadFile(filename, vector);
           })
@@ -150,7 +150,7 @@ export class ComboActionsComponent {
           error: (e: ResponseException) => {
             if(this.handler.autentication(e, {
               key: "Collection",
-              name: collection,
+              name: this.collection,
               service: this.service,
               nextCallback: {
                 func: this.exportJson.bind(this)
@@ -195,8 +195,8 @@ export class ComboActionsComponent {
       });
     }
 
-    protected load(collection: string) {
-      this.redirect.goToCollection(this.service, this.dataBase, collection);
+    protected load() {
+      this.redirect.goToCollection(this.service, this.dataBase, this.collection);
     }
 
 }
