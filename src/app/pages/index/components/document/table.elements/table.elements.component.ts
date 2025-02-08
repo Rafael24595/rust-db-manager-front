@@ -19,7 +19,6 @@ import { CollectionDataParsed } from '../../../../../interfaces/server/collectio
 import { Page } from '../../../../../interfaces/page';
 import { FilterFormComponent } from '../filter.form/filter.form.component';
 import { FilterElement } from '../../../../../interfaces/server/field/filter/filter.element';
-import { FilterResources } from '../../../../../interfaces/server/field/filter/filter.resources';
 import { CollectionData } from '../../../../../interfaces/server/collection/collection.data';
 import { LocalStorageService } from '../../../../../core/services/local.storage.service';
 import { FormsModule } from '@angular/forms';
@@ -355,20 +354,18 @@ export class TableElementsComponent {
   }
 
   private emptyFilter(): void {
-    this.resolver.resourcesFilter().subscribe((value: FilterResources) => {
-      this.filter = {
-        key: "",
-        value: {
-          category: value.root_category,
-          value: "",
-          attributes: [],
-          children: []
-        },
-        direction: true,
-        negation: false
-      };
-      this.refreshData();
-    });
+    this.filter = {
+      key: "",
+      value: {
+        category: "",
+        value: "",
+        attributes: [],
+        children: []
+      },
+      direction: true,
+      negation: false
+    };
+    this.refreshData();
   }
 
 }

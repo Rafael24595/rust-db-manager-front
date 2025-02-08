@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
 import { Callback } from '../../../../../interfaces/callback';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
-import { FilterResources } from '../../../../../interfaces/server/field/filter/filter.resources';
-import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FilterElementPreviewComponent } from './filter.element.preview/filter.element.preview.component';
 import { FilterDefinition } from '../../../../../interfaces/server/field/filter/definition/filter.definition';
@@ -21,7 +19,7 @@ import { ResponseException } from '../../../../../core/commons/response.exceptio
 @Component({
   selector: 'app-filter-form',
   standalone: true,
-  imports: [AsyncPipe, FormsModule, DialogFormComponent, FilterElementPreviewComponent, CodemirrorModule],
+  imports: [FormsModule, DialogFormComponent, FilterElementPreviewComponent, CodemirrorModule],
   templateUrl: './filter.form.component.html',
   styleUrl: './filter.form.component.css'
 })
@@ -36,7 +34,6 @@ export class FilterFormComponent {
   @Input() 
   public getFilter!: Callback;
   
-  protected resources!: Observable<FilterResources>;
   protected schema!: FilterDefinition;
   
   public filter!: FilterElement;
@@ -77,25 +74,22 @@ export class FilterFormComponent {
   protected ngOnInit(): void {
     const oService = this.route.snapshot.paramMap.get("service");
     this.service = oService ? oService : "";
-    this.resources = this.resolver.resourcesFilter();
     this.loadFilterDefinition();
   }
 
   protected loadEmptyFilter(): void {
-    this.resolver.resourcesFilter().subscribe((value: FilterResources) => {
-      this.filter = {
-        key: "",
-        value: {
-          category: value.root_category,
-          value: "",
-          attributes: [],
-          children: []
-        },
-        direction: true,
-        negation: false
-      };
-      this.cursor = this.filter;
-    });
+    this.filter = {
+      key: "",
+      value: {
+        category: "",
+        value: "",
+        attributes: [],
+        children: []
+      },
+      direction: true,
+      negation: false
+    };
+    this.cursor = this.filter;
   }
 
   private loadFilterDefinition(): void {
@@ -105,7 +99,7 @@ export class FilterFormComponent {
       },
       next: (schema: FilterDefinition) => {
         this.schema = schema;
-        if(this.schema.query_type == "JSON") {
+        if(this.schema.category_query.json_type == "JSON") {
           this.options.mode = "application/ld+json";
         }
       }
@@ -199,10 +193,10 @@ export class FilterFormComponent {
   }
 
   protected showExample() {
-    let example = this.schema.query_example;
-    if(this.schema.query_type == "JSON") {
+    let example = this.schema.category_query.example;
+    if(this.schema.category_query.json_type == "JSON") {
       try {
-        const parse = JSON.parse(this.schema.query_example);
+        const parse = JSON.parse(this.schema.category_query.example);
         example = JSON.stringify(parse, null, 2)
       } catch (error) {
         this.alert.alert(`Cannot load example: ${error}`)

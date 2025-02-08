@@ -12,70 +12,68 @@
             <div id="form-header">
                 <button class="title-button smoke form-button" (click)="addValue()">+</button>
             </div>
-            @if (resources | async; as resources) {
-                <table class="table-form">
-                    <tbody>
+            <table class="table-form">
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <label for="category"><span class="required"></span> Category:</label>
+                            <br>
+                            <select name="category" id="category" [(ngModel)]="category" required>
+                                <option value="" disabled selected>-- select one --</option>
+                                    @for (category of schema.categories; track $index) {
+                                        <option value="{{ category }}">{{ category }}</option>
+                                    }
+                            </select>
+                        </td>
+                    </tr>
+                    
+                    @if (category != schema.category_query.category) {
                         <tr>
                             <td colspan="2">
-                                <label for="category"><span class="required"></span> Category:</label>
+                                <label for="field"><span class="required"></span> Field:</label>
                                 <br>
-                                <select name="category" id="category" [(ngModel)]="category" required>
-                                    <option value="" disabled selected>-- select one --</option>
-                                        @for (category of resources.categories; track $index) {
-                                            <option value="{{ category }}">{{ category }}</option>
-                                        }
-                                </select>
+                                <input type="text" name="field" [(ngModel)]="name" required>
                             </td>
                         </tr>
-                        
-                        @if (category != resources.query_category) {
-                            <tr>
-                                <td colspan="2">
-                                    <label for="field"><span class="required"></span> Field:</label>
-                                    <br>
-                                    <input type="text" name="field" [(ngModel)]="name" required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <label for="value"><span class="required"></span> Value:</label>
-                                    <br>
-                                    <input type="text" name="value" [(ngModel)]="value" required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="direction"><span class="required"></span> Direction:</label>
-                                    <br>
-                                    <input type="checkbox" name="direction" [(ngModel)]="direction" required>
-                                </td>
-                                <td>
-                                    <label for="negation"><span class="required"></span> Negation:</label>
-                                    <br>
-                                    <input type="checkbox" name="negation" [(ngModel)]="negation" required>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-                @if (category == resources.query_category) {
-                    <label class="table-form-label" for="value"><span class="required"></span> Value:</label>
-                    <br>
-                    <div id="query-container">
-                        <div>
-                            <ngx-codemirror
-                                [options]="options"
-                                [ngModel]="value"
-                                [disabled]="false"
-                                [autoFocus]="true"
-                                (ngModelChange)="handleChange($event)"
-                            />
-                        </div>
-                    </div>
-                    @if(schema) {
-                        <button (click)="showExample()" class="title-button cover-all smoke form-button">Apply example</button>
+                        <tr>
+                            <td colspan="2">
+                                <label for="value"><span class="required"></span> Value:</label>
+                                <br>
+                                <input type="text" name="value" [(ngModel)]="value" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="direction"><span class="required"></span> Direction:</label>
+                                <br>
+                                <input type="checkbox" name="direction" [(ngModel)]="direction" required>
+                            </td>
+                            <td>
+                                <label for="negation"><span class="required"></span> Negation:</label>
+                                <br>
+                                <input type="checkbox" name="negation" [(ngModel)]="negation" required>
+                            </td>
+                        </tr>
                     }
+                </tbody>
+            </table>
+
+            @if (category == schema.category_query.category) {
+                <label class="table-form-label" for="value"><span class="required"></span> Value:</label>
+                <br>
+                <div id="query-container">
+                    <div>
+                        <ngx-codemirror
+                            [options]="options"
+                            [ngModel]="value"
+                            [disabled]="false"
+                            [autoFocus]="true"
+                            (ngModelChange)="handleChange($event)"
+                        />
+                    </div>
+                </div>
+                @if(schema) {
+                    <button (click)="showExample()" class="title-button cover-all smoke form-button">Apply example</button>
                 }
             }
 
