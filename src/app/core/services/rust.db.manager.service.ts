@@ -97,14 +97,6 @@ export class RustDbManagerService {
       );
   }
 
-  serviceSchemaFilter(service: string): Observable<FilterDefinition> {
-    return this.http.get<FilterDefinition>(`${environment.URL_SERVICE_HOST}/api/v1/service/${service}/schema-filter`, CREDENTIALS_OPTIONS)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-
   dataBaseFindAll(service: string): Observable<string[]> {
     return this.http.get<string[]>(`${environment.URL_SERVICE_HOST}/api/v1/service/${service}/data-base`, CREDENTIALS_OPTIONS)
       .pipe(
@@ -199,6 +191,13 @@ export class RustDbManagerService {
 
   collectionShema(service: string, database: string, collection: string): Observable<DocumentSchema> {
     return this.http.get<DocumentSchema>(`${environment.URL_SERVICE_HOST}/api/v1/service/${service}/data-base/${database}/collection/${collection}/schema`, CREDENTIALS_OPTIONS)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  serviceSchemaFilter(service: string, database: string, collection: string): Observable<FilterDefinition> {
+    return this.http.get<FilterDefinition>(`${environment.URL_SERVICE_HOST}/api/v1/service/${service}/data-base/${database}/collection/${collection}/schema/filter`, CREDENTIALS_OPTIONS)
       .pipe(
         catchError(this.handleError)
       );

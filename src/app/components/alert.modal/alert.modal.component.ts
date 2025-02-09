@@ -4,6 +4,7 @@ import { AlertService } from '../../core/services/view/alert.service';
 import { AlertItem } from '../../interfaces/alert/alert.item';
 import { UtilsService } from '../../core/services/utils/utils.service';
 import { CommonModule } from '@angular/common';
+import { Callback } from '../../interfaces/callback';
 
 const MAX_VIEW: number = 3;
 
@@ -61,6 +62,10 @@ export class AlertModalComponent {
         this.alerts.push(newItem);
       }
     }
+  }
+
+  executeCallback(callback: Callback) {
+    this.utils.executeCallback(callback)
   }
   
 }

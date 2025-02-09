@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { AlertData } from '../../../interfaces/alert/alert.data';
+import { ModalButton } from '../../../interfaces/modal.button';
 
 const DEFAULT_TIME: number = 6000;
 
@@ -15,13 +16,14 @@ export class AlertService {
     return this.subject.asObservable();
   }
 
-  alert(message: string, title?: string, time: number = DEFAULT_TIME) {
+  alert(message: string, title?: string, buttons?: ModalButton[], time: number = DEFAULT_TIME) {
     const alert: AlertData = {
       title: title,
       icon: "⚠",
       color: "#ffeb99",
       message: message,
-      time: time
+      time: time,
+      buttons: buttons
     }
     this.subject.next(alert);
   }

@@ -32,7 +32,15 @@
                             <td colspan="2">
                                 <label for="field"><span class="required"></span> Field:</label>
                                 <br>
-                                <input type="text" name="field" [(ngModel)]="name" required>
+                                @if (findFields(category); as fields) {
+                                    <select name="field" id="field" [(ngModel)]="name" required>
+                                        @for (field of fields.fields; track $index) {
+                                            <option value="{{ field.field }}">{{ field.field }}</option>
+                                        }
+                                    </select>
+                                } @else {
+                                    <input type="text" name="field" [(ngModel)]="name" required>
+                                }
                             </td>
                         </tr>
                         <tr>

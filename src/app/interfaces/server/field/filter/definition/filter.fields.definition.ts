@@ -1,6 +1,6 @@
 import { FilterFieldDefinition } from "./filter.field.definition";
 
 export interface FilterFieldsDefinition {
-    category: String,
+    category: string,
     fields: FilterFieldDefinition[]
 }

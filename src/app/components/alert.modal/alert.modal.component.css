@@ -74,3 +74,9 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.alert-footer.visible {
+    visibility: visible;
+    justify-content: space-around;
+    margin-top: 10px;
+}

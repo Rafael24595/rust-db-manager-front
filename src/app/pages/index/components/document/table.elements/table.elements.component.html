@@ -7,8 +7,8 @@
             }
         </h3>
         <div class="title-combo">
-            <button class="title-button" [disabled]="!documents" (click)="openFormFilter()">
-                @if (!documents || filter.value.children.length == 0) {
+            <button class="title-button" (click)="openFormFilter()">
+                @if (filter.value.children.length == 0) {
                     <span class="expand-icon">⛉</span>
                 } @else {
                     <span class="expand-icon">⛊</span>
@@ -27,7 +27,11 @@
     </div>
     <div class="table-content" [ngClass]="{'empty': !documents || documents.documents.length === 0}">
         @if(!documents) {
-            <p style="text-align: center;">Connecting to the service...</p>
+            @if (error) {
+                <p style="text-align: center;">An error ocurred, check the logs.</p>
+            } @else {
+                <p style="text-align: center;">Connecting to the service...</p>
+            }
         } @else if (documents.documents.length == 0) {
             <p style="text-align: center;">No documents found.</p>
         } @else {
@@ -85,7 +89,7 @@
         </div>
         <div>
             @for (cursor of pages; track $index) {
-                <button class="title-button page-button" (click)="_refreshData(cursor)" 
+                <button class="title-button page-button" (click)="refreshDataWithPage(cursor)" 
                     [ngClass]="{'page-cursor': pages.length > 2 && cursor.position === page.position}" 
                     [disabled]="!documents">{{ cursor.title }}</button>
             }
@@ -98,13 +102,11 @@
     </div>
 </div>
 
-@if(documents) {
-    <app-filter-form
-        [getFilter]="{
-            func: getFilter.bind(this)
-        }"
-        [onSubmit]="{
-            func: setFilter.bind(this)
-        }"
-    />
-}
+<app-filter-form
+    [getFilter]="{
+        func: getFilter.bind(this)
+    }"
+    [onSubmit]="{
+        func: setFilter.bind(this)
+    }"
+/>

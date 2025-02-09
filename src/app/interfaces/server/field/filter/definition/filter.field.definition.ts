@@ -1,5 +1,5 @@
 export interface FilterFieldDefinition {
-    field: String,
-    json_type: String,
-    defaults: String[]
+    field: string,
+    json_type: string,
+    defaults: string[]
 }

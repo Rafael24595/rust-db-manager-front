@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { DialogFormComponent } from '../../../../../components/dialog.form/dialog.form.component';
 import { Callback } from '../../../../../interfaces/callback';
 import { RustDbManagerService } from '../../../../../core/services/rust.db.manager.service';
-import { AsyncPipe } from '@angular/common';
 import { FilterElementPreviewComponent } from './filter.element.preview/filter.element.preview.component';
 import { FilterDefinition } from '../../../../../interfaces/server/field/filter/definition/filter.definition';
 import { ActivatedRoute } from '@angular/router';
@@ -15,6 +14,8 @@ import { FilterAttributeDefaultDefinition } from '../../../../../interfaces/serv
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { AlertService } from '../../../../../core/services/view/alert.service';
 import { ResponseException } from '../../../../../core/commons/response.exception';
+import { FilterFieldsDefinition } from '../../../../../interfaces/server/field/filter/definition/filter.fields.definition';
+import { Optional } from '../../../../../types/optional';
 
 @Component({
   selector: 'app-filter-form',
@@ -40,6 +41,8 @@ export class FilterFormComponent {
   public cursor!: FilterElement;
 
   protected service!: string;
+  public dataBase!: string;
+  public collection!: string;
 
   protected name: string;
   protected direction: boolean;
@@ -72,8 +75,15 @@ export class FilterFormComponent {
   }
 
   protected ngOnInit(): void {
-    const oService = this.route.snapshot.paramMap.get("service");
+    const snapshot = this.route.snapshot;
+
+    const oService = snapshot.paramMap.get("service");
     this.service = oService ? oService : "";
+    const oDataBase = snapshot.paramMap.get("data_base");
+    this.dataBase = oDataBase ? oDataBase : "";
+    const oCollection = snapshot.paramMap.get("collection");
+    this.collection = oCollection ? oCollection : "";
+
     this.loadFilterDefinition();
   }
 
@@ -82,6 +92,7 @@ export class FilterFormComponent {
       key: "",
       value: {
         category: "",
+        json_type: "",
         value: "",
         attributes: [],
         children: []
@@ -93,7 +104,7 @@ export class FilterFormComponent {
   }
 
   private loadFilterDefinition(): void {
-    this.resolver.serviceSchemaFilter(this.service).subscribe({
+    this.resolver.serviceSchemaFilter(this.service, this.dataBase, this.collection).subscribe({
       error: (e: ResponseException) => {
         this.alert.alert(e.message);
       },
@@ -122,12 +133,18 @@ export class FilterFormComponent {
   }
 
   protected addValue(): void {
+    const fieldDefinition = this.findFields(this.category)
+      ?.fields.find(f => f.field == this.name);
+
+    const jsonType = fieldDefinition ? fieldDefinition.json_type : "";
+
     this.cursor.value.children.push({
       key: this.name,
       negation: this.negation,
       direction: this.direction,
       value: {
         category: this.category,
+        json_type: jsonType,
         value: this.value,
         attributes: this.attributes,
         children: []
@@ -176,6 +193,15 @@ export class FilterFormComponent {
 
   protected filterAttributes(attributes: FilterAttributeDefinition[]): FilterAttributeDefinition[] {
     return attributes.filter(a => a.applies.includes(this.category))
+  }
+
+  protected findFields(category: string): Optional<FilterFieldsDefinition> {
+    for (const fields of this.schema.fields) {
+      if(fields.category == category) {
+        return fields
+      }
+    }
+    return undefined;
   }
 
   protected isDefault(attribute: FilterAttributeDefinition, value: FilterAttributeDefaultDefinition): boolean {

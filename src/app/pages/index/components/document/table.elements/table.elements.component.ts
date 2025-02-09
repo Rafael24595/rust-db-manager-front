@@ -49,6 +49,7 @@ export class TableElementsComponent {
   protected schema!: DocumentSchema;
 
   protected documents: Optional<CollectionDataParsed>;
+  protected error: Optional<string>;
   protected details: boolean[];
 
   protected offset: number = TableElementsComponent.DEFAULT_OFFSET;
@@ -155,38 +156,55 @@ export class TableElementsComponent {
     const key = this.makeOffsetKey(this.service, this.dataBase, this.collection);
     this.localstorage.insert(key, this.offset);
 
-    this._refreshData(this.page);
+    this.refreshData();
   }
 
   public refreshData(): void {
-    this._refreshData(this.page);
+    this.refreshDataWithPage(this.page);
   }
 
-  protected _refreshData(page: Page): void {
+  protected refreshDataWithPage(page: Page): void {
     this.loadPage(page);
-    this.refreshSchema();
-    if(this.filter) {
-      this.refreshDataByFilter(page);
-      return;
-    }
-    this.refreshDataByKey(page);
+    this.refreshSchema(page);
   }
 
-  public refreshSchema(): void  {  
+  public refreshSchema(page: Page): void  {  
     this.resolver.collectionShema(this.service, this.dataBase, this.collection).subscribe({
       error: (e) => {
         this.alert.alert(e.message);
       },
       next: (schema) => {
           this.schema = schema;
+          if(this.filter) {
+            this.refreshDataByFilter(page);
+            return;
+          }
+          this.refreshDataByKey(page);
       },
     });
   }
 
   public refreshDataByFilter(page: Page): void  {  
-    this.resolver.documentQuery(this.service, this.dataBase, this.collection, this.filter, page.limit, page.offset).pipe(
-      map(this.parseCollection.bind(this))
-    ).subscribe();
+    this.resolver.documentQuery(this.service, this.dataBase, this.collection, this.filter, page.limit, page.offset)
+      .pipe(
+        map(this.parseCollection.bind(this))
+      ).subscribe({
+        error: (e) => {
+          console.log("mierdaputam", e)
+          if(e instanceof ResponseException) {
+            this.error = e.error;
+            const message = e.error ? e.error : e.message;
+            this.alert.alert(message, undefined, [
+              {
+                title: "Reset filter",
+                callback: {
+                  func: this.emptyFilter.bind(this)
+                }
+              }
+            ], 150000);
+          }
+          }
+      });
   }
 
   public refreshDataByKey(page: Page): void  {  
@@ -222,6 +240,7 @@ export class TableElementsComponent {
     };
 
     this.pages = this.findPages();
+    this.error = undefined;
   }
 
   public loadPage(page: Page) {
@@ -358,6 +377,7 @@ export class TableElementsComponent {
       key: "",
       value: {
         category: "",
+        json_type: "",
         value: "",
         attributes: [],
         children: []

@@ -15,9 +15,17 @@
                     <p class="alert-message"> {{ alert.alert.message }} </p>
                 </div>
             </div>
-            <div class="alert-footer">
-                <button class="title-button">Ok</button>
-            </div>
+            @if (alert.alert.buttons) {
+                <div class="alert-footer visible">
+                    @for (button of alert.alert.buttons; track $index) {
+                        <button class="title-button" (click)="executeCallback(button.callback)">{{ button.title }}</button>
+                    }
+                </div>
+            } @else {
+                <div class="alert-footer">
+                    <button class="title-button">Ok</button>
+                </div>
+            }
         </div>
     }
 </div>
