@@ -305,7 +305,7 @@ export class TableElementsComponent {
   protected findPages(): Page[] {
     let length = 0;
     if(this.documents) {
-      length = Math.round(this.documents.total / this.offset);
+      length = Math.ceil(this.documents.total / this.offset);
     }
 
     const middlePoint = Math.round(this.maxPages / 2);
